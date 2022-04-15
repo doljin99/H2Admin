@@ -18,6 +18,7 @@ IoT, Home, Edge 컴퓨팅 환경에서 발생하는 많은 양의 데이터를 �
 10.	이슈를 처리할 담당자가 원인을 찾기 힘들거나 해결 방안을 구하기 어려울 때에는 공개적으로 전체 팀원들에게 도움을 요청하도록 하고 팀원들은 적극적으로 문제해결을 위한 의견을 제시하도록 합니다.
 
 ## 외부 라이브러리 License
+
 1.	Apache commons
       License: https://apache.org/licenses/LICENSE-2.0
       source: https://commons.apache.org/
