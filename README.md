@@ -22,43 +22,60 @@ IoT, Home, Edge 컴퓨팅 환경에서 발생하는 많은 양의 데이터를 �
 1.	Apache commons
 
       License: https://apache.org/licenses/LICENSE-2.0
+      
       source: https://commons.apache.org/
       
 2.	gson-2.8.6
 
       License: https://apache.org/licenses/LICENSE-2.0
+      
       source: https://github.com/google/gson
       
 3.	h2-2.1.210
 
       License: MPL 2.0 (Mozilla Public License Version 2.0) or EPL 1.0 (Eclipse Public License)
+      
       source: https://github.com/h2database/h2database
       
 4.	jBcrypt 
+
       License: https://github.com/jeremyh/jBCrypt/blob/master/LICENSE
+      
       source: https://github.com/jeremyh/jBCrypt
       
 5.	jlfgr-1_0210 
+
       License: Oracle License Agreement
+      
       source: https://www.oracle.com/java/technologies/java-archive-downloads-java-client-downloads.html
       
 6.	json-simple-1.1.1210 
+
       License: https://apache.org/licenses/LICENSE-2.0
+      
       source: https://github.com/fangyidong/json-simple
       
 7.	log4j-api-2.17.2210 
+
       License: https://apache.org/licenses/LICENSE-2.0
+      
       source: https://logging.apache.org/log4j/2.x/
       
 8.	Apache poi-5.2 
+
       License: https://apache.org/licenses/LICENSE-2.0
+      
       source: https://poi.apache.org/
       
 9.	SparseBitSet-1.2210 
+
       License: https://apache.org/licenses/LICENSE-2.0
+      
       source: https://github.com/brettwooldridge/SparseBitSet
       
 10.	xmlbeans-5.0.3210 
+
       License: https://apache.org/licenses/LICENSE-2.0
+      
       source: https://xmlbeans.apache.org/
 
