@@ -34,10 +34,8 @@ import org.mindrot.jbcrypt.BCrypt;
 public class H2ServerAdmin extends javax.swing.JFrame {
 
     public static final String SERVER_MEN_PATH = "server.json";
-    public static final String DATABASE_MEN_PATH = "database.json";
 
     private ServerMen serverList;
-//    private DatabaseMen databaseList;
     private ServerTreePane serverTreePane;
 
     /**
@@ -55,12 +53,9 @@ public class H2ServerAdmin extends javax.swing.JFrame {
         setSize(920, 810);
         jSplitPane1.setDividerLocation(645);
         serverList = readServerMen();
-//        databaseList = readDatabaseMen();
         serverTreePane = new ServerTreePane(serverList, jTextAreaStatus);
         jPanelServers.add(serverTreePane, BorderLayout.CENTER);
         jPanelServers.validate();
-//        jSplitPaneServers.add(serverTreePane, JSplitPane.LEFT);
-//        jSplitPaneServers.validate();
         setLocationRelativeTo(this);
     }
 
@@ -93,33 +88,7 @@ public class H2ServerAdmin extends javax.swing.JFrame {
             }
         }
     }
-
-//    private DatabaseMen readDatabaseMen() {
-//        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-//        BufferedReader br = null;
-//        try {
-//            java.lang.reflect.Type databaseType = new TypeToken<DatabaseMen>() {
-//            }.getType();
-//            br = new BufferedReader(new InputStreamReader(new FileInputStream(DATABASE_MEN_PATH), "UTF-8"));
-//
-//            DatabaseMen databaseMen = gson.fromJson(br, databaseType);
-//
-//            return databaseMen;
-//        } catch (NoSuchElementException ex) {
-//            logMessage("열기 실패: 파일이 비었거나 DatabaseMen 의 형식이 아님." + ex.getLocalizedMessage());
-//            return new DatabaseMen();
-//        } catch (FileNotFoundException | UnsupportedEncodingException ex) {
-//            logMessage("열기 실패: " + ex.getLocalizedMessage());
-//            return new DatabaseMen();
-//        } finally {
-//            if (br != null) {
-//                try {
-//                    br.close();
-//                } catch (IOException ex) {
-//                }
-//            }
-//        }
-//    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -261,7 +230,7 @@ public class H2ServerAdmin extends javax.swing.JFrame {
         }
         for (int i = 0; i < serverList.size(); i++) {
             ServerMan serverMan = serverList.get(i);
-            if (serverMan.isRun()) {
+            if (serverMan.isLocal() && serverMan.isRun()) {
                 try {
                     serverMan.stop();
                 } catch (SQLException ex) {
@@ -271,23 +240,6 @@ public class H2ServerAdmin extends javax.swing.JFrame {
         }
         
         saveServerInformation();
-//        try {
-//            java.lang.reflect.Type databaseType = new TypeToken<ServerMen>() {
-//            }.getType();
-//            databaseWriter = new OutputStreamWriter(new FileOutputStream(DATABASE_MEN_PATH), "UTF-8");
-//            JsonWriter jsonWriter = new JsonWriter(databaseWriter);
-//            gson.toJson(databaseList, databaseType, jsonWriter);
-//            logMessage("데이터베이스 정보 저장 되었습니다.");
-//        } catch (UnsupportedEncodingException | FileNotFoundException ex) {
-//            logMessage("데이터베이스 정보 저장 중 에러: " + ex.getLocalizedMessage());
-//        } finally {
-//            if (databaseWriter != null) {
-//                try {
-//                    databaseWriter.close();
-//                } catch (IOException ex) {
-//                }
-//            }
-//        }
         setVisible(false);
         System.exit(0);
     }//GEN-LAST:event_formWindowClosing
@@ -295,7 +247,6 @@ public class H2ServerAdmin extends javax.swing.JFrame {
     private void saveServerInformation() {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         Writer serverWriter = null;
-//        Writer databaseWriter = null;
 
         try {
             java.lang.reflect.Type serverType = new TypeToken<ServerMen>() {
@@ -395,7 +346,6 @@ public class H2ServerAdmin extends javax.swing.JFrame {
         } else {
             logMessage("server 생성 실패: " + serverList.getMessage());
             dialog.dispose();
-            return;
         }
     }//GEN-LAST:event_jButtonAddServerActionPerformed
 

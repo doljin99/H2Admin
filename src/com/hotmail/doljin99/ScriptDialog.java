@@ -420,7 +420,6 @@ public class ScriptDialog extends javax.swing.JDialog {
         jCheckBoxPrepared.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(jCheckBoxPrepared);
 
-        jCheckBoxByKey.setSelected(true);
         jCheckBoxByKey.setText("by key");
         jCheckBoxByKey.setToolTipText("primary key를 이용한 WHERE구문 적용");
         jCheckBoxByKey.setFocusable(false);
