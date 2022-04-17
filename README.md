@@ -16,3 +16,66 @@ IoT, Home, Edge 컴퓨팅 환경에서 발생하는 많은 양의 데이터를 �
 8.	이슈 공지시에는 발생한 환경, 해결 방안 등에 관련된 구체적인 자료와 의견들을 최대한 기술하여 공지하도록 합니다.
 9.	이슈를 해결해야 하는 담당자는 이슈를 인지했을 때, 원인, 처리 방향에 대한 내용 등을 공지하고 해결이 되었을 때 처리방법과 결과를 최대한 빨리 공지합니다.
 10.	이슈를 처리할 담당자가 원인을 찾기 힘들거나 해결 방안을 구하기 어려울 때에는 공개적으로 전체 팀원들에게 도움을 요청하도록 하고 팀원들은 적극적으로 문제해결을 위한 의견을 제시하도록 합니다.
+
+# 외부 라이브러리 License
+
+1.	Apache commons
+
+      License: https://apache.org/licenses/LICENSE-2.0
+      
+      source: https://commons.apache.org/
+      
+2.	gson-2.8.6
+
+      License: https://apache.org/licenses/LICENSE-2.0
+      
+      source: https://github.com/google/gson
+      
+3.	h2-2.1.210
+
+      License: MPL 2.0 (Mozilla Public License Version 2.0) or EPL 1.0 (Eclipse Public License)
+      
+      source: https://github.com/h2database/h2database
+      
+4.	jBcrypt 
+
+      License: https://github.com/jeremyh/jBCrypt/blob/master/LICENSE
+      
+      source: https://github.com/jeremyh/jBCrypt
+      
+5.	jlfgr-1_0210 
+
+      License: Oracle License Agreement
+      
+      source: https://www.oracle.com/java/technologies/java-archive-downloads-java-client-downloads.html
+      
+6.	json-simple-1.1.1210 
+
+      License: https://apache.org/licenses/LICENSE-2.0
+      
+      source: https://github.com/fangyidong/json-simple
+      
+7.	log4j-api-2.17.2210 
+
+      License: https://apache.org/licenses/LICENSE-2.0
+      
+      source: https://logging.apache.org/log4j/2.x/
+      
+8.	Apache poi-5.2 
+
+      License: https://apache.org/licenses/LICENSE-2.0
+      
+      source: https://poi.apache.org/
+      
+9.	SparseBitSet-1.2210 
+
+      License: https://apache.org/licenses/LICENSE-2.0
+      
+      source: https://github.com/brettwooldridge/SparseBitSet
+      
+10.	xmlbeans-5.0.3210 
+
+      License: https://apache.org/licenses/LICENSE-2.0
+      
+      source: https://xmlbeans.apache.org/
+
