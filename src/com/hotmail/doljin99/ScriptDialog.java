@@ -12,10 +12,12 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -680,6 +682,10 @@ public class ScriptDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonScriptSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonScriptSelectActionPerformed
+        try {
+            jSpinnerLimit.commitEdit();
+        } catch (ParseException ex) {
+        }
         selectEditor.setText(makeSelectScript());
     }//GEN-LAST:event_jButtonScriptSelectActionPerformed
 
