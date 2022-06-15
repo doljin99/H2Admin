@@ -28,32 +28,13 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JButton" name="jButtonAdd">
-          <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/toolbarButtonGraphics/general/Add16.gif"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="&#xcd94;&#xac00;"/>
-            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-              <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
-                <BevelBorder/>
-              </Border>
-            </Property>
-            <Property name="focusable" type="boolean" value="false"/>
-            <Property name="verticalTextPosition" type="int" value="3"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonAddActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JToolBar$Separator" name="jSeparator1">
-        </Component>
         <Component class="javax.swing.JButton" name="jButtonStart">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/toolbarButtonGraphics/media/Play16.gif"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Start"/>
+            <Property name="toolTipText" type="java.lang.String" value="&#xc120;&#xd0dd;&#xb41c; &#xc11c;&#xbc84;&#xb97c; &#xc2e4;&#xd589;&#xc2dc;&#xd0b5;&#xb2c8;&#xb2e4;."/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
                 <BevelBorder/>
@@ -75,6 +56,7 @@
               <Image iconType="3" name="/toolbarButtonGraphics/media/Stop16.gif"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Stop"/>
+            <Property name="toolTipText" type="java.lang.String" value="&#xc120;&#xd0dd;&#xb41c; &#xc11c;&#xbc84;&#xb97c; &#xc815;&#xc9c0;&#xc2dc;&#xd0b5;&#xb2c8;&#xb2e4;."/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
                 <BevelBorder/>
@@ -90,12 +72,57 @@
         </Component>
         <Component class="javax.swing.JToolBar$Separator" name="jSeparator3">
         </Component>
+        <Component class="javax.swing.JButton" name="jButtonAddDatabase">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/toolbarButtonGraphics/general/Add16.gif"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="&#xb370;&#xc774;&#xd130;&#xbca0;&#xc774;&#xc2a4;"/>
+            <Property name="toolTipText" type="java.lang.String" value="&#xc120;&#xd0dd;&#xb41c; &#xc11c;&#xbc84;&#xc5d0; &#xb370;&#xc774;&#xd130;&#xbca0;&#xc774;&#xc2a4; &#xb610;&#xb294; &#xc120;&#xd0dd;&#xb41c; &#xb370;&#xc774;&#xd130;&#xbca0;&#xc774;&#xc2a4;&#xc5d0; &#xd14c;&#xc774;&#xbe14;&#xc744;&#xb97c; &#xcd94;&#xac00;&#xd569;&#xb2c8;&#xb2e4;."/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
+                <BevelBorder/>
+              </Border>
+            </Property>
+            <Property name="enabled" type="boolean" value="false"/>
+            <Property name="focusable" type="boolean" value="false"/>
+            <Property name="verticalTextPosition" type="int" value="3"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonAddDatabaseActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JToolBar$Separator" name="jSeparator1">
+        </Component>
+        <Component class="javax.swing.JButton" name="jButtonAddTable">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/toolbarButtonGraphics/general/Add16.gif"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="&#xd14c;&#xc774;&#xbe14;"/>
+            <Property name="toolTipText" type="java.lang.String" value="&#xc120;&#xd0dd;&#xb41c; &#xb370;&#xc774;&#xd130;&#xbca0;&#xc774;&#xc2a4;&#xc5d0; &#xd14c;&#xc774;&#xbe14;&#xc744; &#xcd94;&#xac00;&#xd560; &#xc218; &#xc788;&#xb294; &#xcc3d;&#xc774; &#xd45c;&#xc2dc;&#xb429;&#xb2c8;&#xb2e4;."/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
+                <BevelBorder/>
+              </Border>
+            </Property>
+            <Property name="enabled" type="boolean" value="false"/>
+            <Property name="focusable" type="boolean" value="false"/>
+            <Property name="verticalTextPosition" type="int" value="3"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonAddTableActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JToolBar$Separator" name="jSeparator5">
+        </Component>
         <Component class="javax.swing.JButton" name="jButtonReadCsv">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/toolbarButtonGraphics/general/Import16.gif"/>
             </Property>
             <Property name="text" type="java.lang.String" value="CSV &#xc77d;&#xae30;"/>
+            <Property name="toolTipText" type="java.lang.String" value="&#xc120;&#xd0dd;&#xb41c; &#xd14c;&#xc774;&#xbe14;&#xc5d0; CSV&#xd30c;&#xc77c;&#xb85c; &#xb370;&#xc774;&#xd130;&#xb97c; &#xc785;&#xb825;&#xd569;&#xb2c8;&#xb2e4;."/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
                 <BevelBorder/>
@@ -117,6 +144,7 @@
               <Image iconType="3" name="/com/hotmail/doljin99/definer.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="SQL"/>
+            <Property name="toolTipText" type="java.lang.String" value="&#xc120;&#xd0dd;&#xb41c; &#xd14c;&#xc774;&#xbe14;&#xc5d0; DML &#xc791;&#xc5c5;&#xc744; &#xd560; &#xc218; &#xc788;&#xb294; &#xb3c4;&#xad6c;&#xb97c; &#xc81c;&#xacf5;&#xd558;&#xb294; &#xcc3d;&#xc744; &#xc5fd;&#xb2c8;&#xb2e4;."/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
                 <BevelBorder/>

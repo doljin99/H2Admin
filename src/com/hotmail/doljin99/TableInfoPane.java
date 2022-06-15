@@ -4,6 +4,7 @@
  */
 package com.hotmail.doljin99;
 
+import java.util.ArrayList;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -62,6 +63,29 @@ public class TableInfoPane extends javax.swing.JPanel {
         MyUtilities.setTableHAllHeadersAlignment(jTablePrimaryKeys, SwingConstants.CENTER);
         MyUtilities.alignColumnWidth(jTablePrimaryKeys);
         jTablePrimaryKeys.validate();
+        
+        ArrayList<ForeignKey> foreignKeys = table.getForeignKeys();
+        if (foreignKeys == null || foreignKeys.isEmpty()) {
+            return;
+        }
+        DefaultTableModel foreignKeyTableModel = (DefaultTableModel) jTableForeignKey.getModel();
+        Object [] row = new Object[foreignKeyTableModel.getColumnCount()];
+        for (int i = 0; i < foreignKeys.size(); i++) {
+            ForeignKey foreignKey = foreignKeys.get(i);
+            row[0] = foreignKey.getForeignKeyName();
+            row[1] = foreignKey.getForeignKeyColumn();
+            row[2] = foreignKey.getImportedTable();
+            row[3] = foreignKey.getKeySeq();
+            row[4] = foreignKey.getImportedKeyColumn();
+            row[5] = foreignKey.getUpdateRuleString();
+            row[6] = foreignKey.getDeleteRuleString();
+            row[7] = foreignKey.getDeferrabilityString();
+            
+            foreignKeyTableModel.addRow(row);
+        }
+        MyUtilities.setTableHAllHeadersAlignment(jTableForeignKey, SwingConstants.CENTER);
+        MyUtilities.alignColumnWidth(jTableForeignKey);
+        jTableForeignKey.validate();
     }
 
     /**
@@ -97,6 +121,9 @@ public class TableInfoPane extends javax.swing.JPanel {
         jTablePrimaryKeys = new javax.swing.JTable();
         jLabel11 = new javax.swing.JLabel();
         jTextFieldPrimaryKeyName = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTableForeignKey = new javax.swing.JTable();
 
         setToolTipText("");
 
@@ -133,7 +160,8 @@ public class TableInfoPane extends javax.swing.JPanel {
 
         jTextFieldTypeSchem.setEditable(false);
 
-        jLabel9.setText("selfReferencingColName");
+        jLabel9.setText("self Ref.Col.");
+        jLabel9.setToolTipText("selfReferencingColName");
 
         jTextFieldSelfReferencingColName.setEditable(false);
         jTextFieldSelfReferencingColName.setToolTipText("name of the designated \"identifier\" column of a typed table (may be null)");
@@ -169,63 +197,96 @@ public class TableInfoPane extends javax.swing.JPanel {
         jScrollPane1.setViewportView(jTablePrimaryKeys);
 
         jLabel11.setText("Primary Keys");
+        jLabel11.setToolTipText("");
 
         jTextFieldPrimaryKeyName.setEditable(false);
+
+        jLabel12.setText("Forign Key");
+        jLabel12.setToolTipText("");
+
+        jTableForeignKey.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "FK 이름", "FK 컬럼", "PK 테이블", "Key Seq.", "PK 컬럼", "수정규칙", "삭제규칙", "Defferablilty"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.Short.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(jTableForeignKey);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel8))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextFieldTypeName, javax.swing.GroupLayout.DEFAULT_SIZE, 608, Short.MAX_VALUE)
-                            .addComponent(jTextFieldTypeSchem)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldSelfReferencingColName))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGap(37, 37, 37)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jTextFieldServerName, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 617, Short.MAX_VALUE)
+                            .addComponent(jTextFieldJdbcUrl)
+                            .addComponent(jTextFieldTableCat, javax.swing.GroupLayout.Alignment.LEADING)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addGap(21, 21, 21)
+                        .addComponent(jTextFieldPrimaryKeyName))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addGap(18, 18, 18)
+                        .addComponent(jTextFieldRefGeneration))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel6)
+                            .addComponent(jLabel7)
                             .addComponent(jLabel5)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3)
                             .addComponent(jLabel4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextFieldJdbcUrl, javax.swing.GroupLayout.DEFAULT_SIZE, 608, Short.MAX_VALUE)
-                            .addComponent(jTextFieldServerName, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jTextFieldTableCat, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jTextFieldTableName, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jTextFieldTableType, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jTextFieldTypeCat, javax.swing.GroupLayout.Alignment.TRAILING)))
+                        .addGap(24, 24, 24)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jTextFieldTableType, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 617, Short.MAX_VALUE)
+                            .addComponent(jTextFieldTypeCat, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextFieldTypeSchem, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextFieldTableName)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel10)
-                                .addGap(18, 18, 18))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel11)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel8))
+                        .addGap(27, 27, 27)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 608, Short.MAX_VALUE)
-                            .addComponent(jTextFieldRefGeneration)
-                            .addComponent(jTextFieldPrimaryKeyName))))
-                .addContainerGap())
+                            .addComponent(jTextFieldSelfReferencingColName, javax.swing.GroupLayout.DEFAULT_SIZE, 617, Short.MAX_VALUE)
+                            .addComponent(jTextFieldTypeName)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel12)
+                        .addGap(33, 33, 33)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane2)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 617, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jTextFieldJdbcUrl, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -264,12 +325,16 @@ public class TableInfoPane extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
                     .addComponent(jTextFieldRefGeneration, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
                     .addComponent(jTextFieldPrimaryKeyName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel12)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -279,6 +344,7 @@ public class TableInfoPane extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -288,6 +354,8 @@ public class TableInfoPane extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTableForeignKey;
     private javax.swing.JTable jTablePrimaryKeys;
     private javax.swing.JTextField jTextFieldJdbcUrl;
     private javax.swing.JTextField jTextFieldPrimaryKeyName;
