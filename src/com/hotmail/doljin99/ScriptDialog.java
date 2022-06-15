@@ -12,6 +12,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -28,19 +30,22 @@ public class ScriptDialog extends javax.swing.JDialog {
     private final Tables tables;
     private Table selectedTable;
     private final TableColumns tableColumns;
+    
+    private List<String> codeCompletionList;
 
     private SimpleEditor selectEditor;
     private SimpleEditor insertEditor;
     private SimpleEditor updateEditor;
     private SimpleEditor deleteEditor;
-    private SimpleEditor sqlEditor;
+    private SimpleEditor sqlEditor;    
 
-    ScriptDialog(Frame frame, boolean modal, ServerMan serverMan, DatabaseMan databaseMan, Tables tables, String tableName, TableColumns tableColumns) {
+    ScriptDialog(Frame frame, boolean modal, ServerMan serverMan, DatabaseMan databaseMan, Tables tables, String tableName, TableColumns tableColumns, List<String> codeCompletionList) {
         super(frame, modal);
         this.serverMan = serverMan;
         this.databaseMan = databaseMan;
         this.tables = tables;
         this.tableColumns = tableColumns;
+        this.codeCompletionList = codeCompletionList;
 
         initComponents();
 
@@ -58,11 +63,11 @@ public class ScriptDialog extends javax.swing.JDialog {
         jComboBoxTables.setSelectedItem(tableName);
         jComboBoxTables.validate();
 
-        selectEditor = new SimpleEditor(jTextAreaStatus);
-        insertEditor = new SimpleEditor(jTextAreaStatus);
-        updateEditor = new SimpleEditor(jTextAreaStatus);
-        deleteEditor = new SimpleEditor(jTextAreaStatus);
-        sqlEditor = new SimpleEditor(jTextAreaStatus);
+        selectEditor = new SimpleEditor(jTextAreaStatus, codeCompletionList);
+        insertEditor = new SimpleEditor(jTextAreaStatus, codeCompletionList);
+        updateEditor = new SimpleEditor(jTextAreaStatus, codeCompletionList);
+        deleteEditor = new SimpleEditor(jTextAreaStatus, codeCompletionList);
+        sqlEditor = new SimpleEditor(jTextAreaStatus, codeCompletionList);
         setSimpleEditor(jPanelSelect, selectEditor);
         setSimpleEditor(jPanelInsert, insertEditor);
         setSimpleEditor(jPanelUpdate, updateEditor);
@@ -680,6 +685,10 @@ public class ScriptDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonScriptSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonScriptSelectActionPerformed
+        try {
+            jSpinnerLimit.commitEdit();
+        } catch (ParseException ex) {
+        }
         selectEditor.setText(makeSelectScript());
     }//GEN-LAST:event_jButtonScriptSelectActionPerformed
 

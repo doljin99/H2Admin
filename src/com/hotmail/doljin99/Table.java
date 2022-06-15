@@ -4,6 +4,8 @@
  */
 package com.hotmail.doljin99;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author dolji
@@ -50,11 +52,31 @@ public class Table {
     private String typeName;
     private String selfReferencingColName;
     private String refGeneration;
-    
     /**
      * Prinary Key
      */
-    private PrimaryKeys primaryKeys;
+    private PrimaryKeys primaryKeys;    
+    private ArrayList<ForeignKey> ForeignKeys;
+
+    /**
+     * Get the value of ForeignKeys
+     *
+     * @return the value of ForeignKeys
+     */
+    public ArrayList<ForeignKey> getForeignKeys() {
+        return ForeignKeys;
+    }
+
+    /**
+     * Set the value of ForeignKeys
+     *
+     * @param ForeignKeys new value of ForeignKeys
+     */
+    public void setForeignKeys(ArrayList<ForeignKey> ForeignKeys) {
+        this.ForeignKeys = ForeignKeys;
+    }
+
+    
 
     public String getServerName() {
         return serverName;

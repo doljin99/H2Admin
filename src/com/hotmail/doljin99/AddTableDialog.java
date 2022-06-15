@@ -73,10 +73,10 @@ public class AddTableDialog extends javax.swing.JDialog {
         jButtonExecute = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
         jButtonCancel = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
+        jSplitPane1 = new javax.swing.JSplitPane();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextAreaSql = new javax.swing.JTextArea();
-        jPanel2 = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextAreaStatus = new javax.swing.JTextArea();
 
@@ -116,7 +116,7 @@ public class AddTableDialog extends javax.swing.JDialog {
 
         getContentPane().add(jToolBar1, java.awt.BorderLayout.NORTH);
 
-        jPanel1.setLayout(new java.awt.BorderLayout());
+        jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
         jTextAreaSql.setColumns(20);
         jTextAreaSql.setLineWrap(true);
@@ -125,11 +125,9 @@ public class AddTableDialog extends javax.swing.JDialog {
         jTextAreaSql.setWrapStyleWord(true);
         jScrollPane2.setViewportView(jTextAreaSql);
 
-        jPanel1.add(jScrollPane2, java.awt.BorderLayout.CENTER);
+        jSplitPane1.setTopComponent(jScrollPane2);
 
-        getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
-
-        jPanel2.setLayout(new java.awt.BorderLayout());
+        jPanel1.setLayout(new java.awt.BorderLayout());
 
         jTextAreaStatus.setEditable(false);
         jTextAreaStatus.setColumns(20);
@@ -139,9 +137,11 @@ public class AddTableDialog extends javax.swing.JDialog {
         jTextAreaStatus.setWrapStyleWord(true);
         jScrollPane1.setViewportView(jTextAreaStatus);
 
-        jPanel2.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        jPanel1.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
-        getContentPane().add(jPanel2, java.awt.BorderLayout.SOUTH);
+        jSplitPane1.setBottomComponent(jPanel1);
+
+        getContentPane().add(jSplitPane1, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -188,12 +188,12 @@ public class AddTableDialog extends javax.swing.JDialog {
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonExecute;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JMenuItem jPopmenuPaste;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JToolBar.Separator jSeparator1;
+    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTextArea jTextAreaSql;
     private javax.swing.JTextArea jTextAreaStatus;
     private javax.swing.JToolBar jToolBar1;

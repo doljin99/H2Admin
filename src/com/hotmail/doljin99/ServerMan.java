@@ -411,6 +411,7 @@ public class ServerMan {
         if (password == null) {
             password = "";
         }
-        Server.shutdownTcpServer("tcp://" + hostAddress + ":" + getPort(), password, true, false);
+        Server.shutdownTcpServer("tcp://" + hostAddress + ":" + getPort(), password, false, false);
+        System.out.println("stop url = " + "tcp://" + hostAddress + ":" + getPort() + ", password = " + password);
     }
 }

@@ -4,6 +4,7 @@
  */
 package com.hotmail.doljin99;
 
+import codecompletionlibrary.MakeWordList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -20,6 +21,7 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.NoSuchElementException;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -37,6 +39,8 @@ public class H2ServerAdmin extends javax.swing.JFrame {
 
     private ServerMen serverList;
     private ServerTreePane serverTreePane;
+    
+    private List<String> codeCompletionList;
 
     /**
      * Creates new form HeServerAdmin
@@ -48,12 +52,14 @@ public class H2ServerAdmin extends javax.swing.JFrame {
     }
 
     private void init() {
+        
+        codeCompletionList = MakeWordList.make();
 
-        setIconImage(new ImageIcon(H2ServerAdmin.class.getResource("h2admin.png")).getImage());
+        setIconImage(new ImageIcon(H2ServerAdmin.class.getResource("h2adminpro.png")).getImage());
         setSize(920, 810);
         jSplitPane1.setDividerLocation(645);
         serverList = readServerMen();
-        serverTreePane = new ServerTreePane(serverList, jTextAreaStatus);
+        serverTreePane = new ServerTreePane(serverList, jTextAreaStatus, codeCompletionList);
         jPanelServers.add(serverTreePane, BorderLayout.CENTER);
         jPanelServers.validate();
         setLocationRelativeTo(this);
@@ -76,8 +82,11 @@ public class H2ServerAdmin extends javax.swing.JFrame {
         } catch (NoSuchElementException ex) {
             logMessage("열기 실패: 파일이 비었거나 ServerMen 의 형식이 아님." + ex.getLocalizedMessage());
             return new ServerMen();
-        } catch (FileNotFoundException | UnsupportedEncodingException ex) {
-            logMessage("열기 실패: " + ex.getLocalizedMessage());
+        } catch (FileNotFoundException ex) {
+            logMessage("서버 목록이 비었습니다: 서버를 추가하십시오.");
+            return new ServerMen();
+        } catch (UnsupportedEncodingException ex) {
+            logMessage("열기 실패:  " + ex.getLocalizedMessage());
             return new ServerMen();
         } finally {
             if (br != null) {
@@ -129,6 +138,7 @@ public class H2ServerAdmin extends javax.swing.JFrame {
 
         jButtonAddServer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/New16.gif"))); // NOI18N
         jButtonAddServer.setText("server");
+        jButtonAddServer.setToolTipText("새로운 local 또는 remote  H2 데아터베이스를 등록합니다.");
         jButtonAddServer.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonAddServer.setFocusable(false);
         jButtonAddServer.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -142,6 +152,7 @@ public class H2ServerAdmin extends javax.swing.JFrame {
 
         jButtonStopServer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Stop16.gif"))); // NOI18N
         jButtonStopServer.setText("stop server");
+        jButtonStopServer.setToolTipText("선택된 데이터베이스 서버를 정지시킵니다.");
         jButtonStopServer.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonStopServer.setFocusable(false);
         jButtonStopServer.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -155,6 +166,7 @@ public class H2ServerAdmin extends javax.swing.JFrame {
 
         jButtonDeleteServer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Delete16.gif"))); // NOI18N
         jButtonDeleteServer.setText("server");
+        jButtonDeleteServer.setToolTipText("선택된 데이터베이스 서버를 삭제합니다.");
         jButtonDeleteServer.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonDeleteServer.setFocusable(false);
         jButtonDeleteServer.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -168,6 +180,7 @@ public class H2ServerAdmin extends javax.swing.JFrame {
 
         jButtonRefreshTree.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Refresh16.gif"))); // NOI18N
         jButtonRefreshTree.setText("Refresh tree");
+        jButtonRefreshTree.setToolTipText("서버 목록 트리를 최신 정보로 표시합니다.");
         jButtonRefreshTree.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonRefreshTree.setFocusable(false);
         jButtonRefreshTree.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -290,7 +303,7 @@ public class H2ServerAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonRefreshTreeActionPerformed
 
     private void refreshTree() {
-        serverTreePane = new ServerTreePane(serverList, jTextAreaStatus);
+        serverTreePane = new ServerTreePane(serverList, jTextAreaStatus, codeCompletionList);
         TreePath selected = serverTreePane.getSelectedPath();
 
         MyUtilities.setCenterComponent(jPanelServers, serverTreePane);

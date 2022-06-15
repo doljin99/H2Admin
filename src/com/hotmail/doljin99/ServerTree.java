@@ -6,7 +6,6 @@ package com.hotmail.doljin99;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -22,12 +21,15 @@ import javax.swing.tree.TreeSelectionModel;
  */
 public class ServerTree extends JTree {
 
-    public ServerTree() {
-        this(new DefaultMutableTreeNode("servers"));
+    private ServerMen serverList;
+
+    public ServerTree(ServerMen serverList) {
+        this(new DefaultMutableTreeNode("servers"), serverList);
     }
 
-    public ServerTree(TreeNode root) {
+    public ServerTree(TreeNode root, ServerMen serverList) {
         super(root);
+        this.serverList = serverList;
 
         init();
     }
@@ -38,6 +40,16 @@ public class ServerTree extends JTree {
 
         //Listen for when the selection changes.
         addTreeSelectionListener(new SelectionListener());
+    }
+
+    ServerMan findServerMan(String name) {
+        for (int i = 0; i < serverList.size(); i++) {
+            ServerMan serverMan = serverList.get(i);
+            if (name.equals(serverMan.getServerName())) {
+                return serverMan;
+            }
+        }
+        return null;
     }
 
     class SelectionListener implements TreeSelectionListener {
@@ -56,6 +68,8 @@ public class ServerTree extends JTree {
         Icon defaultLeafIcon;
         ImageIcon globalIcon;
         ImageIcon serverIcon;
+        ImageIcon serverOnIcon;
+        ImageIcon serverOffIcon;
         ImageIcon dbmsIcon;
         ImageIcon dbIcon;
         ImageIcon tableIcon;
@@ -70,6 +84,8 @@ public class ServerTree extends JTree {
             defaultLeafIcon = this.getDefaultLeafIcon();
             globalIcon = createImageIcon("global.png");
             serverIcon = createImageIcon("server.png");
+            serverOnIcon = createImageIcon("serverOn.png");
+            serverOffIcon = createImageIcon("serverOff.png");
             dbmsIcon = createImageIcon("dbms.png");
             dbIcon = createImageIcon("db.png");
             tableIcon = createImageIcon("table.png");
@@ -90,7 +106,13 @@ public class ServerTree extends JTree {
                     setIcon(globalIcon);
                     break;
                 case 2:
-                    setIcon(serverIcon);
+//                    System.out.println("tp.toString = " + tp.getLastPathComponent().toString());
+                    ServerMan serverMan = findServerMan(tp.getLastPathComponent().toString());
+                    if (serverMan != null && serverMan.isRun()) {
+                        setIcon(serverOnIcon);
+                    } else {
+                        setIcon(serverOffIcon);
+                    }                    
                     break;
                 case 3:
                     setIcon(dbmsIcon);
