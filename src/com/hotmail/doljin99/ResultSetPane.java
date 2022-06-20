@@ -46,10 +46,10 @@ public class ResultSetPane extends javax.swing.JPanel {
         setEncodingComboBox();
         jTextAreaScript.setText(script);
         
-        queryAndDisplay();
+        queryAndDisplay(script);
     }
     
-    private void queryAndDisplay() {        
+    private void queryAndDisplay(String selectScript) {        
         DefaultTableModel model = (DefaultTableModel) jTableResult.getModel();
         model.setColumnCount(0);
         model.setRowCount(0);
@@ -68,7 +68,7 @@ public class ResultSetPane extends javax.swing.JPanel {
             }
             
             statement = connection.createStatement();
-            resultSet = statement.executeQuery(script);
+            resultSet = statement.executeQuery(selectScript);
             
             metaData = resultSet.getMetaData();
             
@@ -137,6 +137,10 @@ public class ResultSetPane extends javax.swing.JPanel {
     }
 
     void save2Csv() {
+        String selectScript = jTextAreaScript.getText();
+        if (selectScript == null || selectScript.isEmpty()) {
+            selectScript = script;
+        }
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("CSV FILE", "csv", "csv");
         chooser.setFileFilter(filter);
@@ -160,7 +164,7 @@ public class ResultSetPane extends javax.swing.JPanel {
             }
             
             statement = connection.createStatement();
-            resultSet = statement.executeQuery(script);
+            resultSet = statement.executeQuery(selectScript);
             Csv csv = new Csv();
             csv.write(file.getAbsolutePath(), resultSet, (String) jComboBoxEncoding.getSelectedItem());
         } catch (SQLException ex) {
@@ -319,7 +323,12 @@ public class ResultSetPane extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonSaveCsvActionPerformed
 
     private void jButtonRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRefreshActionPerformed
-        queryAndDisplay();
+        String selectScript = jTextAreaScript.getText();
+        if (selectScript == null || selectScript.isEmpty()) {
+            queryAndDisplay(script);
+        } else {
+            queryAndDisplay(selectScript);
+        }
     }//GEN-LAST:event_jButtonRefreshActionPerformed
 
 
