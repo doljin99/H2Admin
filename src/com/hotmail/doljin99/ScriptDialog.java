@@ -121,6 +121,9 @@ public class ScriptDialog extends javax.swing.JDialog {
         }
         StringBuilder script = new StringBuilder("SELECT \n");
         for (int i = 0; i < rowCount; i++) {
+            if (!(boolean) jTableColumns.getValueAt(i, 0)) {
+                continue;
+            }
             script.append("\t");
             script.append(jTableColumns.getValueAt(i, 2));
             String as = (String) jTableColumns.getValueAt(i, 9);
