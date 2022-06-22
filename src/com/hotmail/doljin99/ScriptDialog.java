@@ -827,7 +827,7 @@ public class ScriptDialog extends javax.swing.JDialog {
         }
 
         String temp = script.toUpperCase();
-        if (!temp.contains(" WHERE ")) {
+        if (!MyUtilities.containWord(temp, "WHERE")) {
             int result = JOptionPane.showConfirmDialog(this, "where 절이 없습니다. 계속 하시겠습니까?", "where 구문 여부 확인", JOptionPane.OK_CANCEL_OPTION);
             if (result != JOptionPane.OK_OPTION) {
                 setStatus("update 실행을 취소하였습니다.");
@@ -864,7 +864,7 @@ public class ScriptDialog extends javax.swing.JDialog {
             }
         }
     }//GEN-LAST:event_jButtonExecuteUpdateActionPerformed
-
+    
     private void jButtonScriptUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonScriptUpdateActionPerformed
         updateEditor.setText(makeUpdateScript());
     }//GEN-LAST:event_jButtonScriptUpdateActionPerformed

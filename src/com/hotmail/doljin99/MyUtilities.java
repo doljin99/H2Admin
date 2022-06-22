@@ -240,16 +240,17 @@ public class MyUtilities {
             grid.getColumnModel().getColumn(i).setHeaderRenderer(new JTableHeaderRenderer(alignment));
         }
     }
-    
+
     /**
      * JTable의 index 위치의 헤더를 지정한 alignment로 설정.
+     *
      * @param grid JTable
      * @param index header 위치
      * @param alignment SwingConstants 의 LEFT, CENTER, RIGHT,LEADING, TRAILING
      */
     public static void setTableHeaderAlignment(JTable grid, int index, int alignment) {
         if (grid == null) {
-            return;            
+            return;
         }
         if (grid.getColumnCount() <= index) {
             return;
@@ -258,7 +259,8 @@ public class MyUtilities {
     }
 
     static class JTableHeaderRenderer implements TableCellRenderer {
-        private static final int [] AVAILABLE_ALIGNMENT = { 
+
+        private static final int[] AVAILABLE_ALIGNMENT = {
             SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.RIGHT, SwingConstants.LEADING, SwingConstants.TRAILING
         };
         private int horizontalAlignment = SwingConstants.LEFT;
@@ -270,17 +272,72 @@ public class MyUtilities {
                     this.horizontalAlignment = horizontalAlignment;
                     break;
                 }
-            }            
+            }
         }
 
         @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, 
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
             boolean hasFocus, int row, int column) {
-            
+
             TableCellRenderer r = table.getTableHeader().getDefaultRenderer();
             JLabel label = (JLabel) r.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             label.setHorizontalAlignment(horizontalAlignment);
             return label;
         }
+    }
+
+    /**
+     * 주어진 문자열에 대해 특정 단어의 좌,우가 공백 문자인 순수 단어로 포함되었는지 여부를 판단 특정단어로 시작하거나 끝나는 경우도
+     * 참으로 표현한다. value가 "WHERE COLUMN_A = ?"일 때 word가 "WHERE" 인 경우 참 value가
+     * "FROM TABLE_A WHERE" 일 때 word가 "WHERE"인 경우 참 value가 "FROM TABLE_A WHERE
+     * COLUMN_A = ?"일 때 word가 "WHERE"인 경우 참
+     *
+     * @param value
+     * @param word
+     * @return
+     */
+    public static boolean containWord(String value, String word) {
+        if (value == null || value.isEmpty()) {
+            return false;
+        }
+        if (word == null || word.isEmpty()) {
+            return false;
+        }
+        int index = 0;
+        int offset = 0;
+        String text = value;
+        while (index >= 0 && offset < text.length()) {
+            index = text.indexOf(word, offset);
+//            System.out.println("index = " + index);
+//            System.out.println("offset = " + offset);
+            if (index < 0) {
+                offset = index + word.length();
+                continue;
+            }
+            int checkPoint2 = index + word.length();
+            if (index == 0) {
+                if (checkPoint2 >= text.length()) {
+                    return true;
+                }
+                if ((Character.isWhitespace(text.charAt(word.length())))) {
+                    return true;
+                }
+            } else {
+                if (!(Character.isWhitespace(text.charAt(index - 1)))) {
+//                    System.out.println("character at index - 1 = <" + text.charAt(index - 1) + ">");
+                    offset = index + word.length();
+                    continue;
+                }
+                if (checkPoint2 >= text.length()) {
+                    return true;
+                }
+                if ((Character.isWhitespace(text.charAt(checkPoint2)))) {
+//                    System.out.println("character at checkPoint2 = <" + text.charAt(checkPoint2) + ">");
+                    return true;
+                }
+            }
+            offset = index + word.length();
+        }
+        return false;
     }
 }
