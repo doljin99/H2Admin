@@ -110,7 +110,7 @@ public class ScriptDialog extends javax.swing.JDialog {
 
             model.addRow(row);
         }
-        MyUtilities.alignColumnWidth(jTableColumns);
+        H2AUtilities.alignColumnWidth(jTableColumns);
         jTableColumns.validate();
     }
 
@@ -696,11 +696,11 @@ public class ScriptDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonScriptSelectActionPerformed
 
     private void jButtonUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonUpActionPerformed
-        MyUtilities.upTableRow(jTableColumns);
+        H2AUtilities.upTableRow(jTableColumns);
     }//GEN-LAST:event_jButtonUpActionPerformed
 
     private void jButtonDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDownActionPerformed
-        MyUtilities.downTableRow(jTableColumns);
+        H2AUtilities.downTableRow(jTableColumns);
     }//GEN-LAST:event_jButtonDownActionPerformed
 
     private void jButtonExecuteQueryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExecuteQueryActionPerformed
@@ -827,7 +827,7 @@ public class ScriptDialog extends javax.swing.JDialog {
         }
 
         String temp = script.toUpperCase();
-        if (!MyUtilities.containWord(temp, "WHERE")) {
+        if (!H2AUtilities.containWord(temp, "WHERE")) {
             int result = JOptionPane.showConfirmDialog(this, "where 절이 없습니다. 계속 하시겠습니까?", "where 구문 여부 확인", JOptionPane.OK_CANCEL_OPTION);
             if (result != JOptionPane.OK_OPTION) {
                 setStatus("update 실행을 취소하였습니다.");

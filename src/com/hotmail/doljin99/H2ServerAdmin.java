@@ -306,7 +306,7 @@ public class H2ServerAdmin extends javax.swing.JFrame {
         serverTreePane = new ServerTreePane(serverList, jTextAreaStatus, codeCompletionList);
         TreePath selected = serverTreePane.getSelectedPath();
 
-        MyUtilities.setCenterComponent(jPanelServers, serverTreePane);
+        H2AUtilities.setCenterComponent(jPanelServers, serverTreePane);
         serverTreePane.setSelectionPath(selected);
         serverTreePane.validate();
     }

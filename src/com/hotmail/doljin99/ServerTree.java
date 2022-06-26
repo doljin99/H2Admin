@@ -39,7 +39,7 @@ public class ServerTree extends JTree {
         getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
         //Listen for when the selection changes.
-        addTreeSelectionListener(new SelectionListener());
+//        addTreeSelectionListener(new SelectionListener());
     }
 
     ServerMan findServerMan(String name) {

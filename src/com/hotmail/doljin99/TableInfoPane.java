@@ -60,8 +60,8 @@ public class TableInfoPane extends javax.swing.JPanel {
                 model.addRow(row);
             }
         }
-        MyUtilities.setTableHAllHeadersAlignment(jTablePrimaryKeys, SwingConstants.CENTER);
-        MyUtilities.alignColumnWidth(jTablePrimaryKeys);
+        H2AUtilities.setTableHAllHeadersAlignment(jTablePrimaryKeys, SwingConstants.CENTER);
+        H2AUtilities.alignColumnWidth(jTablePrimaryKeys);
         jTablePrimaryKeys.validate();
         
         ArrayList<ForeignKey> foreignKeys = table.getForeignKeys();
@@ -83,8 +83,8 @@ public class TableInfoPane extends javax.swing.JPanel {
             
             foreignKeyTableModel.addRow(row);
         }
-        MyUtilities.setTableHAllHeadersAlignment(jTableForeignKey, SwingConstants.CENTER);
-        MyUtilities.alignColumnWidth(jTableForeignKey);
+        H2AUtilities.setTableHAllHeadersAlignment(jTableForeignKey, SwingConstants.CENTER);
+        H2AUtilities.alignColumnWidth(jTableForeignKey);
         jTableForeignKey.validate();
     }
 

@@ -8,16 +8,20 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.Icon;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import org.h2.tools.Server;
@@ -26,7 +30,7 @@ import org.h2.tools.Server;
  *
  * @author dolji
  */
-public class MyUtilities {
+public class H2AUtilities {
 
     public static boolean isAvailablePort(int portNr) {
         ServerSocket ignored = null;
@@ -339,5 +343,53 @@ public class MyUtilities {
             offset = index + word.length();
         }
         return false;
+    }
+    
+    public static File chooseDirectory() {
+        return chooseDirectory("디렉터리 선택");
+    }
+    
+    public static File chooseDirectory(String title) {
+        JFileChooser fileChooser = new JFileChooser();
+
+        fileChooser.setFileSelectionMode(
+            JFileChooser.FILES_AND_DIRECTORIES);
+
+        int option = fileChooser.showDialog(null, title);
+
+        File file = null;
+        if (option == JFileChooser.APPROVE_OPTION) {
+            file = fileChooser.getSelectedFile();
+            // if the user accidently click a file, then select the parent directory.
+            if (!file.isDirectory()) {
+                file = file.getParentFile();
+            }
+//            System.out.println("선택된 디렉터리: " + file);
+        }
+        return file;
+    }
+
+    public static File chooseFile(String extension) {
+        return chooseFile(extension, "파일 선택");
+    }
+
+    public static File chooseFile(String extension, String title) {
+        JFileChooser fileChooser = new JFileChooser();
+        
+        FileFilter filter = new FileNameExtensionFilter(extension.toUpperCase() + " File", extension);
+        fileChooser.setFileFilter(filter);
+
+        fileChooser.setFileSelectionMode(
+            JFileChooser.FILES_ONLY);
+
+        int option = fileChooser.showDialog(null, title);
+
+        File file = null;
+        if (option == JFileChooser.APPROVE_OPTION) {
+            file = fileChooser.getSelectedFile();
+
+//            System.out.println("선택된 파일: " + file);
+        }
+        return file;
     }
 }

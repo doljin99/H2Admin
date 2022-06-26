@@ -295,6 +295,8 @@ public class ServerTreePane extends javax.swing.JPanel {
         jSeparator3 = new javax.swing.JToolBar.Separator();
         jButtonAddDatabase = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
+        jButtonDatabaseBackup = new javax.swing.JButton();
+        jSeparator6 = new javax.swing.JToolBar.Separator();
         jButtonAddTable = new javax.swing.JButton();
         jSeparator5 = new javax.swing.JToolBar.Separator();
         jButtonReadCsv = new javax.swing.JButton();
@@ -352,6 +354,20 @@ public class ServerTreePane extends javax.swing.JPanel {
         });
         jToolBar1.add(jButtonAddDatabase);
         jToolBar1.add(jSeparator1);
+
+        jButtonDatabaseBackup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/SaveAll16.gif"))); // NOI18N
+        jButtonDatabaseBackup.setText("백업");
+        jButtonDatabaseBackup.setToolTipText("데이터베이스를 백업합니다.");
+        jButtonDatabaseBackup.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonDatabaseBackup.setFocusable(false);
+        jButtonDatabaseBackup.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonDatabaseBackup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonDatabaseBackupActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButtonDatabaseBackup);
+        jToolBar1.add(jSeparator6);
 
         jButtonAddTable.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Add16.gif"))); // NOI18N
         jButtonAddTable.setText("테이블");
@@ -423,11 +439,16 @@ public class ServerTreePane extends javax.swing.JPanel {
         String databaseName = paths[2].toString();
         ServerMan serverMan = findServerMan(serverName);
         DatabaseMan databaseMan = serverMan.findDatabaseMan(serverName, databaseName);
-        AddTableDialog dialog = new AddTableDialog((Frame) SwingUtilities.getWindowAncestor(this), true, databaseMan);
+        AddTableDialog dialog = new AddTableDialog((Frame) SwingUtilities.getWindowAncestor(this), true, databaseMan, codeCompletionList);
         dialog.setSize(900, 600);
+        dialog.setLocationRelativeTo(null);
         dialog.setVisible(true);
+        boolean changed = dialog.isChanged();
         dialog.dispose();
-        makeTree();
+        if (changed) {
+            makeTree();
+            refreshTree();
+        }
     }
 
     private void jButtonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStartActionPerformed
@@ -554,6 +575,10 @@ public class ServerTreePane extends javax.swing.JPanel {
             return;
         }
         Object[] paths = selectionPath.getPath();
+        if (paths.length < 4) {
+            setStatus("서버 트리 정보가 정확하지 않습니다. \n refresh tree 버튼으로 새로고침 해 주시고 다시 시도해 주시기 바랍니다.");
+            return;
+        }
         String serverName = paths[1].toString();
         String databaseName = paths[2].toString();
         String tableName = paths[3].toString();
@@ -578,6 +603,43 @@ public class ServerTreePane extends javax.swing.JPanel {
         }
         addTable(selectionPath);
     }//GEN-LAST:event_jButtonAddTableActionPerformed
+
+    private void jButtonDatabaseBackupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDatabaseBackupActionPerformed
+        TreePath selectionPath = tree.getSelectionPath();
+        if (selectionPath == null || selectionPath.getPathCount() < 2) {
+            setStatus("먼저 백업할 서버나 데이터베이스를 선택하십시오.");
+            return;
+        }
+
+        Object[] paths = selectionPath.getPath();
+        String serverName = paths[1].toString();
+        ServerMan serverMan = findServerMan(serverName);
+        if (serverMan == null) {
+            setStatus("서버를 찾을 수 없습니다.: " + serverName);
+            return;
+        }
+
+        String databaseName = null;
+        DatabaseMan databaseMan = null;
+        if (paths.length >= 3) {
+            databaseName = paths[2].toString();
+            databaseMan = serverMan.findDatabaseMan(serverName, databaseName);
+        }
+        BackupDialog dialog = new BackupDialog((Frame) SwingUtilities.getWindowAncestor(this), true, serverMan, databaseMan);
+        dialog.setLocationRelativeTo(null);
+        dialog.setVisible(true);
+        if (dialog.isDone()) {
+            setStatus("backup이 실행되었습니다.");
+        } else {
+            setStatus("backup을 취소 또는 실패하였습니다.");
+        }
+        String [] messages = dialog.getMessage().split("\n");
+        dialog.dispose();
+        for (int i = 0; i < messages.length; i++) {
+            String message = messages[i];
+            setStatus("\t" + message);
+        }
+    }//GEN-LAST:event_jButtonDatabaseBackupActionPerformed
 
     private ArrayList<String> getColumnNames(ResultSetMetaData metaData) {
         ArrayList<String> columnNames = new ArrayList<>();
@@ -654,7 +716,6 @@ public class ServerTreePane extends javax.swing.JPanel {
         serverMan.addDatabase(databaseMan);
         dialog.dispose();
         refreshTree();
-        validate();
     }
 
     void refreshTree() {
@@ -664,6 +725,7 @@ public class ServerTreePane extends javax.swing.JPanel {
             tree.setSelectionPath(selectionPath);
         }
         tree.validate();
+        validate();
     }
 
     public void makeTree() {
@@ -702,21 +764,24 @@ public class ServerTreePane extends javax.swing.JPanel {
         }
 //        DefaultTreeModel model = new DefaultTreeModel(root);
 //        model.setRoot(root);
-        tree = new ServerTree(root, serverList);
-        tree.addTreeSelectionListener(new SelectionListener());
-        tree.validate();
-        JScrollPane scrollPane = new JScrollPane(tree);
         BorderLayout layout = (BorderLayout) jPanelTree.getLayout();
         Component component = layout.getLayoutComponent(BorderLayout.CENTER);
         if (component != null) {
             remove(layout.getLayoutComponent(BorderLayout.CENTER));
         }
+        tree = null;
+        tree = new ServerTree(root, serverList);
+        tree.addTreeSelectionListener(new SelectionListener());
+        tree.validate();
+        JScrollPane scrollPane = new JScrollPane(tree);
         jPanelTree.add(scrollPane, BorderLayout.CENTER);
         jPanelTree.validate();
 
         if (selectionPath != null) {
             tree.setSelectionPath(selectionPath);
+            tree.validate();
         }
+        validate();
     }
 
     private void addDatabaseNode(DefaultMutableTreeNode serverNode, ServerMan serverMan) {
@@ -762,6 +827,7 @@ public class ServerTreePane extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAddDatabase;
     private javax.swing.JButton jButtonAddTable;
+    private javax.swing.JButton jButtonDatabaseBackup;
     private javax.swing.JButton jButtonReadCsv;
     private javax.swing.JButton jButtonSql;
     private javax.swing.JButton jButtonStart;
@@ -773,6 +839,7 @@ public class ServerTreePane extends javax.swing.JPanel {
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator4;
     private javax.swing.JToolBar.Separator jSeparator5;
+    private javax.swing.JToolBar.Separator jSeparator6;
     private javax.swing.JSplitPane jSplitPaneServerTree;
     private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables

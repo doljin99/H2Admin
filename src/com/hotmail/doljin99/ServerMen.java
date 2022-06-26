@@ -42,7 +42,7 @@ public class ServerMen extends ArrayList<ServerMan> {
             int portNo;
             try {
                 portNo = Integer.valueOf(port);
-                if (!MyUtilities.isAvailablePort(portNo)) {
+                if (!H2AUtilities.isAvailablePort(portNo)) {
                     message = "사용 중인 port 번호입니다.";
                     return false;
                 }

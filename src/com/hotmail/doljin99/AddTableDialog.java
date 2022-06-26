@@ -4,9 +4,12 @@
  */
 package com.hotmail.doljin99;
 
+import com.hotmail.doljin99.simpleeditor.SimpleEditor;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
+import javax.swing.JTextArea;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -17,23 +20,32 @@ import javax.swing.event.DocumentListener;
 public class AddTableDialog extends javax.swing.JDialog {
 
     private final DatabaseMan databaseMan;
+    private final List<String> codeCompletionList;
+    
+    private SimpleEditor editor;
+    
+    private boolean changed;
     
     /**
      * Creates new form AddTableDialog
      * @param parent
      * @param modal
      * @param databaseMan
+     * @param codeCompletionList
      */
-    public AddTableDialog(java.awt.Frame parent, boolean modal, DatabaseMan databaseMan) {
+    public AddTableDialog(java.awt.Frame parent, boolean modal, DatabaseMan databaseMan, List<String> codeCompletionList) {
         super(parent, modal);
         initComponents();
         
         this.databaseMan = databaseMan;
+        this.codeCompletionList = codeCompletionList;
         
         init();
     }
     
     private void init() {
+        changed = false;
+        JTextArea jTextAreaSql = new JTextArea();
         jTextAreaSql.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -55,7 +67,9 @@ public class AddTableDialog extends javax.swing.JDialog {
                 }
             }
         });
-        setLocationRelativeTo(null);
+        editor = new SimpleEditor(jTextAreaSql, jTextAreaStatus, codeCompletionList);
+        H2AUtilities.setCenterComponent(jPanelScript, editor);
+        jSplitPane1.setDividerLocation(400);
     }
 
     /**
@@ -67,28 +81,16 @@ public class AddTableDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPopupMenu1 = new javax.swing.JPopupMenu();
-        jPopmenuPaste = new javax.swing.JMenuItem();
         jToolBar1 = new javax.swing.JToolBar();
         jButtonExecute = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
         jButtonCancel = new javax.swing.JButton();
         jSplitPane1 = new javax.swing.JSplitPane();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTextAreaSql = new javax.swing.JTextArea();
-        jPanel1 = new javax.swing.JPanel();
+        jPanelScript = new javax.swing.JPanel();
+        jPanelStatus = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextAreaStatus = new javax.swing.JTextArea();
 
-        jPopmenuPaste.setText("붙여넣기");
-        jPopmenuPaste.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jPopmenuPasteActionPerformed(evt);
-            }
-        });
-        jPopupMenu1.add(jPopmenuPaste);
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("테이블 추가 SQL 작업 창");
 
         jToolBar1.setRollover(true);
@@ -118,16 +120,10 @@ public class AddTableDialog extends javax.swing.JDialog {
 
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
-        jTextAreaSql.setColumns(20);
-        jTextAreaSql.setLineWrap(true);
-        jTextAreaSql.setRows(5);
-        jTextAreaSql.setTabSize(4);
-        jTextAreaSql.setWrapStyleWord(true);
-        jScrollPane2.setViewportView(jTextAreaSql);
+        jPanelScript.setLayout(new java.awt.BorderLayout());
+        jSplitPane1.setLeftComponent(jPanelScript);
 
-        jSplitPane1.setTopComponent(jScrollPane2);
-
-        jPanel1.setLayout(new java.awt.BorderLayout());
+        jPanelStatus.setLayout(new java.awt.BorderLayout());
 
         jTextAreaStatus.setEditable(false);
         jTextAreaStatus.setColumns(20);
@@ -137,18 +133,14 @@ public class AddTableDialog extends javax.swing.JDialog {
         jTextAreaStatus.setWrapStyleWord(true);
         jScrollPane1.setViewportView(jTextAreaStatus);
 
-        jPanel1.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        jPanelStatus.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
-        jSplitPane1.setBottomComponent(jPanel1);
+        jSplitPane1.setBottomComponent(jPanelStatus);
 
         getContentPane().add(jSplitPane1, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jPopmenuPasteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPopmenuPasteActionPerformed
-        jTextAreaSql.paste();
-    }//GEN-LAST:event_jPopmenuPasteActionPerformed
 
     private void jButtonExecuteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExecuteActionPerformed
         Connection connection;
@@ -160,8 +152,9 @@ public class AddTableDialog extends javax.swing.JDialog {
         Statement statement = null;
         try {
             statement = connection.createStatement();
-            int count = statement.executeUpdate(jTextAreaSql.getText());
+            int count = statement.executeUpdate(editor.getText());
             setStatus(count + " 행 영향을 줌.");
+            changed = true;
         } catch (SQLException ex) {
             setStatus("error: "+ ex.getLocalizedMessage());
         } finally {
@@ -178,6 +171,10 @@ public class AddTableDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_jButtonExecuteActionPerformed
 
+    public boolean isChanged() {
+        return changed;
+    }
+
     private void setStatus(String msg) {
         jTextAreaStatus.append(msg + "\n");
         jTextAreaStatus.setCaretPosition(jTextAreaStatus.getText().length());
@@ -187,14 +184,11 @@ public class AddTableDialog extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonExecute;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JMenuItem jPopmenuPaste;
-    private javax.swing.JPopupMenu jPopupMenu1;
+    private javax.swing.JPanel jPanelScript;
+    private javax.swing.JPanel jPanelStatus;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JSplitPane jSplitPane1;
-    private javax.swing.JTextArea jTextAreaSql;
     private javax.swing.JTextArea jTextAreaStatus;
     private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables

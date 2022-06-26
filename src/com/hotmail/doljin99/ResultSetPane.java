@@ -112,7 +112,7 @@ public class ResultSetPane extends javax.swing.JPanel {
                 } catch (SQLException ex) {
                 }
             }
-            MyUtilities.alignColumnWidth(jTableResult);
+            H2AUtilities.alignColumnWidth(jTableResult);
             jTableResult.validate();
             setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         }
