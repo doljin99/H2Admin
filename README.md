@@ -50,5 +50,5 @@
 10.	xmlbeans-5.0.3210   
       License: https://apache.org/licenses/LICENSE-2.0        
       source: https://xmlbeans.apache.org/
-11. SimpleEditor
+11. SimpleEditor  
       License: https://github.com/doljin99/H2Admin/wiki/SimpleEditor-library-License
