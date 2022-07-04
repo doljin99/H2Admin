@@ -52,3 +52,5 @@
       source: https://xmlbeans.apache.org/
 11. SimpleEditor  
       License: https://github.com/doljin99/H2Admin/wiki/SimpleEditor-library-License
+11. CodeCompletion 
+      License: https://github.com/doljin99/H2Admin/wiki/SimpleEditor-library-License
