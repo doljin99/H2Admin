@@ -1,7 +1,7 @@
 # Tutorial  
 >[Tutorial 및 예제 자료 download](https://github.com/doljin99/H2Admin/wiki/Tutorial--%EB%B0%8F-%EC%98%88%EC%A0%9C-%EC%9E%90%EB%A3%8C)
 
-# [Latest Release](https://github.com/doljin99/H2Admin/releases)  
+# [Latest Release 다운로드](https://github.com/doljin99/H2Admin/releases)  
 
 # H2Admin 개요
 >Java Swing과 JDBC 등을 이용한 H2 데이터베이스 GUI 관리 도구를 개발
