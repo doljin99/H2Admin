@@ -1,3 +1,8 @@
+# 필요 Library
+>컴파일이나 실행 시에 필요한 라이브러리를 Wiki 페이지에서 다운로드할 수 있습니다.  
+[SimpleEditor: 다운로드](https://github.com/doljin99/H2Admin/wiki/SimpleEditor-library--download-&-license)  
+[CodeCompletion: 다운로드](https://github.com/doljin99/H2Admin/wiki/CodeCompletion-library-Download-&-License)
+
 # Tutorial  
 >[Tutorial 및 예제 자료 download](https://github.com/doljin99/H2Admin/wiki/Tutorial--%EB%B0%8F-%EC%98%88%EC%A0%9C-%EC%9E%90%EB%A3%8C)
 
