@@ -1,7 +1,7 @@
 ### 필요 Library
 >컴파일이나 실행 시에 필요한 라이브러리를 Wiki 페이지에서 다운로드할 수 있습니다.  
 [SimpleEditor: 다운로드](https://github.com/doljin99/H2Admin/wiki/SimpleEditor-library--download-&-license)  
-[CodeCompletion: 다운로드](https://github.com/doljin99/H2Admin/wiki/CodeCompletion-library-Download-&-License)
+[CodeCompletion: 다운로드](https://github.com/doljin99/H2Admin/wiki/CodeCompletion-library-Download-&-License)  
 [LoginManager binary 다운로드](https://github.com/doljin99/H2Admin/wiki/LoginManager-library-download-&-License)
 
 ### Tutorial  
