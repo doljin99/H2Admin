@@ -1,13 +1,21 @@
+### 필요 Library
+>컴파일이나 실행 시에 필요한 라이브러리를 Wiki 페이지에서 다운로드할 수 있습니다.  
+[SimpleEditor: 다운로드](https://github.com/doljin99/H2Admin/wiki/SimpleEditor-library--download-&-license)  
+[CodeCompletion: 다운로드](https://github.com/doljin99/H2Admin/wiki/CodeCompletion-library-Download-&-License)
+
+### Tutorial  
+>[Tutorial 및 예제 자료 download](https://github.com/doljin99/H2Admin/wiki/Tutorial--%EB%B0%8F-%EC%98%88%EC%A0%9C-%EC%9E%90%EB%A3%8C)
+
+### [Latest Release 다운로드](https://github.com/doljin99/H2Admin/releases)  
+
 # H2Admin 개요
 >Java Swing과 JDBC 등을 이용한 H2 데이터베이스 GUI 관리 도구를 개발
 소규모 작업 영역의 데이터 허브 역할을 하는 플랫폼을 필요 자원이 적고 성능이 좋은 H2 데이터베이스를 기반으로 GUI환경에서 구현하여, IoT, 홈컴퓨팅, Edge 컴퓨팅 등에서 쉽고 효율적으로 적용하고, 관리할 수 있는 기능을 제공하는 도구를 개발한다.  
   
-# 목표
+### 목표
 >IoT, Home, Edge 컴퓨팅 환경에서 발생하는 많은 양의 데이터를 안정적이고, 신뢰성 높으며, 관리가 용이하며, 효율적인 데이터 허브 구축을 도와주는 시스템을, 경량이지만 사용이 편하고, 성능이 뛰어난 H2 데이터베이스와 범용성이 높은 개발 언어인 Java 관련 기술을 이용하여 개발한다.  
-# tutorial  
-[Tutorial 및 예제](https://github.com/doljin99/H2Admin/wiki/Tutorial--%EB%B0%8F-%EC%98%88%EC%A0%9C-%EC%9E%90%EB%A3%8C)
 
-# 컨트리뷰션 가이드
+### 컨트리뷰션 가이드
 1.	개발에 필요한 외부 라이브러리는 공개 S/W만을 사용하도록 합니다.
 2.	JDK는 OpenJDK 1.8 버전을 이용하고 Pure Java 앱을 지향합니다.
 3.	외부 라이브러리 사용시에는 특별한 경우가 아니면 binary만을 사용하도록 합니다. (source 수정 지양)
@@ -19,7 +27,7 @@
 9.	이슈를 해결해야 하는 담당자는 이슈를 인지했을 때, 원인, 처리 방향에 대한 내용 등을 공지하고 해결이 되었을 때 처리방법과 결과를 최대한 빨리 공지합니다.
 10.	이슈를 처리할 담당자가 원인을 찾기 힘들거나 해결 방안을 구하기 어려울 때에는 공개적으로 전체 팀원들에게 도움을 요청하도록 하고 팀원들은 적극적으로 문제해결을 위한 의견을 제시하도록 합니다.
 
-# 외부 라이브러리 License  
+### 외부 라이브러리 License  
 1.	Apache commons  
       License: https://apache.org/licenses/LICENSE-2.0        
       source: https://commons.apache.org/        
@@ -50,3 +58,7 @@
 10.	xmlbeans-5.0.3210   
       License: https://apache.org/licenses/LICENSE-2.0        
       source: https://xmlbeans.apache.org/
+11. SimpleEditor  
+      License: https://github.com/doljin99/H2Admin/wiki/SimpleEditor-library-License
+11. CodeCompletion 
+      License: https://github.com/doljin99/H2Admin/wiki/CodeCompletion-library-License
