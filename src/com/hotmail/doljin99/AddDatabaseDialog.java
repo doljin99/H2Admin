@@ -42,7 +42,7 @@ public class AddDatabaseDialog extends javax.swing.JDialog {
         validate();
     }
 
-    public DatabaseMan getdBMan() {
+    public DatabaseMan getDatabaseMan() {
         return databaseMan;
     }
 

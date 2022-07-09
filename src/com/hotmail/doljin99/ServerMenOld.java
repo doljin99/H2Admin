@@ -10,11 +10,12 @@ import java.util.ArrayList;
  *
  * @author dolji
  */
-public class ServerMen extends ArrayList<ServerMan> {
+public class ServerMenOld extends ArrayList<ServerManOld> {
 
-    private transient String message;
+    private String message;
 
-    public boolean addNew(ServerMan serverMan) {
+    @Override
+    public boolean add(ServerManOld serverMan) {
         if (serverMan == null) {
             message = "추가할 대상이 없습니다.";
             return false;
@@ -55,7 +56,7 @@ public class ServerMen extends ArrayList<ServerMan> {
     }
 
     private boolean duplicatedName(String name) {
-        for (ServerMan server : this) {
+        for (ServerManOld server : this) {
             if (server.getServerName().equalsIgnoreCase(name)) {
                 return true;
             }
@@ -64,7 +65,7 @@ public class ServerMen extends ArrayList<ServerMan> {
     }
 
     private boolean usedPort(String port) {
-        for (ServerMan server : this) {
+        for (ServerManOld server : this) {
             if (!server.isLocal()) {
                 continue;
             }
@@ -75,8 +76,8 @@ public class ServerMen extends ArrayList<ServerMan> {
         return false;
     }
 
-    public ServerMan findByName(String name) {
-        for (ServerMan server : this) {
+    public ServerManOld findByName(String name) {
+        for (ServerManOld server : this) {
             if (server.getServerName().equalsIgnoreCase(name)) {
                 return server;
             }
@@ -86,7 +87,7 @@ public class ServerMen extends ArrayList<ServerMan> {
 
     public int getIndex(String name) {
         for (int i = 0; i < this.size(); i++) {
-            ServerMan server = this.get(i);
+            ServerManOld server = this.get(i);
             if (server.getServerName().equalsIgnoreCase(name)) {
                 return i;
             }
@@ -98,7 +99,7 @@ public class ServerMen extends ArrayList<ServerMan> {
         return message;
     }
 
-    ServerMan delete(String serverName) {
+    ServerManOld delete(String serverName) {
         int index = getIndex(serverName);
         if (index < 0) {
             message = serverName + " 서버가 없습니다.";

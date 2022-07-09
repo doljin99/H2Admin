@@ -4,7 +4,6 @@
  */
 package com.hotmail.doljin99;
 
-import com.hotmail.doljin99.loginmanager.LoginManager;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -15,7 +14,7 @@ import org.h2.tools.Server;
  *
  * @author dolji
  */
-public class ServerMan {
+public class ServerManOld {
 
     public static final String TCP_PORT = "-tcpPort";
     public static final String TCP_ALLOW_OTHERS = "-tcpAllowOthers";
@@ -23,29 +22,18 @@ public class ServerMan {
     public static final String IF_EXISTS = "-ifExists";
     public static final String TCP_DAEMON = "-tcpDaemon";
     public static final String TCP_PASSWORD = "-tcpPassword";
-
-    private transient String serverName;
-    private String serverName_enc;
     
+    private String serverName;
     private boolean local;
-    
-    private transient String hostAddress;
-    private String hostAddress_enc;
-    
-    private transient String tcpPort;
-    private String tcpPort_enc;
-    
+    private String hostAddress;
+    private String tcpPort;
     private boolean tcpAllowOthers;
     private boolean ifNotExists;
     private boolean tcpDaemon;
+    private String tcpPassword;
+    private String baseDir;
     
-    private transient String tcpPassword;
-    private String tcpPassword_enc;
-    
-    private transient String baseDir;
-    private String baseDir_enc;
-    
-    private DatabaseMen databaseMen;
+    private DatabaseMenOld databaseMen;
 
     private transient String[] args = {
         TCP_PORT, tcpPort, TCP_ALLOW_OTHERS, IF_NOT_EXISTS, TCP_DAEMON, TCP_PASSWORD, tcpPassword
@@ -59,7 +47,7 @@ public class ServerMan {
      *
      * @param name
      */
-    public ServerMan(String name) {
+    public ServerManOld(String name) {
         this(name, "9092");
     }
 
@@ -68,7 +56,7 @@ public class ServerMan {
      * @param name
      * @param port
      */
-    public ServerMan(String name, String port) {
+    public ServerManOld(String name, String port) {
         this(name, "localhost", port, true);
     }
 
@@ -79,12 +67,12 @@ public class ServerMan {
      * @param port
      * @param tcpAllowOthers
      */
-    public ServerMan(String name, String hostAddress, String port, boolean tcpAllowOthers) {
+    public ServerManOld(String name, String hostAddress, String port, boolean tcpAllowOthers) {
         this(name, hostAddress, port, tcpAllowOthers, false);
     }
     
-    public ServerMan(String name, String hostAddress, String port, boolean tcpAllowOthers, boolean ifNotExists) {
-        this(name, hostAddress, port, tcpAllowOthers, ifNotExists, new DatabaseMen());
+    public ServerManOld(String name, String hostAddress, String port, boolean tcpAllowOthers, boolean ifNotExists) {
+        this(name, hostAddress, port, tcpAllowOthers, ifNotExists, new DatabaseMenOld());
     }
 
     /**
@@ -96,7 +84,7 @@ public class ServerMan {
      * @param ifNotExists
      * @param databaseMen
      */
-    public ServerMan(String name, String hostAddress, String port, boolean tcpAllowOthers, boolean ifNotExists, DatabaseMen databaseMen) {
+    public ServerManOld(String name, String hostAddress, String port, boolean tcpAllowOthers, boolean ifNotExists, DatabaseMenOld databaseMen) {
         this.serverName = name;
         this.hostAddress = hostAddress;
         this.tcpPort = (port == null || port.isEmpty()) ? "9092" : port;
@@ -207,21 +195,21 @@ public class ServerMan {
         }
         ArrayList<String> temp = new ArrayList<>();
 
-        temp.add(ServerMan.TCP_PORT);
+        temp.add(ServerManOld.TCP_PORT);
         temp.add(getPort());
         if (isTcpAllowOthers()) {
-            temp.add(ServerMan.TCP_ALLOW_OTHERS);
+            temp.add(ServerManOld.TCP_ALLOW_OTHERS);
         }
         if (isIfNotExists()) {
-            temp.add(ServerMan.IF_NOT_EXISTS);
+            temp.add(ServerManOld.IF_NOT_EXISTS);
         } else {
-            temp.add(ServerMan.IF_EXISTS);
+            temp.add(ServerManOld.IF_EXISTS);
         }
         if (isTcpDaemon()) {
-            temp.add(ServerMan.TCP_DAEMON);
+            temp.add(ServerManOld.TCP_DAEMON);
         }
         if (getTcpPassword() != null && !getTcpPassword().isEmpty()) {
-            temp.add(ServerMan.TCP_PASSWORD);
+            temp.add(ServerManOld.TCP_PASSWORD);
             temp.add(getTcpPassword());
         }
 
@@ -308,7 +296,7 @@ public class ServerMan {
     
     public Connection getRemoteConnection() {
         if (databaseMen == null) {
-            databaseMen = new DatabaseMen();
+            databaseMen = new DatabaseMenOld();
             return null;
         }
         if (databaseMen.isEmpty()) {
@@ -328,7 +316,7 @@ public class ServerMan {
 
     private String makeRemoteJdbcUrl() {
         if (databaseMen == null) {
-            databaseMen = new DatabaseMen();
+            databaseMen = new DatabaseMenOld();
             return null;
         }
         if (databaseMen.isEmpty()) {
@@ -375,24 +363,24 @@ public class ServerMan {
         return server;
     }
 
-    public DatabaseMen getDatabaseMen() {
+    public DatabaseMenOld getDatabaseMen() {
         return databaseMen;
     }
 
-    public void setDatabaseMen(DatabaseMen databaseMen) {
+    public void setDatabaseMen(DatabaseMenOld databaseMen) {
         this.databaseMen = databaseMen;
     }
     
-    public DatabaseMan addDatabase(String databaseName) {
-        DatabaseMan databaseMan = new DatabaseMan(serverName, local, hostAddress, tcpPort, baseDir, databaseName);
+    public DatabaseManOld addDatabase(String databaseName) {
+        DatabaseManOld databaseMan = new DatabaseManOld(serverName, local, hostAddress, tcpPort, baseDir, databaseName);
         return addDatabase(databaseMan);
     }
     
-    public DatabaseMan addDatabase(DatabaseMan databaseMan) {
+    public DatabaseManOld addDatabase(DatabaseManOld databaseMan) {
         if (databaseMen == null) {
-            databaseMen = new DatabaseMen();
+            databaseMen = new DatabaseMenOld();
         }
-        boolean ok = databaseMen.addNew(databaseMan);
+        boolean ok = databaseMen.add(databaseMan);
         if (ok) {
             message = databaseMan.getDatabaseName() + " 데이터베이스가 추가 되었습니다.";
         } else {
@@ -402,17 +390,17 @@ public class ServerMan {
         return databaseMan;
     }   
 
-    public DatabaseMan findDatabaseMan(String serverName, String databaseName) {
+    public DatabaseManOld findDatabaseMan(String serverName, String databaseName) {
         if (databaseMen == null) {
-            databaseMen = new DatabaseMen();
+            databaseMen = new DatabaseMenOld();
         }
         return databaseMen.findByName(serverName, databaseName);
     }
     
 
-    public DatabaseMan findDatabaseByName(String databaseName) {
+    public DatabaseManOld findDatabaseByName(String databaseName) {
         if (databaseMen == null) {
-            databaseMen = new DatabaseMen();
+            databaseMen = new DatabaseMenOld();
         }
         return databaseMen.findByName(serverName, databaseName);
     }
@@ -425,65 +413,5 @@ public class ServerMan {
         }
         Server.shutdownTcpServer("tcp://" + hostAddress + ":" + getPort(), password, false, false);
         System.out.println("stop url = " + "tcp://" + hostAddress + ":" + getPort() + ", password = " + password);
-    }
-
-    public void setServerName(String serverName) {
-        this.serverName = serverName;
-    }
-
-    public String getServerName_enc() {
-        return serverName_enc;
-    }
-
-    public void setServerName_enc(String serverName_enc) {
-        this.serverName_enc = serverName_enc;
-    }
-
-    public String getHostAddress_enc() {
-        return hostAddress_enc;
-    }
-
-    public void setHostAddress_enc(String hostAddress_enc) {
-        this.hostAddress_enc = hostAddress_enc;
-    }
-
-    public String getTcpPort_enc() {
-        return tcpPort_enc;
-    }
-
-    public void setTcpPort_enc(String tcpPort_enc) {
-        this.tcpPort_enc = tcpPort_enc;
-    }
-
-    public String getTcpPassword_enc() {
-        return tcpPassword_enc;
-    }
-
-    public void setTcpPassword_enc(String tcpPassword_enc) {
-        this.tcpPassword_enc = tcpPassword_enc;
-    }
-
-    public String getBaseDir_enc() {
-        return baseDir_enc;
-    }
-
-    public void setBaseDir_enc(String baseDir_enc) {
-        this.baseDir_enc = baseDir_enc;
-    }    
-    
-    protected void decryptFields(LoginManager loginManager) {
-        serverName = loginManager.decrypt(serverName_enc);
-        hostAddress = loginManager.decrypt(hostAddress_enc);
-        tcpPort = loginManager.decrypt(tcpPort_enc);
-        baseDir = loginManager.decrypt(baseDir_enc);
-        tcpPassword = loginManager.decrypt(tcpPassword_enc);
-    }    
-    
-    protected void encryptFields(LoginManager loginManager) {
-        serverName_enc = loginManager.encrypt(serverName);
-        hostAddress_enc = loginManager.encrypt(hostAddress);
-        tcpPort_enc = loginManager.encrypt(tcpPort);
-        baseDir_enc = loginManager.encrypt(baseDir);
-        tcpPassword_enc = loginManager.encrypt(tcpPassword);
     }
 }

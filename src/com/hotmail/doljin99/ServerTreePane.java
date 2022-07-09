@@ -4,6 +4,7 @@
  */
 package com.hotmail.doljin99;
 
+import com.hotmail.doljin99.loginmanager.LoginManager;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Frame;
@@ -45,14 +46,17 @@ public class ServerTreePane extends javax.swing.JPanel {
     private List<String> codeCompletionList;
 
     private JTree tree;
+    private final LoginManager loginManager;
 
     /**
      * Creates new form ServerTree
      *
      * @param serverList
+     * @param codeCompletionList
+     * @param loginManager
      */
-    public ServerTreePane(ServerMen serverList, List<String> codeCompletionList) {
-        this(serverList, null, codeCompletionList);
+    public ServerTreePane(ServerMen serverList, List<String> codeCompletionList, LoginManager loginManager) {
+        this(serverList, null, codeCompletionList, loginManager);
     }
 
     /**
@@ -60,12 +64,15 @@ public class ServerTreePane extends javax.swing.JPanel {
      *
      * @param serverList
      * @param status
+     * @param codeCompletionList
+     * @param loginManager
      */
-    public ServerTreePane(ServerMen serverList, Object status, List<String> codeCompletionList) {
+    public ServerTreePane(ServerMen serverList, Object status, List<String> codeCompletionList, LoginManager loginManager) {
         initComponents();
         this.serverList = serverList;
         this.status = status;
         this.codeCompletionList = codeCompletionList;
+        this.loginManager = loginManager;
 
         init();
     }
@@ -605,6 +612,10 @@ public class ServerTreePane extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonAddTableActionPerformed
 
     private void jButtonDatabaseBackupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDatabaseBackupActionPerformed
+        backup();
+    }//GEN-LAST:event_jButtonDatabaseBackupActionPerformed
+
+    protected void backup() {
         TreePath selectionPath = tree.getSelectionPath();
         if (selectionPath == null || selectionPath.getPathCount() < 2) {
             setStatus("먼저 백업할 서버나 데이터베이스를 선택하십시오.");
@@ -618,8 +629,12 @@ public class ServerTreePane extends javax.swing.JPanel {
             setStatus("서버를 찾을 수 없습니다.: " + serverName);
             return;
         }
+        if (!serverMan.isLocal()) {
+            setStatus("현재 버전에서는 remote 서버 데이터베이스에 대한 백업 기능이 없습니다.");
+            return;
+        }
 
-        String databaseName = null;
+        String databaseName;
         DatabaseMan databaseMan = null;
         if (paths.length >= 3) {
             databaseName = paths[2].toString();
@@ -633,13 +648,13 @@ public class ServerTreePane extends javax.swing.JPanel {
         } else {
             setStatus("backup을 취소 또는 실패하였습니다.");
         }
-        String [] messages = dialog.getMessage().split("\n");
+        String[] messages = dialog.getMessage().split("\n");
         dialog.dispose();
         for (int i = 0; i < messages.length; i++) {
             String message = messages[i];
             setStatus("\t" + message);
         }
-    }//GEN-LAST:event_jButtonDatabaseBackupActionPerformed
+    }
 
     private ArrayList<String> getColumnNames(ResultSetMetaData metaData) {
         ArrayList<String> columnNames = new ArrayList<>();
@@ -706,11 +721,12 @@ public class ServerTreePane extends javax.swing.JPanel {
         ServerMan serverMan = findServerMan(serverName);
         AddDatabaseDialog dialog = new AddDatabaseDialog((Frame) SwingUtilities.getWindowAncestor(this), true, serverMan);
         dialog.setVisible(true);
-        DatabaseMan databaseMan = dialog.getdBMan();
+        DatabaseMan databaseMan = dialog.getDatabaseMan();
         if (databaseMan == null) {
             setStatus("database 생성 실패.");
             return;
         }
+        databaseMan.encryptFields(loginManager);
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
         node.add(new DefaultMutableTreeNode(databaseMan.getDatabaseName()));
         serverMan.addDatabase(databaseMan);

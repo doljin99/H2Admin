@@ -4,6 +4,7 @@
  */
 package com.hotmail.doljin99;
 
+import com.hotmail.doljin99.loginmanager.LoginManager;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Font;
@@ -12,7 +13,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -31,6 +34,19 @@ import org.h2.tools.Server;
  * @author dolji
  */
 public class H2AUtilities {
+
+    /**
+     * yyyy-MM-dd HH:mm:ss
+     */
+    public static final SimpleDateFormat SQL_SIMPLE_DATETIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    public static String getSqlDataTime() {
+        return getSqlDataTime(System.currentTimeMillis());
+    }
+
+    public static String getSqlDataTime(long timeinmillis) {
+        return SQL_SIMPLE_DATETIME_FORMAT.format(new Date(timeinmillis));
+    }
 
     public static boolean isAvailablePort(int portNr) {
         ServerSocket ignored = null;
@@ -344,11 +360,11 @@ public class H2AUtilities {
         }
         return false;
     }
-    
+
     public static File chooseDirectory() {
         return chooseDirectory("디렉터리 선택");
     }
-    
+
     public static File chooseDirectory(String title) {
         JFileChooser fileChooser = new JFileChooser();
 
@@ -375,7 +391,7 @@ public class H2AUtilities {
 
     public static File chooseFile(String extension, String title) {
         JFileChooser fileChooser = new JFileChooser();
-        
+
         FileFilter filter = new FileNameExtensionFilter(extension.toUpperCase() + " File", extension);
         fileChooser.setFileFilter(filter);
 
@@ -391,5 +407,82 @@ public class H2AUtilities {
 //            System.out.println("선택된 파일: " + file);
         }
         return file;
+    }
+
+    public static boolean isOldServerListFile() {
+        File file = new File(H2ServerAdmin.SERVER_MEN_PATH);
+        return file.exists();
+    }
+
+    public static boolean isServerListFile() {
+        File file = new File(H2ServerAdmin.SERVER_MEN_ENC_DIR + File.separator + H2ServerAdmin.SERVER_MEN_PATH);
+        return file.exists();
+    }
+
+    public static ServerMen upgradeServerMen(LoginManager loginManager, ServerMenOld plains) {
+        ServerMen serverMen = new ServerMen();
+        for (int i = 0; i < plains.size(); i++) {
+            ServerManOld plain = plains.get(i);
+            ServerMan serverMan = upgradeServerMan(loginManager, plain);
+            serverMen.add(serverMan);
+        }
+
+        return serverMen;
+    }
+
+    private static ServerMan upgradeServerMan(LoginManager loginManager, ServerManOld serverManOld) {
+        ServerMan serverMan = new ServerMan(serverManOld.getServerName());
+
+        serverMan.setServerName_enc(loginManager.encrypt(serverManOld.getServerName()));
+        serverMan.setLocal(serverManOld.isLocal());
+        serverMan.setHostAddress(serverManOld.getHostAddress());
+        serverMan.setHostAddress_enc(loginManager.encrypt(serverManOld.getHostAddress()));
+        serverMan.setTcpPort(serverManOld.getTcpPort());
+        serverMan.setTcpPort_enc(loginManager.encrypt(serverManOld.getTcpPort()));
+        serverMan.setTcpAllowOthers(serverManOld.isTcpAllowOthers());
+        serverMan.setIfNotExists(serverManOld.isIfNotExists());
+        serverMan.setTcpDaemon(serverManOld.isTcpDaemon());
+        serverMan.setTcpPassword(serverManOld.getTcpPassword());
+        serverMan.setTcpPassword_enc(loginManager.encrypt(serverManOld.getTcpPassword()));
+        serverMan.setBaseDir(serverManOld.getBaseDir());
+        serverMan.setBaseDir_enc(loginManager.encrypt(serverManOld.getBaseDir()));
+
+        DatabaseMenOld databaseMenOld = serverManOld.getDatabaseMen();
+
+        DatabaseMen databaseMen = upgradeDataBaseMen(loginManager, databaseMenOld);
+
+        serverMan.setDatabaseMen(databaseMen);
+
+        return serverMan;
+    }
+
+    private static DatabaseMen upgradeDataBaseMen(LoginManager loginManager, DatabaseMenOld databaseMenOld) {
+        DatabaseMen databaseMen = new DatabaseMen();
+        for (int i = 0; i < databaseMenOld.size(); i++) {
+            DatabaseManOld databaseManOld = databaseMenOld.get(i);
+            DatabaseMan databaseMan = upgradeDatabaseMan(loginManager, databaseManOld);
+
+            databaseMen.add(databaseMan);
+        }
+        return databaseMen;
+    }
+
+    private static DatabaseMan upgradeDatabaseMan(LoginManager loginManager, DatabaseManOld databaseManOld) {
+        DatabaseMan databaseMan = new DatabaseMan();
+        
+        databaseMan.setServerName(databaseManOld.getServerName());
+        databaseMan.setLocal(databaseManOld.isLocal());
+        databaseMan.setHostAddress(databaseManOld.getHostAddress());
+        databaseMan.setPort(databaseManOld.getPort());
+        databaseMan.setBaseDir(databaseManOld.getBaseDir());
+        databaseMan.setDatabaseName(databaseManOld.getDatabaseName());
+        databaseMan.encryptFields(loginManager);
+//        databaseMan.setServerName_enc(loginManager.encrypt(databaseManOld.getServerName()));
+//        databaseMan.setHostAddress_enc(loginManager.encrypt(databaseManOld.getHostAddress()));
+//        databaseMan.setPort_enc(loginManager.encrypt(databaseManOld.getPort()));
+//        databaseMan.setBaseDir_enc(loginManager.encrypt(databaseManOld.getBaseDir()));
+//        databaseMan.setDatabaseName_enc(loginManager.encrypt(databaseManOld.getDatabaseName()));
+        
+        return databaseMan;
     }
 }

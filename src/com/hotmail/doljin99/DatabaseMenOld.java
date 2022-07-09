@@ -10,11 +10,12 @@ import java.util.ArrayList;
  *
  * @author dolji
  */
-public class DatabaseMen extends ArrayList<DatabaseMan> {
+public class DatabaseMenOld extends ArrayList<DatabaseManOld> {
     
-    private transient String message;
+    private String message;
 
-    public boolean addNew(DatabaseMan databaseMan) {
+    @Override
+    public boolean add(DatabaseManOld databaseMan) {
         if (databaseMan == null) {
             message = "추가할 대상이 없습니다.";
             return false;
@@ -43,7 +44,7 @@ public class DatabaseMen extends ArrayList<DatabaseMan> {
     }
 
     private boolean duplicatedName(String serverName, String dbName) {
-        for (DatabaseMan databaseMan : this) {
+        for (DatabaseManOld databaseMan : this) {
             if (serverName.equalsIgnoreCase(databaseMan.getServerName()) && dbName.equalsIgnoreCase(databaseMan.getDatabaseName())) {
                 return true;
             }
@@ -51,8 +52,8 @@ public class DatabaseMen extends ArrayList<DatabaseMan> {
         return false;
     }
 
-    public DatabaseMan findByName(String serverName, String databaseName) {
-        for (DatabaseMan databaseMan : this) {
+    public DatabaseManOld findByName(String serverName, String databaseName) {
+        for (DatabaseManOld databaseMan : this) {
             if (databaseMan.getServerName().equalsIgnoreCase(serverName) && databaseMan.getDatabaseName().equalsIgnoreCase(databaseName)) {
                 return databaseMan;
             }
@@ -62,7 +63,7 @@ public class DatabaseMen extends ArrayList<DatabaseMan> {
 
     public int getIndex(String serverName, String databaseName) {
         for (int i = 0; i < this.size(); i++) {
-            DatabaseMan databaseMan = this.get(i);
+            DatabaseManOld databaseMan = this.get(i);
             if (databaseMan.getServerName().equalsIgnoreCase(serverName) &&  databaseMan.getDatabaseName().equalsIgnoreCase(databaseName)) {
                 return i;
             }
