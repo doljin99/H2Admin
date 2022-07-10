@@ -10,7 +10,7 @@ import com.hotmail.doljin99.loginmanager.LoginManager;
  *
  * @author dolji
  */
-public class CheckPasswordJDialog extends javax.swing.JDialog {
+public class CheckPasswordDialog extends javax.swing.JDialog {
 
     private final LoginManager loginManager;
     private String password;
@@ -22,7 +22,7 @@ public class CheckPasswordJDialog extends javax.swing.JDialog {
      * @param modal
      * @param loginManager
      */
-    public CheckPasswordJDialog(java.awt.Frame parent, boolean modal, LoginManager loginManager) {
+    public CheckPasswordDialog(java.awt.Frame parent, boolean modal, LoginManager loginManager) {
         super(parent, modal);
         initComponents();
 
@@ -65,12 +65,13 @@ public class CheckPasswordJDialog extends javax.swing.JDialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextAreaStatus = new javax.swing.JTextArea();
 
-        setTitle(org.openide.util.NbBundle.getMessage(CheckPasswordJDialog.class, "CheckPasswordJDialog.title")); // NOI18N
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle(org.openide.util.NbBundle.getMessage(CheckPasswordDialog.class, "CheckPasswordDialog.title")); // NOI18N
 
         jToolBar1.setRollover(true);
 
         jButtonSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Save16.gif"))); // NOI18N
-        jButtonSave.setText(org.openide.util.NbBundle.getMessage(CheckPasswordJDialog.class, "CheckPasswordJDialog.jButtonSave.text")); // NOI18N
+        jButtonSave.setText(org.openide.util.NbBundle.getMessage(CheckPasswordDialog.class, "CheckPasswordDialog.jButtonSave.text")); // NOI18N
         jButtonSave.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonSave.setFocusable(false);
         jButtonSave.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -83,7 +84,7 @@ public class CheckPasswordJDialog extends javax.swing.JDialog {
         jToolBar1.add(jSeparator1);
 
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Stop16.gif"))); // NOI18N
-        jButton2.setText(org.openide.util.NbBundle.getMessage(CheckPasswordJDialog.class, "CheckPasswordJDialog.jButton2.text")); // NOI18N
+        jButton2.setText(org.openide.util.NbBundle.getMessage(CheckPasswordDialog.class, "CheckPasswordDialog.jButton2.text")); // NOI18N
         jButton2.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButton2.setFocusable(false);
         jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -96,16 +97,16 @@ public class CheckPasswordJDialog extends javax.swing.JDialog {
 
         getContentPane().add(jToolBar1, java.awt.BorderLayout.NORTH);
 
-        jLabel1.setText(org.openide.util.NbBundle.getMessage(CheckPasswordJDialog.class, "CheckPasswordJDialog.jLabel1.text")); // NOI18N
+        jLabel1.setText(org.openide.util.NbBundle.getMessage(CheckPasswordDialog.class, "CheckPasswordDialog.jLabel1.text")); // NOI18N
 
-        jPasswordFieldPassword.setText(org.openide.util.NbBundle.getMessage(CheckPasswordJDialog.class, "CheckPasswordJDialog.jPasswordFieldPassword.text")); // NOI18N
+        jPasswordFieldPassword.setText(org.openide.util.NbBundle.getMessage(CheckPasswordDialog.class, "CheckPasswordDialog.jPasswordFieldPassword.text")); // NOI18N
         jPasswordFieldPassword.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jPasswordFieldPasswordActionPerformed(evt);
             }
         });
 
-        jCheckBoxPassword.setText(org.openide.util.NbBundle.getMessage(CheckPasswordJDialog.class, "CheckPasswordJDialog.jCheckBoxPassword.text")); // NOI18N
+        jCheckBoxPassword.setText(org.openide.util.NbBundle.getMessage(CheckPasswordDialog.class, "CheckPasswordDialog.jCheckBoxPassword.text")); // NOI18N
         jCheckBoxPassword.setEnabled(false);
         jCheckBoxPassword.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -113,16 +114,16 @@ public class CheckPasswordJDialog extends javax.swing.JDialog {
             }
         });
 
-        jLabel2.setText(org.openide.util.NbBundle.getMessage(CheckPasswordJDialog.class, "CheckPasswordJDialog.jLabel2.text")); // NOI18N
+        jLabel2.setText(org.openide.util.NbBundle.getMessage(CheckPasswordDialog.class, "CheckPasswordDialog.jLabel2.text")); // NOI18N
 
-        jPasswordFieldConfirm.setText(org.openide.util.NbBundle.getMessage(CheckPasswordJDialog.class, "CheckPasswordJDialog.jPasswordFieldConfirm.text")); // NOI18N
+        jPasswordFieldConfirm.setText(org.openide.util.NbBundle.getMessage(CheckPasswordDialog.class, "CheckPasswordDialog.jPasswordFieldConfirm.text")); // NOI18N
         jPasswordFieldConfirm.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jPasswordFieldConfirmActionPerformed(evt);
             }
         });
 
-        jCheckBoxConfirm.setText(org.openide.util.NbBundle.getMessage(CheckPasswordJDialog.class, "CheckPasswordJDialog.jCheckBoxConfirm.text")); // NOI18N
+        jCheckBoxConfirm.setText(org.openide.util.NbBundle.getMessage(CheckPasswordDialog.class, "CheckPasswordDialog.jCheckBoxConfirm.text")); // NOI18N
         jCheckBoxConfirm.setEnabled(false);
         jCheckBoxConfirm.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {

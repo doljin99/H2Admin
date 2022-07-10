@@ -161,6 +161,8 @@ public class BackupDialog extends javax.swing.JDialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextAreaStatus = new javax.swing.JTextArea();
 
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
         jToolBar1.setRollover(true);
 
         jButtonBackup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/SaveAll16.gif"))); // NOI18N

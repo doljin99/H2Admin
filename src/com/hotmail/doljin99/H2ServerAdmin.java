@@ -13,7 +13,7 @@ import com.hotmail.doljin99.loginmanager.LoginManager;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.Desktop;
-import java.awt.Frame;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -31,6 +31,7 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.URI;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import javax.swing.AbstractAction;
@@ -39,18 +40,16 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.tree.TreePath;
 import org.apache.commons.io.FileUtils;
-import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
  * @author dolji
  */
 public class H2ServerAdmin extends javax.swing.JFrame {
-    
-    public static final String VERSION = "v0.7";
+
+    public static final String VERSION = "v0.7.1";
 
     private LoginManager loginManager;
     private JPanel glassPane;
@@ -141,6 +140,7 @@ public class H2ServerAdmin extends javax.swing.JFrame {
 
             @Override
             public void componentHidden(ComponentEvent e) {
+                showOwnedWindows();
                 if (serverList == null) {
                     makeServerList();
                 }
@@ -149,17 +149,113 @@ public class H2ServerAdmin extends javax.swing.JFrame {
         });
     }
 
+    class OnairWindow {
+
+        Window window;
+        int locationX;
+        int locationY;
+        int sizeX;
+        int sizeY;
+
+        public OnairWindow(Window window) {
+            this.window = window;
+        }
+
+        public Window getWindow() {
+            return window;
+        }
+
+        public void setWindow(Window window) {
+            this.window = window;
+        }
+
+        public int getLocationX() {
+            return locationX;
+        }
+
+        public void setLocationX(int locationX) {
+            this.locationX = locationX;
+        }
+
+        public int getLocationY() {
+            return locationY;
+        }
+
+        public void setLocationY(int locationY) {
+            this.locationY = locationY;
+        }
+
+        public int getSizeX() {
+            return sizeX;
+        }
+
+        public void setSizeX(int sizeX) {
+            this.sizeX = sizeX;
+        }
+
+        public int getSizeY() {
+            return sizeY;
+        }
+
+        public void setSizeY(int sizeY) {
+            this.sizeY = sizeY;
+        }
+
+    }
+
+    private ArrayList<OnairWindow> ownWindows;
+
     private void blockWindow(String msg) {
         blockMessage = msg;
+
+        ownWindows = new ArrayList<>();
+        Window[] windows = getOwnedWindows();
+        for (Window window : windows) {
+            if (!window.isVisible()) {
+                window.dispose();
+                continue;
+            }
+            OnairWindow onairWindow = new OnairWindow(window);
+            onairWindow.setLocationX(window.getX());
+            onairWindow.setLocationY(window.getY());
+            onairWindow.setLocationX(window.getX());
+            onairWindow.setSizeX(window.getWidth());
+            onairWindow.setSizeY(window.getHeight());
+            ownWindows.add(onairWindow);
+            window.setSize(20, 20);
+            window.setLocation(getX() + 20, getY() + 20);
+            window.toBack();
+            window.setVisible(false);
+        }
+
         glassPane.setVisible(true);
+        this.toFront();
+        stopActivityTimer();
     }
 
     private void unblockWindow() {
+        showOwnedWindows();
         glassPane.setVisible(false);
         if (serverList == null) {
             makeServerList();
         }
         resetActivityTimer(interval);
+    }
+
+    private void showOwnedWindows() {
+        if (ownWindows == null || ownWindows.isEmpty()) {
+            return;
+        }
+        for (int i = 0; i < ownWindows.size(); i++) {
+            OnairWindow onairWindow = ownWindows.get(i);
+            Window window = onairWindow.getWindow();
+            window.setSize(onairWindow.getSizeX(), onairWindow.getSizeY());
+            window.setLocation(onairWindow.getLocationX(), onairWindow.getLocationY());
+            window.toFront();
+            window.setVisible(true);
+            window.validate();
+        }
+        ownWindows.clear();
     }
 
     private void login() {
@@ -173,17 +269,13 @@ public class H2ServerAdmin extends javax.swing.JFrame {
     }
 
     private String getPassword() {
-        CheckPasswordJDialog dialog;
-        dialog = new CheckPasswordJDialog(this, true, loginManager);
+        CheckPasswordDialog dialog;
+        dialog = new CheckPasswordDialog(this, true, loginManager);
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
         String password = dialog.getPassword();
         dialog.dispose();
         return password;
-    }
-
-    private void logout() {
-        logout("logout 합니다.");
     }
 
     private void decryptServerMen(ServerMen serverMen) {
@@ -213,7 +305,6 @@ public class H2ServerAdmin extends javax.swing.JFrame {
     }
 
     private ServerMen readServerMen() {
-        System.out.println("reached here 0");
         Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
         FileInputStream fileInputStream = null;
         BufferedReader br = null;
@@ -231,7 +322,6 @@ public class H2ServerAdmin extends javax.swing.JFrame {
                 return serverMen;
             }
 
-            System.out.println("decrypt 시작, serverMen size = " + serverMen.size());
             decryptServerMen(serverMen);
 
             return serverMen;
@@ -721,7 +811,7 @@ public class H2ServerAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItemBackupActionPerformed
 
     private void jMenuItemLChangePasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemLChangePasswordActionPerformed
-        ChangePasswordJDialog dialog = new ChangePasswordJDialog(this, true, loginManager);
+        ChangePasswordDialog dialog = new ChangePasswordDialog(this, true, loginManager);
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }//GEN-LAST:event_jMenuItemLChangePasswordActionPerformed
@@ -773,22 +863,20 @@ public class H2ServerAdmin extends javax.swing.JFrame {
         resetActivityTimer(5);
     }
 
+    private void stopActivityTimer() {
+        if (activityTimer != null) {
+            activityTimer.stop();
+            logMessage("activity listener stop.");
+        } else {
+            logMessage("activity listener can't stop.");
+        }
+    }
+
     private void resetActivityTimer(int time) {
         interval = time;
         actionTimeOutListener = new ActionTimeOutListener();
         activityTimer = new InactivityListener(this, actionTimeOutListener, interval);
         activityTimer.start();
-        System.out.println(interval + "분 대기 후 activity timer reset: " + H2AUtilities.getSqlDataTime());
-    }
-
-    private boolean checkPassword(String password, String hashed) {
-        if (BCrypt.checkpw(password, hashed)) {
-            System.out.println(password + ": matches");
-            return true;
-        } else {
-            System.out.println(password + ": does not match");
-            return false;
-        }
     }
 
     private void logMessage(String msg) {

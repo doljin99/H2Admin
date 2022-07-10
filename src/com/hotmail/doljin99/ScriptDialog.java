@@ -31,7 +31,7 @@ public class ScriptDialog extends javax.swing.JDialog {
     private Table selectedTable;
     private final TableColumns tableColumns;
     
-    private List<String> codeCompletionList;
+    private final List<String> codeCompletionList;
 
     private SimpleEditor selectEditor;
     private SimpleEditor insertEditor;

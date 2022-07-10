@@ -162,7 +162,9 @@ public class StopRemoteServerDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
-        serverMan.setMessage("취소하였습니다.");
+        if (serverMan != null) {
+            serverMan.setMessage("취소하였습니다.");
+        }
         setStatus("취소하였습니다.");
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
@@ -183,12 +185,12 @@ public class StopRemoteServerDialog extends javax.swing.JDialog {
             int port;
             try {
                 port = Integer.valueOf(portString);
-            } catch(NumberFormatException ex) {
+            } catch (NumberFormatException ex) {
                 port = 9092;
             }
             serverMan.setTcpPort(port);
             String password;
-            char [] passwordChars = jPasswordFieldPassword.getPassword();
+            char[] passwordChars = jPasswordFieldPassword.getPassword();
             if (passwordChars == null) {
                 password = "";
             } else {
