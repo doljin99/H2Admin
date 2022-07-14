@@ -7,9 +7,10 @@
 ### Tutorial  
 >[Tutorial 및 예제 자료 download](https://github.com/doljin99/H2Admin/wiki/Tutorial--%EB%B0%8F-%EC%98%88%EC%A0%9C-%EC%9E%90%EB%A3%8C)
 
-### [Latest Release 다운로드](https://github.com/doljin99/H2Admin/releases)  
+### Latest Release binary download  
+>[Latest Release binary 다운로드](https://github.com/doljin99/H2Admin/releases)  
 
-# H2Admin 개요
+### H2Admin 개요
 >Java Swing과 JDBC 등을 이용한 H2 데이터베이스 GUI 관리 도구를 개발
 소규모 작업 영역의 데이터 허브 역할을 하는 플랫폼을 필요 자원이 적고 성능이 좋은 H2 데이터베이스를 기반으로 GUI환경에서 구현하여, IoT, 홈컴퓨팅, Edge 컴퓨팅 등에서 쉽고 효율적으로 적용하고, 관리할 수 있는 기능을 제공하는 도구를 개발한다.  
   
@@ -59,7 +60,9 @@
 10.	xmlbeans-5.0.3210   
       License: https://apache.org/licenses/LICENSE-2.0        
       source: https://xmlbeans.apache.org/
-11. SimpleEditor  
-      License: https://github.com/doljin99/H2Admin/wiki/SimpleEditor-library-License
-11. CodeCompletion 
-      License: https://github.com/doljin99/H2Admin/wiki/CodeCompletion-library-License
+11. SimpleEditor
+      [binary download & License](https://github.com/doljin99/H2Admin/wiki/SimpleEditor-library-License)  
+12. CodeCompletion
+      [binary download & License](https://github.com/doljin99/H2Admin/wiki/CodeCompletion-library-License)  
+13. LoginManager
+      [binary download & License](https://github.com/doljin99/H2Admin/wiki/LoginManager-library-download-&-License)
