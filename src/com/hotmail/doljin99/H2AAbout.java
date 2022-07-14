@@ -10,22 +10,26 @@ package com.hotmail.doljin99;
  * @author Dongjin
  */
 public class H2AAbout extends javax.swing.JPanel {
-    private final String version;
+    private final String h2Adminersion;
+    private final String h2Version;
 
     /**
      * Creates new form MunJaJoRibGiAbout
-     * @param version
+     * @param h2Version
+     * @param h2Adminversion
      */
-    public H2AAbout(String version) {
+    public H2AAbout(String h2Version, String h2Adminversion) {
         initComponents();
         
-        this.version = version;
+        this.h2Version = h2Version;
+        this.h2Adminersion = h2Adminversion;
 
         init();
     }
 
     private void init() {
-        jTextFieldVersion.setText(version);
+        jTextFieldH2Version.setText(h2Version);
+        jTextFieldVersion.setText(h2Adminersion);
         jTextFieldOs.setText(System.getProperty("os.name") + " " + System.getProperty("os.version"));
         jTextFieldJavaVersion.setText(System.getProperty("java.version"));
         jTextFieldJavaHomm.setText(System.getProperty("java.home"));
@@ -49,6 +53,8 @@ public class H2AAbout extends javax.swing.JPanel {
         jTextFieldOs = new javax.swing.JTextField();
         jTextFieldJavaVersion = new javax.swing.JTextField();
         jTextFieldJavaHomm = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        jTextFieldH2Version = new javax.swing.JTextField();
 
         jLabel1.setText(org.openide.util.NbBundle.getMessage(H2AAbout.class, "H2AAbout.jLabel1.text")); // NOI18N
 
@@ -68,6 +74,11 @@ public class H2AAbout extends javax.swing.JPanel {
 
         jTextFieldJavaHomm.setEditable(false);
 
+        jLabel6.setText(org.openide.util.NbBundle.getMessage(H2AAbout.class, "H2AAbout.jLabel6.text")); // NOI18N
+
+        jTextFieldH2Version.setEditable(false);
+        jTextFieldH2Version.setText(org.openide.util.NbBundle.getMessage(H2AAbout.class, "H2AAbout.jTextFieldH2Version.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -75,23 +86,27 @@ public class H2AAbout extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel2))
-                        .addGap(38, 38, 38)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextFieldOs, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
-                            .addComponent(jTextFieldVersion)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
                             .addComponent(jLabel4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(7, 7, 7)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextFieldJavaHomm)
-                            .addComponent(jTextFieldJavaVersion))))
+                            .addComponent(jTextFieldJavaVersion)
+                            .addComponent(jTextFieldJavaHomm)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(0, 229, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel6))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextFieldVersion)
+                            .addComponent(jTextFieldOs)
+                            .addComponent(jTextFieldH2Version))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -99,7 +114,11 @@ public class H2AAbout extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(jTextFieldH2Version, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(jTextFieldVersion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -125,6 +144,8 @@ public class H2AAbout extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JTextField jTextFieldH2Version;
     private javax.swing.JTextField jTextFieldJavaHomm;
     private javax.swing.JTextField jTextFieldJavaVersion;
     private javax.swing.JTextField jTextFieldOs;

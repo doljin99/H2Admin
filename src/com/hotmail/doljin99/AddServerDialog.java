@@ -30,6 +30,7 @@ public class AddServerDialog extends javax.swing.JDialog {
     }
 
     private void init() {
+        jTextFieldAddress.setEditable(false);
         setLocationRelativeTo(this);
     }
 
@@ -64,7 +65,7 @@ public class AddServerDialog extends javax.swing.JDialog {
         jLabel2 = new javax.swing.JLabel();
         jTextFieldPort = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jPasswordFieldPassword = new javax.swing.JPasswordField();
+        jPasswordFieldTcpPassword = new javax.swing.JPasswordField();
         jCheckBoxDaemon = new javax.swing.JCheckBox();
         jCheckBoxAllowOthers = new javax.swing.JCheckBox();
         jCheckBoxIfNotExists = new javax.swing.JCheckBox();
@@ -74,6 +75,10 @@ public class AddServerDialog extends javax.swing.JDialog {
         jRadioButtonRemote = new javax.swing.JRadioButton();
         jLabel5 = new javax.swing.JLabel();
         jTextFieldDatabase = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        jTextFieldRootUser = new javax.swing.JTextField();
+        jLabelRootPassword = new javax.swing.JLabel();
+        jPasswordFieldRootPassword = new javax.swing.JPasswordField();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextAreaSetStatus = new javax.swing.JTextArea();
@@ -118,7 +123,8 @@ public class AddServerDialog extends javax.swing.JDialog {
 
         jLabel2.setText("port");
 
-        jLabel3.setText("패스워드");
+        jLabel3.setText("tcp 패스워드");
+        jLabel3.setToolTipText("tcp 패스워드");
 
         jCheckBoxDaemon.setSelected(true);
         jCheckBoxDaemon.setText("-tcpDaemon");
@@ -152,6 +158,13 @@ public class AddServerDialog extends javax.swing.JDialog {
 
         jLabel5.setText("데이터베이스");
 
+        jLabel6.setText("root user");
+
+        jTextFieldRootUser.setText("SA");
+        jTextFieldRootUser.setToolTipText("");
+
+        jLabelRootPassword.setText("root 패스워드");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -164,16 +177,26 @@ public class AddServerDialog extends javax.swing.JDialog {
                             .addComponent(jLabel1)
                             .addComponent(jLabel2)
                             .addComponent(jLabel4))
-                        .addGap(60, 60, 60)
+                        .addGap(68, 68, 68)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextFieldAddress)
+                            .addComponent(jTextFieldAddress, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jTextFieldPort)
                             .addComponent(jTextFieldName)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButtonBaseDir)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel5))
+                        .addGap(20, 20, 20)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextFieldBaseDir, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jTextFieldDatabase)
+                            .addComponent(jPasswordFieldTcpPassword)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jRadioButtonLocal)
-                                .addGap(18, 18, 18)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jRadioButtonRemote))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jCheckBoxAllowOthers)
@@ -184,14 +207,12 @@ public class AddServerDialog extends javax.swing.JDialog {
                         .addGap(0, 47, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButtonBaseDir)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel5))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(jLabelRootPassword)
+                            .addComponent(jLabel6))
+                        .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextFieldDatabase, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jTextFieldBaseDir)
-                            .addComponent(jPasswordFieldPassword))))
+                            .addComponent(jTextFieldRootUser)
+                            .addComponent(jPasswordFieldRootPassword))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -208,15 +229,15 @@ public class AddServerDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
-                    .addComponent(jTextFieldAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
                     .addComponent(jTextFieldPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jPasswordFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPasswordFieldTcpPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonBaseDir)
@@ -225,12 +246,20 @@ public class AddServerDialog extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(jTextFieldDatabase, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(jTextFieldRootUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelRootPassword)
+                    .addComponent(jPasswordFieldRootPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jCheckBoxAllowOthers)
-                    .addComponent(jCheckBoxDaemon)
-                    .addComponent(jCheckBoxIfNotExists))
-                .addContainerGap(12, Short.MAX_VALUE))
+                    .addComponent(jCheckBoxIfNotExists)
+                    .addComponent(jCheckBoxDaemon))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
@@ -286,16 +315,22 @@ public class AddServerDialog extends javax.swing.JDialog {
         String port = (portTemp == null || portTemp.isEmpty()) ? "9092" : portTemp;
         String baseDirTemp = jTextFieldBaseDir.getText();
         String baseDir = (baseDirTemp == null || baseDirTemp.isEmpty()) ? "~" : baseDirTemp;
-        char[] passwordTemp = jPasswordFieldPassword.getPassword();
-        String password = (passwordTemp == null || passwordTemp.length <= 0) ? "" : new String(passwordTemp);
+        char[] tcpPasswordTemp = jPasswordFieldTcpPassword.getPassword();
+        String tcpPassword = (tcpPasswordTemp == null || tcpPasswordTemp.length <= 0) ? "" : new String(tcpPasswordTemp);
+        String rootUserTemp = jTextFieldRootUser.getText();
+        String rootUser = (rootUserTemp == null || rootUserTemp.isEmpty()) ? "SA" : rootUserTemp;
+        char[] rootPasswordTemp = jPasswordFieldRootPassword.getPassword();
+        String rootPassword = (rootPasswordTemp == null || rootPasswordTemp.length <= 0) ? "" : new String(rootPasswordTemp);
 
         serverMan = new ServerMan(serverName, port);
         serverMan.setLocal(jRadioButtonLocal.isSelected());
         serverMan.setHostAddress(address);
         serverMan.setTcpDaemon(jCheckBoxDaemon.isSelected());
-        serverMan.setTcpPassword(password);
+        serverMan.setTcpPassword(tcpPassword);
         serverMan.setBaseDir(baseDir);
-        serverMan.setTcpPassword(password);
+        serverMan.setTcpPassword(tcpPassword);
+        serverMan.setRootUser(rootUser);
+        serverMan.setRootPassword(rootPassword);
         serverMan.setTcpAllowOthers(jCheckBoxAllowOthers.isSelected());
         serverMan.setIfNotExists(jCheckBoxIfNotExists.isSelected());
 
@@ -358,9 +393,12 @@ public class AddServerDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabelRootPassword;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPasswordField jPasswordFieldPassword;
+    private javax.swing.JPasswordField jPasswordFieldRootPassword;
+    private javax.swing.JPasswordField jPasswordFieldTcpPassword;
     private javax.swing.JRadioButton jRadioButtonLocal;
     private javax.swing.JRadioButton jRadioButtonRemote;
     private javax.swing.JScrollPane jScrollPane1;
@@ -371,6 +409,7 @@ public class AddServerDialog extends javax.swing.JDialog {
     private javax.swing.JTextField jTextFieldDatabase;
     private javax.swing.JTextField jTextFieldName;
     private javax.swing.JTextField jTextFieldPort;
+    private javax.swing.JTextField jTextFieldRootUser;
     private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables
 }

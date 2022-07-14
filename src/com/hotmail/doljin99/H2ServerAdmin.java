@@ -42,6 +42,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.tree.TreePath;
 import org.apache.commons.io.FileUtils;
+import org.h2.engine.Constants;
 
 /**
  *
@@ -49,7 +50,7 @@ import org.apache.commons.io.FileUtils;
  */
 public class H2ServerAdmin extends javax.swing.JFrame {
 
-    public static final String VERSION = "v0.7.1";
+    public static final String VERSION = "v0.8";
 
     private LoginManager loginManager;
     private JPanel glassPane;
@@ -400,6 +401,7 @@ public class H2ServerAdmin extends javax.swing.JFrame {
         jToolBarTop = new javax.swing.JToolBar();
         jButtonAddServer = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
+        jButtonChangeUserInfo = new javax.swing.JButton();
         jButtonStopServer = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JToolBar.Separator();
         jButtonDeleteServer = new javax.swing.JButton();
@@ -453,6 +455,18 @@ public class H2ServerAdmin extends javax.swing.JFrame {
         });
         jToolBarTop.add(jButtonAddServer);
         jToolBarTop.add(jSeparator1);
+
+        jButtonChangeUserInfo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Edit16.gif"))); // NOI18N
+        jButtonChangeUserInfo.setText("ID,PW 변경");
+        jButtonChangeUserInfo.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonChangeUserInfo.setFocusable(false);
+        jButtonChangeUserInfo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonChangeUserInfo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonChangeUserInfoActionPerformed(evt);
+            }
+        });
+        jToolBarTop.add(jButtonChangeUserInfo);
 
         jButtonStopServer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Stop16.gif"))); // NOI18N
         jButtonStopServer.setText("stop server");
@@ -623,6 +637,10 @@ public class H2ServerAdmin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        if (glassPane.isVisible()) {
+            logMessage("화면 차단 중에는 종료할 수 없습니다. 화면 복구후 종료하십시오.");
+            return;
+        }
         if (loginManager == null || loginManager.isLogoff()) {
             stopImmadiately();
         }
@@ -707,22 +725,47 @@ public class H2ServerAdmin extends javax.swing.JFrame {
     }
 
     private void jButtonStopServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStopServerActionPerformed
-        StopRemoteServerDialog dialog = new StopRemoteServerDialog(this, true);
-        dialog.setTitle("shutdown server");
-        dialog.setVisible(true);
-
-        ServerMan serverMan = dialog.getServerMan();
+        TreePath selectionPath = serverTreePane.getSelectedPath();
+        if (selectionPath == null || selectionPath.getPathCount() != 2) {
+            logMessage("먼저 시작할 서버 노드를 선택하십시오.");
+            return;
+        }
+        String serverName = selectionPath.getLastPathComponent().toString();
+        ServerMan serverMan = findServerMan(serverName);
         if (serverMan == null) {
+            logMessage("서버 정보가 없습니다: " + serverName);
+            return;
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append((serverMan.isLocal()) ? "localhost" : "remote").append(" ");
+        sb.append(serverMan.getServerName()).append("서버");
+        String title = sb.toString() + " 정지";
+        String message = title + "하시겠습니까?";
+        int response = JOptionPane.showConfirmDialog(this, message, title, JOptionPane.YES_NO_OPTION);
+        if (response == JOptionPane.NO_OPTION) {
             logMessage(" 서버 정지를 취소하였습니다");
             return;
         }
         try {
-            serverMan.shutdown();
-            logMessage("서버 정지 성공: " + serverMan.getMessage());
+            if (serverMan.stop()) {
+                logMessage("서버 정지 성공: " + serverMan.getMessage());
+            } else {
+                logMessage("서버 정지 실패: " + serverMan.getMessage());
+            }
         } catch (SQLException ex) {
-            logMessage("서버 정지 실패: " + ex.getLocalizedMessage());
+            logMessage("서버 정지 중 에러: " + ex.getLocalizedMessage());
         }
     }//GEN-LAST:event_jButtonStopServerActionPerformed
+
+    ServerMan findServerMan(String name) {
+        for (int i = 0; i < serverList.size(); i++) {
+            ServerMan serverMan = serverList.get(i);
+            if (name.equals(serverMan.getServerName())) {
+                return serverMan;
+            }
+        }
+        return null;
+    }
 
     private void jButtonRefreshTreeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRefreshTreeActionPerformed
         refreshTree();
@@ -842,14 +885,31 @@ public class H2ServerAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
-        H2AAbout about = new H2AAbout(VERSION);
+        H2AAbout about = new H2AAbout(Constants.FULL_VERSION, VERSION);
         JDialog dialog = new JDialog(this, "사용환경", true);
         dialog.setLayout(new BorderLayout());
         dialog.add(about, BorderLayout.CENTER);
-        dialog.setSize(500, 230);
+        dialog.setSize(500, 260);
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void jButtonChangeUserInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonChangeUserInfoActionPerformed
+        TreePath path = serverTreePane.getSelectedPath();
+        if (path == null || path.getPathCount() != 2) {
+            logMessage("사용자 정보를 변경할 서버 노드를 선택하십시오.");
+            return;
+        }
+        String serverName = path.getLastPathComponent().toString();
+        ServerMan serverMan = findServerMan(serverName);
+        if (serverMan == null) {
+            logMessage("서버 정보가 없습니다: " + serverName);
+            return;
+        }
+        ChangeUserInfoDialog dialog = new ChangeUserInfoDialog(this, true, serverMan, loginManager);
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_jButtonChangeUserInfoActionPerformed
 
     private void openBrowser(String uri) {
         try {
@@ -921,6 +981,7 @@ public class H2ServerAdmin extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAddServer;
+    private javax.swing.JButton jButtonChangeUserInfo;
     private javax.swing.JButton jButtonDeleteServer;
     private javax.swing.JButton jButtonRefreshTree;
     private javax.swing.JButton jButtonStopServer;

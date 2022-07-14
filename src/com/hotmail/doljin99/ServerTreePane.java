@@ -446,7 +446,7 @@ public class ServerTreePane extends javax.swing.JPanel {
         String databaseName = paths[2].toString();
         ServerMan serverMan = findServerMan(serverName);
         DatabaseMan databaseMan = serverMan.findDatabaseMan(serverName, databaseName);
-        AddTableDialog dialog = new AddTableDialog((Frame) SwingUtilities.getWindowAncestor(this), true, databaseMan, codeCompletionList);
+        AddTableDialog dialog = new AddTableDialog((Frame) SwingUtilities.getWindowAncestor(this), true, serverMan, databaseMan, codeCompletionList);
         dialog.setSize(900, 600);
         dialog.setLocationRelativeTo(null);
         dialog.setVisible(true);
@@ -541,7 +541,7 @@ public class ServerTreePane extends javax.swing.JPanel {
             if (!serverMan.isRun()) {
                 serverMan.start();
             }
-            Connection connection = databaseMan.getConnection();
+            Connection connection = serverMan.getConnection(databaseName);
             ArrayList<String> columnNames = getColumnNames(rs.getMetaData());
             String insertPreparedString = makeInsertPreparedString(tableName, columnNames);
             ps = connection.prepareStatement(insertPreparedString);
@@ -805,7 +805,7 @@ public class ServerTreePane extends javax.swing.JPanel {
         for (int i = 0; i < databaseMen.size(); i++) {
             DatabaseMan databaseMan = databaseMen.get(i);
             DefaultMutableTreeNode databaseNode = new DefaultMutableTreeNode(databaseMan.getDatabaseName());
-            Connection connection = databaseMan.getConnection();
+            Connection connection = serverMan.getConnection(databaseMan.getDatabaseName());
             if (connection != null) {
                 serverMan.setRun(true);
                 addTableNode(serverMan.getServerName(), connection, databaseNode);

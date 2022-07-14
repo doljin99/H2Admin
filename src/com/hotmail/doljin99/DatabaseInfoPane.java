@@ -43,15 +43,7 @@ public class DatabaseInfoPane extends javax.swing.JPanel {
     }
 
     private String makeJdbcUrl() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("jdbc:h2:tcp://localhost:");
-        sb.append(serverMan.getPort());
-        sb.append("/");
-        sb.append(serverMan.getBaseDir());
-        sb.append("/");
-        sb.append(databaseMan.getDatabaseName());
-        
-        return sb.toString();
+        return serverMan.getJdbcUrl(databaseMan.getDatabaseName());
     }
 
     /**

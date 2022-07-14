@@ -26,25 +26,30 @@ public class ServerMan {
 
     private transient String serverName;
     private String serverName_enc;
-    
+
     private boolean local;
-    
+
     private transient String hostAddress;
     private String hostAddress_enc;
-    
+
     private transient String tcpPort;
     private String tcpPort_enc;
-    
+
     private boolean tcpAllowOthers;
     private boolean ifNotExists;
     private boolean tcpDaemon;
-    
+
     private transient String tcpPassword;
     private String tcpPassword_enc;
-    
+
     private transient String baseDir;
     private String baseDir_enc;
-    
+
+    private transient String rootUser;
+    private String rootUser_enc;
+    private transient String rootPassword;
+    private String rootPassword_enc;
+
     private DatabaseMen databaseMen;
 
     private transient String[] args = {
@@ -82,7 +87,7 @@ public class ServerMan {
     public ServerMan(String name, String hostAddress, String port, boolean tcpAllowOthers) {
         this(name, hostAddress, port, tcpAllowOthers, false);
     }
-    
+
     public ServerMan(String name, String hostAddress, String port, boolean tcpAllowOthers, boolean ifNotExists) {
         this(name, hostAddress, port, tcpAllowOthers, ifNotExists, new DatabaseMen());
     }
@@ -261,6 +266,14 @@ public class ServerMan {
     }
 
     public boolean stop() throws SQLException {
+        if (isLocal()) {
+            return localStop();
+        } else {
+            return remoteStop();
+        }
+    }
+
+    public boolean localStop() throws SQLException {
         if (server == null) {
             server = createServer();
         }
@@ -277,9 +290,9 @@ public class ServerMan {
             server = createServer();
         }
         int port = server.getPort();
-        Server.shutdownTcpServer("tcp://localhost:" + getPort(), getTcpPassword(), true, false);
+        Server.shutdownTcpServer("tcp://" + hostAddress + ":" + getPort(), getTcpPassword(), true, false);
         run = false;
-        message = "서버가 종료되었습니다: " + port;
+        message = serverName + " 서버가 종료되었습니다: " + port;
 
         return true;
     }
@@ -293,7 +306,7 @@ public class ServerMan {
         }
         return isRemoteRun();
     }
-    
+
     private boolean isRemoteRun() {
         Connection connection = getRemoteConnection();
         if (connection == null) {
@@ -304,8 +317,8 @@ public class ServerMan {
         } catch (SQLException ex) {
         }
         return true;
-    }    
-    
+    }
+
     public Connection getRemoteConnection() {
         if (databaseMen == null) {
             databaseMen = new DatabaseMen();
@@ -323,8 +336,8 @@ public class ServerMan {
         } catch (SQLException ex) {
             setMessage(makeRemoteJdbcUrl() + " connection 실패: " + ex.getLocalizedMessage());
             return null;
-        }        
-    }    
+        }
+    }
 
     private String makeRemoteJdbcUrl() {
         if (databaseMen == null) {
@@ -343,7 +356,7 @@ public class ServerMan {
         sb.append(getBaseDir());
         sb.append("/");
         sb.append(databaseMen.get(0).getDatabaseName());
-        
+
         return sb.toString();
     }
 
@@ -375,6 +388,22 @@ public class ServerMan {
         return server;
     }
 
+    public String getRootUser() {
+        return rootUser;
+    }
+
+    public void setRootUser(String rootUser) {
+        this.rootUser = rootUser;
+    }
+
+    public String getRootPassword() {
+        return rootPassword;
+    }
+
+    public void setRootPassword(String rootPassword) {
+        this.rootPassword = rootPassword;
+    }
+
     public DatabaseMen getDatabaseMen() {
         return databaseMen;
     }
@@ -382,12 +411,12 @@ public class ServerMan {
     public void setDatabaseMen(DatabaseMen databaseMen) {
         this.databaseMen = databaseMen;
     }
-    
+
     public DatabaseMan addDatabase(String databaseName) {
-        DatabaseMan databaseMan = new DatabaseMan(serverName, local, hostAddress, tcpPort, baseDir, databaseName);
+        DatabaseMan databaseMan = new DatabaseMan(databaseName);
         return addDatabase(databaseMan);
     }
-    
+
     public DatabaseMan addDatabase(DatabaseMan databaseMan) {
         if (databaseMen == null) {
             databaseMen = new DatabaseMen();
@@ -400,31 +429,90 @@ public class ServerMan {
             databaseMan = null;
         }
         return databaseMan;
-    }   
+    }
 
     public DatabaseMan findDatabaseMan(String serverName, String databaseName) {
         if (databaseMen == null) {
             databaseMen = new DatabaseMen();
         }
-        return databaseMen.findByName(serverName, databaseName);
+        return databaseMen.findByName(databaseName);
     }
-    
 
     public DatabaseMan findDatabaseByName(String databaseName) {
         if (databaseMen == null) {
             databaseMen = new DatabaseMen();
         }
-        return databaseMen.findByName(serverName, databaseName);
+        return databaseMen.findByName(databaseName);
     }
 
-    void remoteStop() throws SQLException {
+    public Connection getConnection(String databaseName) {
+        if (rootUser == null || rootUser.isEmpty()) {
+            rootUser = "SA";
+        }
+        if (rootPassword == null) {
+            rootPassword = "";
+        }
+        Connection connection;
+        try {
+            connection = DriverManager.
+                getConnection(getJdbcUrl(databaseName), rootUser, rootPassword);
+            setMessage("connection 성공: " + getJdbcUrl(databaseName));
+            return connection;
+        } catch (SQLException ex) {
+            setMessage(getJdbcUrl(databaseName) + " connection 실패: " + ex.getLocalizedMessage());
+            return null;
+        }
+    }
+
+    public String getJdbcUrl(String databaseName) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("jdbc:h2:tcp://");
+        sb.append(getHostAddress());
+        sb.append(":");
+        sb.append(getPort());
+        sb.append("/");
+        sb.append(getBaseDir());
+        sb.append("/");
+        sb.append(databaseName);
+
+        return sb.toString();
+    }
+
+    public boolean connectionTest(String databaseName) {
+        Connection conn = null;
+        try {
+            conn = DriverManager.
+                getConnection(getJdbcUrl(databaseName), rootUser, rootPassword);
+            setMessage("connection 성공: " + getJdbcUrl(databaseName));
+            return true;
+        } catch (SQLException ex) {
+            setMessage(getJdbcUrl(databaseName) + "connection 실패: " + ex.getLocalizedMessage());
+            return false;
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException ex) {
+                }
+            }
+        }
+    }
+
+    boolean remoteStop() {
         // no password: ""
         String password = getTcpPassword();
         if (password == null) {
             password = "";
         }
-        Server.shutdownTcpServer("tcp://" + hostAddress + ":" + getPort(), password, false, false);
-        System.out.println("stop url = " + "tcp://" + hostAddress + ":" + getPort() + ", password = " + password);
+        try {
+            Server.shutdownTcpServer("tcp://" + hostAddress + ":" + getPort(), password, true, true);
+            message = ("정지된 remote " + serverName + " 서버: " + hostAddress + ":" + getPort());
+            run = false;
+            return true;
+        } catch (SQLException ex) {
+            message = "" + ex.getLocalizedMessage();
+            return false;
+        }
     }
 
     public void setServerName(String serverName) {
@@ -469,21 +557,48 @@ public class ServerMan {
 
     public void setBaseDir_enc(String baseDir_enc) {
         this.baseDir_enc = baseDir_enc;
-    }    
-    
+    }
+
     protected void decryptFields(LoginManager loginManager) {
         serverName = loginManager.decrypt(serverName_enc);
         hostAddress = loginManager.decrypt(hostAddress_enc);
         tcpPort = loginManager.decrypt(tcpPort_enc);
         baseDir = loginManager.decrypt(baseDir_enc);
         tcpPassword = loginManager.decrypt(tcpPassword_enc);
-    }    
-    
+        rootUser = loginManager.decrypt(rootUser_enc);
+        rootPassword = loginManager.decrypt(rootPassword_enc);
+    }
+
     protected void encryptFields(LoginManager loginManager) {
         serverName_enc = loginManager.encrypt(serverName);
         hostAddress_enc = loginManager.encrypt(hostAddress);
         tcpPort_enc = loginManager.encrypt(tcpPort);
         baseDir_enc = loginManager.encrypt(baseDir);
         tcpPassword_enc = loginManager.encrypt(tcpPassword);
+        rootUser_enc = loginManager.encrypt(rootUser);
+        rootPassword_enc = loginManager.encrypt(rootPassword);
+    }
+
+    public String getRootUser_enc() {
+        return rootUser_enc;
+    }
+
+    public void setRootUser_enc(String rootUser_enc) {
+        this.rootUser_enc = rootUser_enc;
+    }
+
+    public String getRootPassword_enc() {
+        return rootPassword_enc;
+    }
+
+    public void setRootPassword_enc(String rootPassword_enc) {
+        this.rootPassword_enc = rootPassword_enc;
+    }
+
+    Connection getConnection() {
+        if (databaseMen == null || databaseMen.isEmpty()) {
+            return null;
+        }
+        return getConnection(databaseMen.get(0).getDatabaseName());
     }
 }

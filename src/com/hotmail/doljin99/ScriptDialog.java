@@ -713,7 +713,7 @@ public class ScriptDialog extends javax.swing.JDialog {
             setStatus("서버가 정지 중입니다.");
             return;
         }
-        Connection connection = databaseMan.getConnection();
+        Connection connection = serverMan.getConnection(databaseMan.getDatabaseName());
         if (connection == null) {
             setStatus("connection 획득을 실패했습니다.");
             return;
@@ -724,7 +724,7 @@ public class ScriptDialog extends javax.swing.JDialog {
             statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             resultSet = statement.executeQuery(script);
 
-            ResultSetPane resultSetPane = new ResultSetPane(databaseMan, script);
+            ResultSetPane resultSetPane = new ResultSetPane(serverMan, databaseMan, script);
             ResultSetDialog dialog = new ResultSetDialog((Frame) SwingUtilities.getWindowAncestor(this), false, resultSetPane);
             dialog.setSize(900, 600);
             dialog.setLocationRelativeTo(null);
@@ -776,7 +776,7 @@ public class ScriptDialog extends javax.swing.JDialog {
             setStatus("서버가 정지 중입니다.");
             return;
         }
-        Connection connection = databaseMan.getConnection();
+        Connection connection = serverMan.getConnection(databaseMan.getDatabaseName());
         if (connection == null) {
             setStatus("connection 획득을 실패했습니다.");
             return;
@@ -839,7 +839,7 @@ public class ScriptDialog extends javax.swing.JDialog {
             setStatus("서버가 정지 중입니다.");
             return;
         }
-        Connection connection = databaseMan.getConnection();
+        Connection connection = serverMan.getConnection(databaseMan.getDatabaseName());
         if (connection == null) {
             setStatus("connection 획득을 실패했습니다.");
             return;
@@ -884,7 +884,7 @@ public class ScriptDialog extends javax.swing.JDialog {
         }
 
         if (temp.startsWith("SELECT")) {
-            ResultSetPane resultSetPane = new ResultSetPane(databaseMan, script);
+            ResultSetPane resultSetPane = new ResultSetPane(serverMan, databaseMan, script);
             ResultSetDialog dialog = new ResultSetDialog((Frame) SwingUtilities.getWindowAncestor(this), false, resultSetPane);
             dialog.setSize(900, 600);
             dialog.setLocationRelativeTo(null);
@@ -893,7 +893,7 @@ public class ScriptDialog extends javax.swing.JDialog {
             Connection connection = null;
             Statement statement = null;
             try {
-                connection = databaseMan.getConnection();
+                connection = serverMan.getConnection(databaseMan.getDatabaseName());
                 statement = connection.createStatement();
                 int result = statement.executeUpdate(script);
                 setStatus("SQL: " + result + " 행이 영향을 받았습니다.");
@@ -940,7 +940,7 @@ public class ScriptDialog extends javax.swing.JDialog {
             setStatus("서버가 정지 중입니다.");
             return;
         }
-        Connection connection = databaseMan.getConnection();
+        Connection connection = serverMan.getConnection(databaseMan.getDatabaseName());
         if (connection == null) {
             setStatus("connection 획득을 실패했습니다.");
             return;

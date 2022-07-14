@@ -384,7 +384,7 @@ public class BackupDialog extends javax.swing.JDialog {
     }
 
     private void onlineDatabaseBackup(DatabaseMan databaseMan) {
-        Connection connection = databaseMan.getConnection();
+        Connection connection = serverMan.getConnection(databaseMan.getDatabaseName());
         if (connection == null) {
             setStatus("Connection 획득에 실패하여 online Backup을 실행할 수 없습니다: " + databaseMan.getDatabaseName());
             return;

@@ -23,6 +23,8 @@ import org.h2.tools.Csv;
  */
 public class ResultSetPane extends javax.swing.JPanel {
 
+    private final ServerMan serverMan;
+
     private final DatabaseMan databaseMan;
     private String scriptName;
     private final String script;
@@ -30,11 +32,13 @@ public class ResultSetPane extends javax.swing.JPanel {
     /**
      * Creates new form ResultSetPane
      *
+     * @param serverMan
      * @param databaseMan
      * @param script
      */
-    public ResultSetPane(DatabaseMan databaseMan, String script) {
+    public ResultSetPane(ServerMan serverMan, DatabaseMan databaseMan, String script) {
         initComponents();
+        this.serverMan = serverMan;
 
         this.databaseMan = databaseMan;
         this.script = script;
@@ -61,7 +65,7 @@ public class ResultSetPane extends javax.swing.JPanel {
         int rowCount = 0;
         setCursor(new Cursor(Cursor.WAIT_CURSOR));
         try {
-            connection = databaseMan.getConnection();
+            connection = serverMan.getConnection(databaseMan.getDatabaseName());
             if (connection == null) {
                 setStatus("connection 획득을 실패했습니다.");
                 return;
@@ -157,7 +161,7 @@ public class ResultSetPane extends javax.swing.JPanel {
         ResultSet resultSet = null;
         setCursor(new Cursor(Cursor.WAIT_CURSOR));
         try {
-            connection = databaseMan.getConnection();
+            connection = serverMan.getConnection(databaseMan.getDatabaseName());
             if (connection == null) {
                 setStatus("connection 획득을 실패했습니다.");
                 return;

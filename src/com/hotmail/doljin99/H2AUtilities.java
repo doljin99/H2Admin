@@ -470,11 +470,6 @@ public class H2AUtilities {
     private static DatabaseMan upgradeDatabaseMan(LoginManager loginManager, DatabaseManOld databaseManOld) {
         DatabaseMan databaseMan = new DatabaseMan();
         
-        databaseMan.setServerName(databaseManOld.getServerName());
-        databaseMan.setLocal(databaseManOld.isLocal());
-        databaseMan.setHostAddress(databaseManOld.getHostAddress());
-        databaseMan.setPort(databaseManOld.getPort());
-        databaseMan.setBaseDir(databaseManOld.getBaseDir());
         databaseMan.setDatabaseName(databaseManOld.getDatabaseName());
         databaseMan.encryptFields(loginManager);
 //        databaseMan.setServerName_enc(loginManager.encrypt(databaseManOld.getServerName()));

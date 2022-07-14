@@ -19,6 +19,8 @@ import javax.swing.event.DocumentListener;
  */
 public class AddTableDialog extends javax.swing.JDialog {
 
+    private final ServerMan serverMan;
+
     private final DatabaseMan databaseMan;
     private final List<String> codeCompletionList;
     
@@ -30,12 +32,14 @@ public class AddTableDialog extends javax.swing.JDialog {
      * Creates new form AddTableDialog
      * @param parent
      * @param modal
+     * @param serverMan
      * @param databaseMan
      * @param codeCompletionList
      */
-    public AddTableDialog(java.awt.Frame parent, boolean modal, DatabaseMan databaseMan, List<String> codeCompletionList) {
+    public AddTableDialog(java.awt.Frame parent, boolean modal, ServerMan serverMan, DatabaseMan databaseMan, List<String> codeCompletionList) {
         super(parent, modal);
         initComponents();
+        this.serverMan = serverMan;
         
         this.databaseMan = databaseMan;
         this.codeCompletionList = codeCompletionList;
@@ -144,9 +148,9 @@ public class AddTableDialog extends javax.swing.JDialog {
 
     private void jButtonExecuteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExecuteActionPerformed
         Connection connection;
-        connection = databaseMan.getConnection();
+        connection = serverMan.getConnection(databaseMan.getDatabaseName());
         if (connection == null) {
-            setStatus("connection 실패: " + databaseMan.getJdbcUrl());
+            setStatus("connection 실패: " + serverMan.getJdbcUrl(databaseMan.getDatabaseName()));
             return;
         }
         Statement statement = null;

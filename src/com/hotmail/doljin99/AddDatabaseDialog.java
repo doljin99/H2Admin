@@ -279,9 +279,9 @@ public class AddDatabaseDialog extends javax.swing.JDialog {
             return;
         }
 
-        databaseMan = new DatabaseMan(serverName, serverMan.isLocal(), serverMan.getHostAddress(), port, baseDir, databaseName);
+        databaseMan = new DatabaseMan(databaseName);
         
-        boolean ok = databaseMan.connectionTest();
+        boolean ok = serverMan.connectionTest(databaseName);
         setStatus("접속 결과: " + databaseMan.getMessage());
         if (!ok) {
             databaseMan = null;
