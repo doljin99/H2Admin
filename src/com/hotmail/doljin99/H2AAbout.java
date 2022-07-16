@@ -56,28 +56,32 @@ public class H2AAbout extends javax.swing.JPanel {
         jLabel6 = new javax.swing.JLabel();
         jTextFieldH2Version = new javax.swing.JTextField();
 
-        jLabel1.setText(org.openide.util.NbBundle.getMessage(H2AAbout.class, "H2AAbout.jLabel1.text")); // NOI18N
+        jLabel1.setText("H2 데이터베이스 관리도구");
 
-        jLabel2.setText(org.openide.util.NbBundle.getMessage(H2AAbout.class, "H2AAbout.jLabel2.text")); // NOI18N
+        jLabel2.setText("운영체제");
 
-        jLabel3.setText(org.openide.util.NbBundle.getMessage(H2AAbout.class, "H2AAbout.jLabel3.text")); // NOI18N
+        jLabel3.setText("Java 버전");
 
-        jLabel4.setText(org.openide.util.NbBundle.getMessage(H2AAbout.class, "H2AAbout.jLabel4.text")); // NOI18N
+        jLabel4.setText("Java 설치위치");
 
-        jLabel5.setText(org.openide.util.NbBundle.getMessage(H2AAbout.class, "H2AAbout.jLabel5.text")); // NOI18N
+        jLabel5.setText("H2Admin버전");
 
         jTextFieldVersion.setEditable(false);
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/hotmail/doljin99/Bundle"); // NOI18N
+        jTextFieldVersion.setText(bundle.getString("H2AAbout.jTextFieldVersion.text")); // NOI18N
 
         jTextFieldOs.setEditable(false);
+        jTextFieldOs.setText(bundle.getString("H2AAbout.jTextFieldOs.text")); // NOI18N
 
         jTextFieldJavaVersion.setEditable(false);
+        jTextFieldJavaVersion.setText(bundle.getString("H2AAbout.jTextFieldJavaVersion.text")); // NOI18N
 
         jTextFieldJavaHomm.setEditable(false);
+        jTextFieldJavaHomm.setText(bundle.getString("H2AAbout.jTextFieldJavaHomm.text")); // NOI18N
 
-        jLabel6.setText(org.openide.util.NbBundle.getMessage(H2AAbout.class, "H2AAbout.jLabel6.text")); // NOI18N
+        jLabel6.setText("H2 버전");
 
         jTextFieldH2Version.setEditable(false);
-        jTextFieldH2Version.setText(org.openide.util.NbBundle.getMessage(H2AAbout.class, "H2AAbout.jTextFieldH2Version.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

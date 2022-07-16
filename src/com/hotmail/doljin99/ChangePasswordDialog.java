@@ -63,12 +63,12 @@ public class ChangePasswordDialog extends javax.swing.JDialog {
         jTextAreaStatus = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle(org.openide.util.NbBundle.getMessage(ChangePasswordDialog.class, "ChangePasswordDialog.title")); // NOI18N
+        setTitle("패스워드 변경");
 
         jToolBar1.setRollover(true);
 
         jButtonChange.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Save16.gif"))); // NOI18N
-        jButtonChange.setText(org.openide.util.NbBundle.getMessage(ChangePasswordDialog.class, "ChangePasswordDialog.jButtonChange.text")); // NOI18N
+        jButtonChange.setText("변경");
         jButtonChange.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonChange.setFocusable(false);
         jButtonChange.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -81,7 +81,7 @@ public class ChangePasswordDialog extends javax.swing.JDialog {
         jToolBar1.add(jSeparator1);
 
         jButtonCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Stop16.gif"))); // NOI18N
-        jButtonCancel.setText(org.openide.util.NbBundle.getMessage(ChangePasswordDialog.class, "ChangePasswordDialog.jButtonCancel.text")); // NOI18N
+        jButtonCancel.setText("취소");
         jButtonCancel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonCancel.setFocusable(false);
         jButtonCancel.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -94,25 +94,23 @@ public class ChangePasswordDialog extends javax.swing.JDialog {
 
         getContentPane().add(jToolBar1, java.awt.BorderLayout.NORTH);
 
-        jLabel1.setText(org.openide.util.NbBundle.getMessage(ChangePasswordDialog.class, "ChangePasswordDialog.jLabel1.text")); // NOI18N
+        jLabel1.setText("기존 패스워드");
 
-        jPasswordFieldLegacy.setText(org.openide.util.NbBundle.getMessage(ChangePasswordDialog.class, "ChangePasswordDialog.jPasswordFieldLegacy.text")); // NOI18N
         jPasswordFieldLegacy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jPasswordFieldLegacyActionPerformed(evt);
             }
         });
 
-        jLabel2.setText(org.openide.util.NbBundle.getMessage(ChangePasswordDialog.class, "ChangePasswordDialog.jLabel2.text")); // NOI18N
+        jLabel2.setText("신규 패스워드");
 
-        jPasswordFieldCandidate.setText(org.openide.util.NbBundle.getMessage(ChangePasswordDialog.class, "ChangePasswordDialog.jPasswordFieldCandidate.text")); // NOI18N
         jPasswordFieldCandidate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jPasswordFieldCandidateActionPerformed(evt);
             }
         });
 
-        jCheckBoxConfirm.setText(org.openide.util.NbBundle.getMessage(ChangePasswordDialog.class, "ChangePasswordDialog.jCheckBoxConfirm.text")); // NOI18N
+        jCheckBoxConfirm.setText("보이기");
         jCheckBoxConfirm.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jCheckBoxConfirmItemStateChanged(evt);

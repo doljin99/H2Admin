@@ -236,15 +236,14 @@ public class ResultSetPane extends javax.swing.JPanel {
 
         jToolBarGrid.setRollover(true);
 
-        jLabelCount.setText(org.openide.util.NbBundle.getMessage(ResultSetPane.class, "ResultSetPane.jLabelCount.text")); // NOI18N
+        jLabelCount.setText("0");
         jToolBarGrid.add(jLabelCount);
 
-        jLabel1.setText(org.openide.util.NbBundle.getMessage(ResultSetPane.class, "ResultSetPane.jLabel1.text")); // NOI18N
+        jLabel1.setText(" 행");
         jToolBarGrid.add(jLabel1);
         jToolBarGrid.add(jSeparator1);
 
         jButtonRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Refresh16.gif"))); // NOI18N
-        jButtonRefresh.setText(org.openide.util.NbBundle.getMessage(ResultSetPane.class, "ResultSetPane.jButtonRefresh.text")); // NOI18N
         jButtonRefresh.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonRefresh.setFocusable(false);
         jButtonRefresh.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -257,7 +256,7 @@ public class ResultSetPane extends javax.swing.JPanel {
         jToolBarGrid.add(jSeparator2);
 
         jButtonSaveCsv.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Save16.gif"))); // NOI18N
-        jButtonSaveCsv.setText(org.openide.util.NbBundle.getMessage(ResultSetPane.class, "ResultSetPane.jButtonSaveCsv.text")); // NOI18N
+        jButtonSaveCsv.setText("저장(CSV)");
         jButtonSaveCsv.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonSaveCsv.setFocusable(false);
         jButtonSaveCsv.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -290,7 +289,7 @@ public class ResultSetPane extends javax.swing.JPanel {
 
         jPanelresult.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ResultSetPane.class, "ResultSetPane.jPanelresult.TabConstraints.tabTitle"), jPanelresult); // NOI18N
+        jTabbedPane1.addTab("결과", jPanelresult);
 
         jPanelScript.setLayout(new java.awt.BorderLayout());
 
@@ -303,7 +302,7 @@ public class ResultSetPane extends javax.swing.JPanel {
 
         jPanelScript.add(jScrollPane3, java.awt.BorderLayout.CENTER);
 
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ResultSetPane.class, "ResultSetPane.jPanelScript.TabConstraints.tabTitle"), jPanelScript); // NOI18N
+        jTabbedPane1.addTab("Script", jPanelScript);
 
         add(jTabbedPane1, java.awt.BorderLayout.CENTER);
 

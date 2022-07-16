@@ -100,7 +100,7 @@ public class UnblockPane extends javax.swing.JPanel {
 
         jButtonSave.setBackground(new java.awt.Color(204, 255, 255));
         jButtonSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Refresh16.gif"))); // NOI18N
-        jButtonSave.setText(org.openide.util.NbBundle.getMessage(UnblockPane.class, "UnblockPane.jButtonSave.text")); // NOI18N
+        jButtonSave.setText("화면 복구");
         jButtonSave.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonSave.setFocusable(false);
         jButtonSave.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -115,9 +115,8 @@ public class UnblockPane extends javax.swing.JPanel {
 
         jPanel1.setBackground(new java.awt.Color(204, 255, 204));
 
-        jLabel1.setText(org.openide.util.NbBundle.getMessage(UnblockPane.class, "UnblockPane.jLabel1.text")); // NOI18N
+        jLabel1.setText("패스워드");
 
-        jPasswordFieldPassword.setText(org.openide.util.NbBundle.getMessage(UnblockPane.class, "UnblockPane.jPasswordFieldPassword.text")); // NOI18N
         jPasswordFieldPassword.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jPasswordFieldPasswordActionPerformed(evt);
@@ -125,7 +124,7 @@ public class UnblockPane extends javax.swing.JPanel {
         });
 
         jCheckBoxPassword.setBackground(new java.awt.Color(204, 255, 204));
-        jCheckBoxPassword.setText(org.openide.util.NbBundle.getMessage(UnblockPane.class, "UnblockPane.jCheckBoxPassword.text")); // NOI18N
+        jCheckBoxPassword.setText("보이기");
         jCheckBoxPassword.setEnabled(false);
         jCheckBoxPassword.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {

@@ -12,7 +12,6 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.h2.tools.Backup;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -166,7 +165,7 @@ public class BackupDialog extends javax.swing.JDialog {
         jToolBar1.setRollover(true);
 
         jButtonBackup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/SaveAll16.gif"))); // NOI18N
-        jButtonBackup.setText(org.openide.util.NbBundle.getMessage(BackupDialog.class, "BackupDialog.jButtonBackup.text")); // NOI18N
+        jButtonBackup.setText("백업");
         jButtonBackup.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonBackup.setEnabled(false);
         jButtonBackup.setFocusable(false);
@@ -180,7 +179,7 @@ public class BackupDialog extends javax.swing.JDialog {
         jToolBar1.add(jSeparator1);
 
         jButtonCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Stop16.gif"))); // NOI18N
-        jButtonCancel.setText(org.openide.util.NbBundle.getMessage(BackupDialog.class, "BackupDialog.jButtonCancel.text")); // NOI18N
+        jButtonCancel.setText("취소");
         jButtonCancel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonCancel.setFocusable(false);
         jButtonCancel.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -193,37 +192,37 @@ public class BackupDialog extends javax.swing.JDialog {
 
         getContentPane().add(jToolBar1, java.awt.BorderLayout.NORTH);
 
-        jLabel1.setText(org.openide.util.NbBundle.getMessage(BackupDialog.class, "BackupDialog.jLabel1.text")); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/hotmail/doljin99/Bundle"); // NOI18N
+        jLabel1.setText(bundle.getString("BackupDialog.jLabel1.text")); // NOI18N
+        jLabel1.setToolTipText(bundle.getString("BackupDialog.jLabel1.toolTipText")); // NOI18N
 
         jTextFieldBaseDir.setEditable(false);
-        jTextFieldBaseDir.setText(org.openide.util.NbBundle.getMessage(BackupDialog.class, "BackupDialog.jTextFieldBaseDir.text")); // NOI18N
 
         buttonGroupOnOffline.add(jRadioButtonOnline);
         jRadioButtonOnline.setSelected(true);
-        jRadioButtonOnline.setText(org.openide.util.NbBundle.getMessage(BackupDialog.class, "BackupDialog.jRadioButtonOnline.text")); // NOI18N
+        jRadioButtonOnline.setText("Online");
         jRadioButtonOnline.setEnabled(false);
 
         buttonGroupOnOffline.add(jRadioButtonOffline);
-        jRadioButtonOffline.setText(org.openide.util.NbBundle.getMessage(BackupDialog.class, "BackupDialog.jRadioButtonOffline.text")); // NOI18N
+        jRadioButtonOffline.setText("Offline");
         jRadioButtonOffline.setEnabled(false);
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 51, 204)), org.openide.util.NbBundle.getMessage(BackupDialog.class, "BackupDialog.jPanel2.border.title"))); // NOI18N
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 51, 204)), bundle.getString("BackupDialog.jPanel2.border.title"))); // NOI18N
 
         buttonGroupDBSelect.add(jRadioButtonAllDB);
         jRadioButtonAllDB.setSelected(true);
-        jRadioButtonAllDB.setText(org.openide.util.NbBundle.getMessage(BackupDialog.class, "BackupDialog.jRadioButtonAllDB.text")); // NOI18N
-        jRadioButtonAllDB.setToolTipText(org.openide.util.NbBundle.getMessage(BackupDialog.class, "BackupDialog.jRadioButtonAllDB.toolTipText")); // NOI18N
+        jRadioButtonAllDB.setText(bundle.getString("BackupDialog.jRadioButtonAllDB.text")); // NOI18N
+        jRadioButtonAllDB.setToolTipText("서버의 모든 DB를 백업");
         jRadioButtonAllDB.setEnabled(false);
 
         buttonGroupDBSelect.add(jRadioButtonSelectedDB);
-        jRadioButtonSelectedDB.setText(org.openide.util.NbBundle.getMessage(BackupDialog.class, "BackupDialog.jRadioButtonSelectedDB.text")); // NOI18N
-        jRadioButtonSelectedDB.setToolTipText(org.openide.util.NbBundle.getMessage(BackupDialog.class, "BackupDialog.jRadioButtonSelectedDB.toolTipText")); // NOI18N
+        jRadioButtonSelectedDB.setText("선택된 DB");
+        jRadioButtonSelectedDB.setToolTipText("서버에서 선택한 DB만 백업");
         jRadioButtonSelectedDB.setEnabled(false);
 
         buttonGroupDBSelect.add(jRadioButtonOnlyOneDB);
-        jRadioButtonOnlyOneDB.setText(org.openide.util.NbBundle.getMessage(BackupDialog.class, "BackupDialog.jRadioButtonOnlyOneDB.text")); // NOI18N
-        jRadioButtonOnlyOneDB.setToolTipText(org.openide.util.NbBundle.getMessage(BackupDialog.class, "BackupDialog.jRadioButtonOnlyOneDB.toolTipText")); // NOI18N
-        jRadioButtonOnlyOneDB.setActionCommand(org.openide.util.NbBundle.getMessage(BackupDialog.class, "BackupDialog.jRadioButtonOnlyOneDB.actionCommand")); // NOI18N
+        jRadioButtonOnlyOneDB.setText("유일한DB");
+        jRadioButtonOnlyOneDB.setToolTipText(bundle.getString("BackupDialog.jRadioButtonOnlyOneDB.toolTipText")); // NOI18N
         jRadioButtonOnlyOneDB.setEnabled(false);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -251,7 +250,7 @@ public class BackupDialog extends javax.swing.JDialog {
         );
 
         jButtonBackupDir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Import16.gif"))); // NOI18N
-        jButtonBackupDir.setText(org.openide.util.NbBundle.getMessage(BackupDialog.class, "BackupDialog.jButtonBackupDir.text")); // NOI18N
+        jButtonBackupDir.setText("백업 dir");
         jButtonBackupDir.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonBackupDir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -260,13 +259,12 @@ public class BackupDialog extends javax.swing.JDialog {
         });
 
         jTextFieldBackupDir.setEditable(false);
-        jTextFieldBackupDir.setText(org.openide.util.NbBundle.getMessage(BackupDialog.class, "BackupDialog.jTextFieldBackupDir.text")); // NOI18N
 
-        jLabel2.setText(org.openide.util.NbBundle.getMessage(BackupDialog.class, "BackupDialog.jLabel2.text")); // NOI18N
+        jLabel2.setText("백업 파일");
 
         jTextFieldBackupFileName.setEditable(false);
-        jTextFieldBackupFileName.setText(org.openide.util.NbBundle.getMessage(BackupDialog.class, "BackupDialog.jTextFieldBackupFileName.text")); // NOI18N
-        jTextFieldBackupFileName.setToolTipText(org.openide.util.NbBundle.getMessage(BackupDialog.class, "BackupDialog.jTextFieldBackupFileName.toolTipText")); // NOI18N
+        jTextFieldBackupFileName.setText("serverName-dbName-yyyy-MM-dd-HH-mm-ss.zip");
+        jTextFieldBackupFileName.setToolTipText("시간은 현재 시간을 보여주며 백업작업 당시 시간으로 설정됩니다.");
 
         javax.swing.GroupLayout jPanelOfflineLayout = new javax.swing.GroupLayout(jPanelOffline);
         jPanelOffline.setLayout(jPanelOfflineLayout);
@@ -336,7 +334,7 @@ public class BackupDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonBackupDirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBackupDirActionPerformed
+    private void chooseBackupDir() {
         File directory = H2AUtilities.chooseDirectory("H2 DB Backup 디렉터리 선택");
         if (directory == null) {
             setStatus("백업 디렉터리 선택을 취소하였습니다.");
@@ -356,8 +354,8 @@ public class BackupDialog extends javax.swing.JDialog {
         jTextFieldBackupFileName.setText(makeBackupFilename(serverMan.getServerName(), dbName));
 
         jButtonBackup.setEnabled(true);
-    }//GEN-LAST:event_jButtonBackupDirActionPerformed
-
+    }
+    
     private void jButtonBackupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBackupActionPerformed
         if (serverMan.isRun()) {
             onlineBackup();
@@ -450,7 +448,6 @@ public class BackupDialog extends javax.swing.JDialog {
             done = false;
             setStatus("offline 백업 중 에러: " + ex.getLocalizedMessage());
             message = "offline 백업 중 에러: " + ex.getLocalizedMessage();
-            Exceptions.printStackTrace(ex);
         } finally {
             setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         }
@@ -461,6 +458,10 @@ public class BackupDialog extends javax.swing.JDialog {
         message = "백업을 취소하였습니다.";
         setVisible(false);
     }//GEN-LAST:event_jButtonCancelActionPerformed
+
+    private void jButtonBackupDirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBackupDirActionPerformed
+        chooseBackupDir();
+    }//GEN-LAST:event_jButtonBackupDirActionPerformed
 
     public boolean isDone() {
         return done;

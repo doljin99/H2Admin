@@ -8,7 +8,6 @@ import com.hotmail.doljin99.loginmanager.LoginManager;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -67,32 +66,28 @@ public class ChangeUserInfoDialog extends javax.swing.JDialog {
         jTextAreaStatus = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle(org.openide.util.NbBundle.getMessage(ChangeUserInfoDialog.class, "ChangeUserInfoDialog.title")); // NOI18N
+        setTitle("root사용자 정보 변경");
 
-        jLabel1.setText(org.openide.util.NbBundle.getMessage(ChangeUserInfoDialog.class, "ChangeUserInfoDialog.jLabel1.text")); // NOI18N
+        jLabel1.setText("기존 사용자 ID");
 
-        jTextFieldLegacy.setText(org.openide.util.NbBundle.getMessage(ChangeUserInfoDialog.class, "ChangeUserInfoDialog.jTextFieldLegacy.text")); // NOI18N
+        jTextFieldLegacy.setEditable(false);
 
-        jLabel2.setText(org.openide.util.NbBundle.getMessage(ChangeUserInfoDialog.class, "ChangeUserInfoDialog.jLabel2.text")); // NOI18N
+        jLabel2.setText("새 사용자 ID");
 
-        jTextFieldNew.setText(org.openide.util.NbBundle.getMessage(ChangeUserInfoDialog.class, "ChangeUserInfoDialog.jTextFieldNew.text")); // NOI18N
+        jLabel3.setText("기존 패스워드");
 
-        jLabel3.setText(org.openide.util.NbBundle.getMessage(ChangeUserInfoDialog.class, "ChangeUserInfoDialog.jLabel3.text")); // NOI18N
+        jPasswordFieldLegacy.setEditable(false);
 
-        jPasswordFieldLegacy.setText(org.openide.util.NbBundle.getMessage(ChangeUserInfoDialog.class, "ChangeUserInfoDialog.jPasswordFieldLegacy.text")); // NOI18N
+        jLabel4.setText("새 패스워드");
 
-        jLabel4.setText(org.openide.util.NbBundle.getMessage(ChangeUserInfoDialog.class, "ChangeUserInfoDialog.jLabel4.text")); // NOI18N
-
-        jPasswordFieldNew.setText(org.openide.util.NbBundle.getMessage(ChangeUserInfoDialog.class, "ChangeUserInfoDialog.jPasswordFieldNew.text")); // NOI18N
-
-        jCheckBoxLegacy.setText(org.openide.util.NbBundle.getMessage(ChangeUserInfoDialog.class, "ChangeUserInfoDialog.jCheckBoxLegacy.text")); // NOI18N
+        jCheckBoxLegacy.setText("보이기");
         jCheckBoxLegacy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBoxLegacyActionPerformed(evt);
             }
         });
 
-        jCheckBoxNew.setText(org.openide.util.NbBundle.getMessage(ChangeUserInfoDialog.class, "ChangeUserInfoDialog.jCheckBoxNew.text")); // NOI18N
+        jCheckBoxNew.setText("보이기");
         jCheckBoxNew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBoxNewActionPerformed(evt);
@@ -100,7 +95,7 @@ public class ChangeUserInfoDialog extends javax.swing.JDialog {
         });
 
         jButtonChange.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Edit16.gif"))); // NOI18N
-        jButtonChange.setText(org.openide.util.NbBundle.getMessage(ChangeUserInfoDialog.class, "ChangeUserInfoDialog.jButtonChange.text")); // NOI18N
+        jButtonChange.setText("변경");
         jButtonChange.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonChange.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -109,7 +104,7 @@ public class ChangeUserInfoDialog extends javax.swing.JDialog {
         });
 
         jButtonCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Stop16.gif"))); // NOI18N
-        jButtonCancel.setText(org.openide.util.NbBundle.getMessage(ChangeUserInfoDialog.class, "ChangeUserInfoDialog.jButtonCancel.text")); // NOI18N
+        jButtonCancel.setText("취소");
         jButtonCancel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -169,10 +164,11 @@ public class ChangeUserInfoDialog extends javax.swing.JDialog {
                     .addComponent(jLabel2)
                     .addComponent(jTextFieldNew, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jPasswordFieldLegacy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jCheckBoxLegacy))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jCheckBoxLegacy)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel3)
+                        .addComponent(jPasswordFieldLegacy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
