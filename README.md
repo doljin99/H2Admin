@@ -61,8 +61,8 @@
       License: https://apache.org/licenses/LICENSE-2.0        
       source: https://xmlbeans.apache.org/
 11. SimpleEditor
-      [binary download & License](https://github.com/doljin99/H2Admin/wiki/SimpleEditor-library-License)  
+      [binary download & License](https://github.com/doljin99/H2Admin/wiki/SimpleEditor-library--download-&-license)  
 12. CodeCompletion
-      [binary download & License](https://github.com/doljin99/H2Admin/wiki/CodeCompletion-library-License)  
+      [binary download & License](https://github.com/doljin99/H2Admin/wiki/CodeCompletion-library-Download-&-License)  
 13. LoginManager
       [binary download & License](https://github.com/doljin99/H2Admin/wiki/LoginManager-library-download-&-License)
