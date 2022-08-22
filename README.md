@@ -5,7 +5,7 @@
 [LoginManager binary 다운로드](https://github.com/doljin99/H2Admin/wiki/LoginManager-library-download-&-License)
 
 ### Tutorial  
->[Tutorial 및 예제 자료 download](https://github.com/doljin99/H2Admin/wiki/Tutorial--%EB%B0%8F-%EC%98%88%EC%A0%9C-%EC%9E%90%EB%A3%8C)
+>[Tutorial 및 예제 자료 download](https://github.com/doljin99/H2Admin/wiki/A.-Tutorial--%EB%B0%8F-%EC%98%88%EC%A0%9C-%EC%9E%90%EB%A3%8C)  
 
 ### Latest Release binary download  
 >[Latest Release binary 다운로드](https://github.com/doljin99/H2Admin/releases)  
@@ -61,8 +61,8 @@
       License: https://apache.org/licenses/LICENSE-2.0        
       source: https://xmlbeans.apache.org/
 11. SimpleEditor
-      [binary download & License](https://github.com/doljin99/H2Admin/wiki/SimpleEditor-library-License)  
+      [binary download & License](https://github.com/doljin99/H2Admin/wiki/SimpleEditor-library--download-&-license)  
 12. CodeCompletion
-      [binary download & License](https://github.com/doljin99/H2Admin/wiki/CodeCompletion-library-License)  
+      [binary download & License](https://github.com/doljin99/H2Admin/wiki/CodeCompletion-library-Download-&-License)  
 13. LoginManager
       [binary download & License](https://github.com/doljin99/H2Admin/wiki/LoginManager-library-download-&-License)
