@@ -26,10 +26,13 @@ public class DatabaseMan {
 
     private transient String databaseName;
     private String databaseName_enc;
+    
+    private Users users;
 
     private transient String message;
 
     public DatabaseMan() {
+        this(null);
     }
 
     /**
@@ -37,36 +40,22 @@ public class DatabaseMan {
      * @param databaseName
      */
     public DatabaseMan(String databaseName) {
-        this.databaseName = databaseName;
+        this(databaseName, new Users());
     }
-
     /**
      *
-     * @param serverName
-     * @param local
-     * @param memory
-     * @param port
-     * @param user
-     * @param userPassword
-     * @param baseDir
      * @param databaseName
+     * @param users
      */
+    public DatabaseMan(String databaseName, Users users) {
+        this.databaseName = databaseName;
+        this.users = users;
+    }
+    
 //    public DatabaseMan(String serverName, boolean local, boolean memory, String port, String user, String userPassword, String baseDir, String databaseName) {
 //        this(serverName, local, memory, "localhost", port, user, userPassword, baseDir, databaseName);
 //    }
 
-    /**
-     *
-     * @param serverName
-     * @param local
-     * @param memory
-     * @param hostAddress
-     * @param port
-     * @param user
-     * @param userPassword
-     * @param baseDir
-     * @param databaseName
-     */
 //    public DatabaseMan(String serverName, boolean local, boolean memory, String hostAddress, String port, String user, String userPassword, String baseDir, String databaseName) {
 //        this.serverName = serverName;
 //        this.local = local;
@@ -105,9 +94,51 @@ public class DatabaseMan {
 
     protected void decryptFields(LoginManager loginManager) {
         databaseName = loginManager.decrypt(databaseName_enc);
+        if (users == null) {
+            return;
+        }
+        for (int i = 0; i < users.size(); i++) {
+            User user = users.get(i);
+            user.decryptFields(loginManager);
+        }
     }
 
     protected void encryptFields(LoginManager loginManager) {
         databaseName_enc = loginManager.encrypt(databaseName);
+        if (users == null) {
+            return;
+        }
+        for (int i = 0; i < users.size(); i++) {
+            User user = users.get(i);
+            user.encryptFields(loginManager);
+        }
+    }
+
+    public Users getUsers() {
+        return users;
+    }
+
+    public void setUsers(Users users) {
+        this.users = users;
+    }
+    
+    public void serUser(User user) {
+        if (users == null || users.isEmpty()) {
+            return;
+        }
+        users.add(user);
+    }
+
+    public User getUser(String userName) {
+        if (users == null || users.isEmpty()) {
+            return null;
+        }
+        for (int i = 0; i < users.size(); i++) {
+            User user = users.get(i);
+            if (user.getUserName().equalsIgnoreCase(userName)) {
+                return user;
+            }
+        }
+        return null;
     }
 }

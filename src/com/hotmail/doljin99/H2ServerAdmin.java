@@ -279,18 +279,6 @@ public class H2ServerAdmin extends javax.swing.JFrame {
         return password;
     }
 
-    private void decryptServerMen(ServerMen serverMen) {
-        for (int i = 0; i < serverMen.size(); i++) {
-            ServerMan serverMan = serverMen.get(i);
-            serverMan.decryptFields(loginManager);
-            DatabaseMen databaseMen = serverMan.getDatabaseMen();
-            for (int j = 0; j < databaseMen.size(); j++) {
-                DatabaseMan databaseMan = databaseMen.get(j);
-                databaseMan.decryptFields(loginManager);
-            }
-        }
-    }
-
     class ActionTimeOutListener extends AbstractAction {
 
         @Override
@@ -323,7 +311,7 @@ public class H2ServerAdmin extends javax.swing.JFrame {
                 return serverMen;
             }
 
-            decryptServerMen(serverMen);
+            serverMen.decryptServerMen(loginManager);
 
             return serverMen;
         } catch (NoSuchElementException ex) {
@@ -416,6 +404,7 @@ public class H2ServerAdmin extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuFile = new javax.swing.JMenu();
         jMenuItemBackup = new javax.swing.JMenuItem();
+        jMenuItem7 = new javax.swing.JMenuItem();
         jMenuEdit = new javax.swing.JMenu();
         jMenuItemLChangePassword = new javax.swing.JMenuItem();
         jSeparator4 = new javax.swing.JPopupMenu.Separator();
@@ -458,6 +447,7 @@ public class H2ServerAdmin extends javax.swing.JFrame {
 
         jButtonChangeUserInfo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Edit16.gif"))); // NOI18N
         jButtonChangeUserInfo.setText("ID,PW 변경");
+        jButtonChangeUserInfo.setToolTipText("root 사용자 ID 또는 암호 변경");
         jButtonChangeUserInfo.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonChangeUserInfo.setFocusable(false);
         jButtonChangeUserInfo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -546,6 +536,15 @@ public class H2ServerAdmin extends javax.swing.JFrame {
             }
         });
         jMenuFile.add(jMenuItemBackup);
+
+        jMenuItem7.setText("서버 정보 저장");
+        jMenuItem7.setToolTipText("서버 정보를 파일에 저장");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
+        jMenuFile.add(jMenuItem7);
 
         jMenuBar1.add(jMenuFile);
 
@@ -637,12 +636,12 @@ public class H2ServerAdmin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        if (loginManager == null || loginManager.isLogoff()) {
+            stopImmadiately();
+        }
         if (glassPane.isVisible()) {
             logMessage("화면 차단 중에는 종료할 수 없습니다. 화면 복구후 종료하십시오.");
             return;
-        }
-        if (loginManager == null || loginManager.isLogoff()) {
-            stopImmadiately();
         }
         String password = getPassword();
         if (!loginManager.checkPassword(password)) {
@@ -686,6 +685,7 @@ public class H2ServerAdmin extends javax.swing.JFrame {
         Writer serverWriter = null;
 
         try {
+            serverList.encryptFields(loginManager);
             File dir = new File(SERVER_MEN_ENC_DIR);
             if (!dir.exists()) {
                 FileUtils.forceMkdir(dir);
@@ -721,7 +721,6 @@ public class H2ServerAdmin extends javax.swing.JFrame {
             Thread.sleep(interval);
         } catch (InterruptedException ex) {
         }
-
     }
 
     private void jButtonStopServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStopServerActionPerformed
@@ -815,11 +814,6 @@ public class H2ServerAdmin extends javax.swing.JFrame {
             return;
         }
         serverMan.encryptFields(loginManager);
-        DatabaseMen databaseMen = serverMan.getDatabaseMen();
-        for (int i = 0; i < databaseMen.size(); i++) {
-            DatabaseMan databaseMan = databaseMen.get(i);
-            databaseMan.encryptFields(loginManager);
-        }
         if (serverList.addNew(serverMan)) {
             logMessage("server 생성: " + serverMan.getPort());
             refreshTree();
@@ -911,6 +905,11 @@ public class H2ServerAdmin extends javax.swing.JFrame {
         dialog.setVisible(true);
     }//GEN-LAST:event_jButtonChangeUserInfoActionPerformed
 
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+        saveServerInformation();
+        logMessage("서버 정보를 저장하였습니다.");
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
+
     private void openBrowser(String uri) {
         try {
             Desktop.getDesktop().browse(URI.create(uri));
@@ -995,6 +994,7 @@ public class H2ServerAdmin extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItemBackup;
     private javax.swing.JMenuItem jMenuItemBlockWindow;
     private javax.swing.JMenuItem jMenuItemLChangePassword;

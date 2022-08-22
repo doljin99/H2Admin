@@ -101,7 +101,8 @@ public class ServerMan {
      * @param ifNotExists
      * @param databaseMen
      */
-    public ServerMan(String name, String hostAddress, String port, boolean tcpAllowOthers, boolean ifNotExists, DatabaseMen databaseMen) {
+    public ServerMan(String name, String hostAddress, String port, boolean tcpAllowOthers, boolean ifNotExists, 
+        DatabaseMen databaseMen) {
         this.serverName = name;
         this.hostAddress = hostAddress;
         this.tcpPort = (port == null || port.isEmpty()) ? "9092" : port;
@@ -567,6 +568,13 @@ public class ServerMan {
         tcpPassword = loginManager.decrypt(tcpPassword_enc);
         rootUser = loginManager.decrypt(rootUser_enc);
         rootPassword = loginManager.decrypt(rootPassword_enc);
+        if (databaseMen == null) {
+            return;
+        }
+        for (int i = 0; i < databaseMen.size(); i++) {
+            DatabaseMan databaseMan = databaseMen.get(i);
+            databaseMan.decryptFields(loginManager);
+        }
     }
 
     protected void encryptFields(LoginManager loginManager) {
@@ -577,6 +585,13 @@ public class ServerMan {
         tcpPassword_enc = loginManager.encrypt(tcpPassword);
         rootUser_enc = loginManager.encrypt(rootUser);
         rootPassword_enc = loginManager.encrypt(rootPassword);
+        if (databaseMen == null) {
+            return;
+        }
+        for (int i = 0; i < databaseMen.size(); i++) {
+            DatabaseMan databaseMan = databaseMen.get(i);
+            databaseMan.encryptFields(loginManager);
+        }
     }
 
     public String getRootUser_enc() {
@@ -601,4 +616,5 @@ public class ServerMan {
         }
         return getConnection(databaseMen.get(0).getDatabaseName());
     }
+    
 }

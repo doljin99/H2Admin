@@ -158,6 +158,7 @@ public class ServerTreePane extends javax.swing.JPanel {
             jButtonAddTable.setEnabled(false);
             jButtonReadCsv.setEnabled(false);
             jButtonSql.setEnabled(false);
+            jButtonAddUser.setEnabled(false);
             int count = selected.getPathCount();
             switch (count) {
                 case 2: {
@@ -199,8 +200,10 @@ public class ServerTreePane extends javax.swing.JPanel {
                     ServerMan serverMan = findServerMan(serverName);
                     if (serverMan.isRun()) {
                         jButtonAddTable.setEnabled(true);
+                        jButtonAddUser.setEnabled(true);
                     } else {
                         jButtonAddTable.setEnabled(false);
+                        jButtonAddUser.setEnabled(false);
                     }
 
                     DatabaseInfoPane pane = new DatabaseInfoPane(serverMan, databaseName);
@@ -302,6 +305,8 @@ public class ServerTreePane extends javax.swing.JPanel {
         jSeparator3 = new javax.swing.JToolBar.Separator();
         jButtonAddDatabase = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
+        jButtonAddUser = new javax.swing.JButton();
+        jSeparator7 = new javax.swing.JToolBar.Separator();
         jButtonDatabaseBackup = new javax.swing.JButton();
         jSeparator6 = new javax.swing.JToolBar.Separator();
         jButtonAddTable = new javax.swing.JButton();
@@ -361,6 +366,20 @@ public class ServerTreePane extends javax.swing.JPanel {
         });
         jToolBar1.add(jButtonAddDatabase);
         jToolBar1.add(jSeparator1);
+
+        jButtonAddUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Zoom16.gif"))); // NOI18N
+        jButtonAddUser.setText("사용자");
+        jButtonAddUser.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonAddUser.setEnabled(false);
+        jButtonAddUser.setFocusable(false);
+        jButtonAddUser.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonAddUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAddUserActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButtonAddUser);
+        jToolBar1.add(jSeparator7);
 
         jButtonDatabaseBackup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/SaveAll16.gif"))); // NOI18N
         jButtonDatabaseBackup.setText("백업");
@@ -615,6 +634,26 @@ public class ServerTreePane extends javax.swing.JPanel {
         backup();
     }//GEN-LAST:event_jButtonDatabaseBackupActionPerformed
 
+    private void jButtonAddUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddUserActionPerformed
+        TreePath selectionPath = tree.getSelectionPath();
+        if (selectionPath == null) {
+            setStatus("사용자 추가할 할 데이터베이스 노드를 선택하십시오.");
+            return;
+        }
+        Object[] paths = selectionPath.getPath();
+        if (paths.length < 3) {
+            setStatus("서버 트리 정보가 정확하지 않습니다. \n refresh tree 버튼으로 새로고침 해 주시고 다시 시도해 주시기 바랍니다.");
+            return;
+        }
+        String serverName = paths[1].toString();
+        String databaseNAme = paths[2].toString();
+        ServerMan serverMan = serverList.findByName(serverName);
+        DatabaseMan databaseMan = serverMan.findDatabaseByName(databaseNAme);
+        ManageUserDialog dialog = new ManageUserDialog((Frame) SwingUtilities.getWindowAncestor(this), true, serverMan, databaseMan, loginManager);
+        dialog.setLocationRelativeTo(null);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_jButtonAddUserActionPerformed
+
     protected void backup() {
         TreePath selectionPath = tree.getSelectionPath();
         if (selectionPath == null || selectionPath.getPathCount() < 2) {
@@ -843,6 +882,7 @@ public class ServerTreePane extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAddDatabase;
     private javax.swing.JButton jButtonAddTable;
+    private javax.swing.JButton jButtonAddUser;
     private javax.swing.JButton jButtonDatabaseBackup;
     private javax.swing.JButton jButtonReadCsv;
     private javax.swing.JButton jButtonSql;
@@ -856,6 +896,7 @@ public class ServerTreePane extends javax.swing.JPanel {
     private javax.swing.JToolBar.Separator jSeparator4;
     private javax.swing.JToolBar.Separator jSeparator5;
     private javax.swing.JToolBar.Separator jSeparator6;
+    private javax.swing.JToolBar.Separator jSeparator7;
     private javax.swing.JSplitPane jSplitPaneServerTree;
     private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables

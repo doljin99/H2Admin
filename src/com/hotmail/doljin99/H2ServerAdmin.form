@@ -18,6 +18,15 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemBackupActionPerformed"/>
               </Events>
             </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem7">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="&#xc11c;&#xbc84; &#xc815;&#xbcf4; &#xc800;&#xc7a5;"/>
+                <Property name="toolTipText" type="java.lang.String" value="&#xc11c;&#xbc84; &#xc815;&#xbcf4;&#xb97c; &#xd30c;&#xc77c;&#xc5d0; &#xc800;&#xc7a5;"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem7ActionPerformed"/>
+              </Events>
+            </MenuItem>
           </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="jMenuEdit">
@@ -188,6 +197,7 @@
                   <Image iconType="3" name="/toolbarButtonGraphics/general/Edit16.gif"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="ID,PW &#xbcc0;&#xacbd;"/>
+                <Property name="toolTipText" type="java.lang.String" value="root &#xc0ac;&#xc6a9;&#xc790; ID &#xb610;&#xb294; &#xc554;&#xd638; &#xbcc0;&#xacbd;"/>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
                     <BevelBorder/>

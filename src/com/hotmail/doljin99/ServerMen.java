@@ -4,6 +4,7 @@
  */
 package com.hotmail.doljin99;
 
+import com.hotmail.doljin99.loginmanager.LoginManager;
 import java.util.ArrayList;
 
 /**
@@ -105,5 +106,17 @@ public class ServerMen extends ArrayList<ServerMan> {
             return null;
         }
         return remove(index);
+    }    
+
+    public void decryptServerMen(LoginManager loginManager) {
+        for (ServerMan serverMan : this) {
+            serverMan.decryptFields(loginManager);
+        }
+    }
+
+    void encryptFields(LoginManager loginManager) {
+        for (ServerMan serverMan : this) {
+            serverMan.encryptFields(loginManager);
+        }
     }
 }
