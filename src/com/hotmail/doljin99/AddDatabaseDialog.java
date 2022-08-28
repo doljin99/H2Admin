@@ -24,8 +24,10 @@ public class AddDatabaseDialog extends javax.swing.JDialog {
      * @param serverMan
      */
     public AddDatabaseDialog(java.awt.Frame parent, boolean modal, ServerMan serverMan) {
+        
         super(parent, modal);
         initComponents();
+        
         this.serverMan = serverMan;
         
         init();

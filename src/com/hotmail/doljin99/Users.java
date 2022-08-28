@@ -58,6 +58,15 @@ public class Users extends ArrayList<User> {
         return false;
     }
 
+    public boolean existId(String id) {
+        for (User user : this) {
+            if (user.getUserName().equalsIgnoreCase(id)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public User getUser(String userName) {
         for (User user : this) {
             if (user.getUserName().equalsIgnoreCase(userName)) {

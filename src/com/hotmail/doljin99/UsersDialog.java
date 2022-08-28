@@ -5,7 +5,6 @@
 package com.hotmail.doljin99;
 
 import com.hotmail.doljin99.loginmanager.LoginManager;
-import java.awt.BorderLayout;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,8 +22,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author dolji
  */
-public class ManageUserDialog extends javax.swing.JDialog {
-
+public class UsersDialog extends javax.swing.JDialog {
     public static final String GET_USERS_SCRIPT
         = "SELECT "
         + "	USER_NAME, IS_ADMIN "
@@ -32,7 +30,7 @@ public class ManageUserDialog extends javax.swing.JDialog {
         + "	INFORMATION_SCHEMA.USERS "
         + "WHERE "
         + "	USER_NAME != 'SA' ";
-
+    
     public static final String GET_TABLES_SCRIPT
         = " SELECT  "
         + " 	TABLE_NAME, TABLE_TYPE  "
@@ -51,25 +49,16 @@ public class ManageUserDialog extends javax.swing.JDialog {
         + " ORDER BY  "
         + " 	TABLE_NAME,  PRIVILEGE_TYPE ";
 
-    public static final String CREATE_USER_TEMPLATE
-        = "CREATE USER ?1 PASSWORD '?2'";
-    public static final String GRANT_TABLE_SCRIPT
-        = "GRANT ? ON TABLE ? TO ?";
-    public static final String REVOKE_TABLE_SCRIPT
-        = "REVOKE ? ON TABLE ? FROM ?";
-
     private final ServerMan serverMan;
     private final DatabaseMan databaseMan;
-
-    private ArrayList<SimpleTableInfo> databaseTables;
-    private Users users;
-
-    private UserPrivileges userPrivileges;
-    private UserPriviligesJPanel userPrivilegesPane;
     private final LoginManager loginManager;
 
+    private Users users;
+    private ArrayList<SimpleTableInfo> databaseTables;
+    private UserPrivileges userTablesPrivileges;
+
     /**
-     * Creates new form AddUserDialog
+     * Creates new form UserDialog
      *
      * @param parent
      * @param modal
@@ -77,7 +66,10 @@ public class ManageUserDialog extends javax.swing.JDialog {
      * @param databaseMan
      * @param loginManager
      */
-    public ManageUserDialog(java.awt.Frame parent, boolean modal, ServerMan serverMan, DatabaseMan databaseMan, LoginManager loginManager) {
+    public UsersDialog(java.awt.Frame parent, boolean modal,
+        ServerMan serverMan, DatabaseMan databaseMan,
+        LoginManager loginManager) {
+
         super(parent, modal);
         initComponents();
         this.serverMan = serverMan;
@@ -88,34 +80,23 @@ public class ManageUserDialog extends javax.swing.JDialog {
     }
 
     private void init() {
-        users = databaseMan.getUsers();
-        if (serverMan == null) {
-            jButtonAdd.setEnabled(false);
-            return;
-        }
+        setLocationRelativeTo(this);
+        users = databaseMan.getUsersNotNull();
 
+        jTextFieldServerName.setText(serverMan.getServerName());
+        jTextFieldDatabaseName.setText(databaseMan.getDatabaseName());
+
+        addDiffUsersFromMeta();
         setUsersFromFIle();
-        setUsersFromMeta();
 
         setDatabaseTables();
 
         jTextFieldUserId.getDocument().addDocumentListener(new UserIdChangeListener());
         jTableUsers.getSelectionModel().addListSelectionListener(new UsersSelectionListener());
-    }
-
-    private void refreshUserTable() {
-        setUsersFromFIle();
-        setUsersFromMeta();
-        if (jTableUsers.getRowCount() > 0) {
-            jTableUsers.setRowSelectionInterval(0, 0);
-        }
-        jTableUsers.validate();
+        validate();
     }
 
     private void setUsersFromFIle() {
-        if (users == null) {
-            users = new Users();
-        }
         Object[] row = new Object[2];
         DefaultTableModel model = (DefaultTableModel) jTableUsers.getModel();
         model.setRowCount(0);
@@ -129,29 +110,23 @@ public class ManageUserDialog extends javax.swing.JDialog {
         jTableUsers.validate();
     }
 
-    private void setUsersFromMeta() {
-        Object[] row = new Object[2];
-        DefaultTableModel model = (DefaultTableModel) jTableUsers.getModel();
-        Connection connection = serverMan.getConnection(databaseMan.getDatabaseName());
+    private void addDiffUsersFromMeta() {
+        Connection connection = null;
         Statement statement = null;
         ResultSet usersResulset = null;
         try {
+            connection = serverMan.getConnection(databaseMan.getDatabaseName());
             statement = connection.createStatement();
             usersResulset = statement.executeQuery(GET_USERS_SCRIPT);
             while (usersResulset.next()) {
-                if (existId(usersResulset.getString(1))) {
+                if (users.existId(usersResulset.getString(1))) {
                     continue;
                 }
                 User user = new User();
-                user.setUserName(usersResulset.getString(1));                
+                user.setUserName(usersResulset.getString(1));
                 user.setAdministrator(usersResulset.getBoolean(2));
                 user.encryptFields(loginManager);
-
-                row[0] = user.getUserName();
-                row[1] = user.isAdministrator();
                 users.addUser(user);
-
-                model.addRow(row);
             }
             jTableUsers.validate();
         } catch (SQLException ex) {
@@ -178,74 +153,20 @@ public class ManageUserDialog extends javax.swing.JDialog {
         }
     }
 
-    private UserPrivileges makeAllRightsUserPrivileges(String userName, boolean rights) {
-        UserPrivileges tempUserPrivileges = new UserPrivileges(userName);
-        for (int i = 0; i < databaseTables.size(); i++) {
-            SimpleTableInfo simpleTableInfo = databaseTables.get(i);
-            TablePrivileges tablePrivileges = makeAllRightsTablePrivileges(simpleTableInfo, rights);
-            tablePrivileges.setRightsAll(rights);
-        }
-
-        return tempUserPrivileges;
-    }
-
-    private TablePrivileges makeAllRightsTablePrivileges(SimpleTableInfo simpleTableInfo, boolean rights) {
-        TablePrivileges tablePrivileges = new TablePrivileges(simpleTableInfo.getTableName(), simpleTableInfo.getTableType());
-        tablePrivileges.setRightsAll(rights);
-
-        return tablePrivileges;
-    }
-
-    class SimpleTableInfo {
-
-        private String tableName;
-
-        private String tableType;
-
-        /**
-         * Get the value of tableType
-         *
-         * @return the value of tableType
-         */
-        public String getTableType() {
-            return tableType;
-        }
-
-        /**
-         * Set the value of tableType
-         *
-         * @param tableType new value of tableType
-         */
-        public void setTableType(String tableType) {
-            this.tableType = tableType;
-        }
-
-        /**
-         * Get the value of tableName
-         *
-         * @return the value of tableName
-         */
-        public String getTableName() {
-            return tableName;
-        }
-
-        /**
-         * Set the value of tableName
-         *
-         * @param tableName new value of tableName
-         */
-        public void setTableName(String tableName) {
-            this.tableName = tableName;
-        }
-
-    }
-
     private void setDatabaseTables() {
-        Connection connection = serverMan.getConnection(databaseMan.getDatabaseName());
+        Connection connection = null;
         Statement statement = null;
         ResultSet tablesResulset = null;
         databaseTables = new ArrayList<>();
+        Object[] row = new Object[6];
+        DefaultTableModel model = (DefaultTableModel) jTablePrivileges.getModel();
+        model.setRowCount(0);
         try {
+            connection = serverMan.getConnection(databaseMan.getDatabaseName());
+            if (connection == null) {
+                writeMessage("데이터베이스테 테이블이 없습니다.");
+                return;
+            }
             statement = connection.createStatement();
             tablesResulset = statement.executeQuery(GET_TABLES_SCRIPT);
             while (tablesResulset.next()) {
@@ -254,10 +175,17 @@ public class ManageUserDialog extends javax.swing.JDialog {
                 simpleTableInfo.setTableType(tablesResulset.getString(2));
 
                 databaseTables.add(simpleTableInfo);
+
+                row[0] = simpleTableInfo.getTableName();
+                row[1] = simpleTableInfo.getTableType();
+                row[2] = false;
+                row[3] = false;
+                row[4] = false;
+                row[5] = false;
+                model.addRow(row);
             }
-            userPrivilegesPane = new UserPriviligesJPanel(databaseTables);
-            jPanelPriviliges.add(userPrivilegesPane, BorderLayout.CENTER);
-            jPanelPriviliges.validate();
+
+            jTablePrivileges.validate();
 
         } catch (SQLException ex) {
             writeMessage("데이터베이스 테이블 목록 가져오기 에러: " + ex.getLocalizedMessage());
@@ -307,7 +235,7 @@ public class ManageUserDialog extends javax.swing.JDialog {
                 jButtonUpdate.setEnabled(false);
                 jButtonDelete.setEnabled(false);
             }
-            if (existId(id)) {
+            if (users.existId(id)) {
                 jButtonAdd.setEnabled(false);
                 jButtonUpdate.setEnabled(true);
                 jButtonDelete.setEnabled(true);
@@ -323,18 +251,13 @@ public class ManageUserDialog extends javax.swing.JDialog {
         }
     }
 
-    private boolean existId(String id) {
-        for (User user : users) {
-            if (user.getUserName().equalsIgnoreCase(id)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private void setUserPrivileges(String userName) {
-        userPrivileges = getTablePrivileges(userName);
-        userPrivilegesPane.setPrivileges(userPrivileges);
+        userTablesPrivileges = getTablePrivileges(userName);
+        if (userTablesPrivileges == null) {
+            writeMessage("테이블 겁근 권한 가져오기에 실패하였습니다.");
+            return;
+        }
+        setPrivileges();
     }
 
     private UserPrivileges getTablePrivileges(String userName) {
@@ -368,7 +291,7 @@ public class ManageUserDialog extends javax.swing.JDialog {
                     count++;
                 }
                 if (count == 0) {
-                    tempUserPrivileges.add(makeAllRightsTablePrivileges(simpleTableInfo, false));
+                    tempUserPrivileges.add(makeAllTablePrivileges(simpleTableInfo, false));
                 } else {
                     tempUserPrivileges.add(tablePrivileges);
                 }
@@ -396,6 +319,78 @@ public class ManageUserDialog extends javax.swing.JDialog {
                 } catch (SQLException ex) {
                 }
             }
+        }
+    }
+
+    public void setPrivileges() {
+        DefaultTableModel model = (DefaultTableModel) jTablePrivileges.getModel();
+        model.setRowCount(0);
+        if (userTablesPrivileges == null) {
+            writeMessage("사용자 테이블 권한 목록이 없습니다.");
+            return;
+        }
+        Object[] row = new Object[6];
+        for (int i = 0; i < userTablesPrivileges.size(); i++) {
+            TablePrivileges tablePrivileges = userTablesPrivileges.get(i);
+            row[0] = tablePrivileges.getTableName();
+            row[1] = tablePrivileges.getTableType();
+            row[2] = tablePrivileges.isInsertPrivileges();
+            row[3] = tablePrivileges.isSelectPrivileges();
+            row[4] = tablePrivileges.isUpdatePrivileges();
+            row[5] = tablePrivileges.isDeletePrivileges();
+
+            model.addRow(row);
+        }
+        jTablePrivileges.validate();
+    }
+
+    private TablePrivileges makeAllTablePrivileges(SimpleTableInfo simpleTableInfo, boolean rights) {
+        TablePrivileges tablePrivileges = new TablePrivileges(simpleTableInfo.getTableName(), simpleTableInfo.getTableType());
+        tablePrivileges.setRightsAll(rights);
+
+        return tablePrivileges;
+    }
+
+    class SimpleTableInfo {
+
+        private String tableName;
+
+        private String tableType;
+
+        /**
+         * Get the value of tableType
+         *
+         * @return the value of tableType
+         */
+        public String getTableType() {
+            return tableType;
+        }
+
+        /**
+         * Set the value of tableType
+         *
+         * @param tableType new value of tableType
+         */
+        public void setTableType(String tableType) {
+            this.tableType = tableType;
+        }
+
+        /**
+         * Get the value of tableName
+         *
+         * @return the value of tableName
+         */
+        public String getTableName() {
+            return tableName;
+        }
+
+        /**
+         * Set the value of tableName
+         *
+         * @param tableName new value of tableName
+         */
+        public void setTableName(String tableName) {
+            this.tableName = tableName;
         }
     }
 
@@ -437,6 +432,7 @@ public class ManageUserDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel3 = new javax.swing.JPanel();
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -459,12 +455,20 @@ public class ManageUserDialog extends javax.swing.JDialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextAreaMessage = new javax.swing.JTextArea();
         jPanelPriviliges = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTablePrivileges = new javax.swing.JTable();
         jCheckBoxEcho = new javax.swing.JCheckBox();
+        jLabel3 = new javax.swing.JLabel();
+        jTextFieldServerName = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        jTextFieldDatabaseName = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("사용자 관리");
 
-        jSplitPane1.setDividerLocation(200);
+        jPanel3.setLayout(new java.awt.BorderLayout());
+
+        jSplitPane1.setDividerLocation(250);
 
         jPanel4.setLayout(new java.awt.BorderLayout());
 
@@ -585,12 +589,47 @@ public class ManageUserDialog extends javax.swing.JDialog {
         jPanelPriviliges.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 51, 204)), "Privileges"));
         jPanelPriviliges.setLayout(new java.awt.BorderLayout());
 
+        jTablePrivileges.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "테이블명", "테이블타입", "INSERT", "SELECT", "UPDATE", "DELETE"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, true, true, true, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane3.setViewportView(jTablePrivileges);
+
+        jPanelPriviliges.add(jScrollPane3, java.awt.BorderLayout.CENTER);
+
         jCheckBoxEcho.setText("보이기");
         jCheckBoxEcho.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jCheckBoxEchoItemStateChanged(evt);
             }
         });
+
+        jLabel3.setText("서버명");
+
+        jTextFieldServerName.setEditable(false);
+
+        jLabel4.setText("데이터베이스명");
+
+        jTextFieldDatabaseName.setEditable(false);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -599,27 +638,47 @@ public class ManageUserDialog extends javax.swing.JDialog {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanelPriviliges, javax.swing.GroupLayout.DEFAULT_SIZE, 438, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextFieldUserId)
-                            .addComponent(jPasswordField1, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jCheckBoxAdministrator)
-                            .addComponent(jCheckBoxEcho))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jPanelPriviliges, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 392, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel3))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(18, 18, 18)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(jTextFieldUserId)
+                                            .addComponent(jPasswordField1, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jCheckBoxAdministrator)
+                                            .addComponent(jCheckBoxEcho)))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(44, 44, 44)
+                                        .addComponent(jTextFieldServerName, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jTextFieldDatabaseName, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 54, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jTextFieldServerName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(jTextFieldDatabaseName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jTextFieldUserId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -631,7 +690,7 @@ public class ManageUserDialog extends javax.swing.JDialog {
                     .addComponent(jCheckBoxEcho))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanelPriviliges, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -640,36 +699,12 @@ public class ManageUserDialog extends javax.swing.JDialog {
 
         jSplitPane1.setRightComponent(jPanel2);
 
-        getContentPane().add(jSplitPane1, java.awt.BorderLayout.CENTER);
+        jPanel3.add(jSplitPane1, java.awt.BorderLayout.CENTER);
+
+        getContentPane().add(jPanel3, java.awt.BorderLayout.PAGE_START);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jCheckBoxEchoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxEchoItemStateChanged
-        if (jCheckBoxEcho.isSelected()) {
-            jPasswordField1.setEchoChar((char) 0);
-        } else {
-            jPasswordField1.setEchoChar('*');
-        }
-    }//GEN-LAST:event_jCheckBoxEchoItemStateChanged
-
-    private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
-        setVisible(false);
-    }//GEN-LAST:event_jButtonCancelActionPerformed
-
-    private void jCheckBoxAdministratorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxAdministratorItemStateChanged
-        if (jCheckBoxAdministrator.isSelected()) {
-            jPanelPriviliges.setEnabled(false);
-            userPrivilegesPane.setEnabled(false);
-            userPrivilegesPane.setAllRights(true);
-            userPrivilegesPane.setEnableTablePrivileges(false);
-        } else {
-            jPanelPriviliges.setEnabled(true);
-            userPrivilegesPane.setEnabled(true);
-            userPrivilegesPane.setEnableTablePrivileges(true);
-        }
-        jPanelPriviliges.validate();
-    }//GEN-LAST:event_jCheckBoxAdministratorItemStateChanged
 
     private void jButtonAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddActionPerformed
         addUser();
@@ -692,12 +727,32 @@ public class ManageUserDialog extends javax.swing.JDialog {
         }
     }
 
+    private void refreshUserTable() {
+        DefaultTableModel model = (DefaultTableModel) jTableUsers.getModel();
+        model.setRowCount(0);
+        if (users == null || users.isEmpty()) {
+            return;
+        }
+        Object[] row = new Object[2];
+        for (User user : users) {
+            row[0] = user.getUserName();
+            row[1] = user.isAdministrator();
+
+            model.addRow(row);
+        }
+        if (jTableUsers.getRowCount() > 0) {
+            jTableUsers.setRowSelectionInterval(0, 0);
+        }
+        jTableUsers.validate();
+    }
+
     private boolean createUser(String userName, String password) {
-        Connection connection = serverMan.getConnection(databaseMan.getDatabaseName());
+        Connection connection = null;
         Statement createUserStatement = null;
 //        String createTemplate = "CREATE USER '?1' PASSWORD '?2'";
         try {
             String createScript = "CREATE USER " + userName + " PASSWORD '" + password + "'";
+            connection = serverMan.getConnection(databaseMan.getDatabaseName());
             createUserStatement = connection.createStatement();
 
             createUserStatement.executeUpdate(createScript);
@@ -709,7 +764,7 @@ public class ManageUserDialog extends javax.swing.JDialog {
             users.addUser(user);
             writeMessage("사용자 생성: " + userName);
             return true;
-        } catch (SQLException ex) {
+        } catch (SQLException | NullPointerException ex) {
             writeMessage("사용자 생성 중 에러: " + ex.getLocalizedMessage());
             return false;
         } finally {
@@ -739,7 +794,7 @@ public class ManageUserDialog extends javax.swing.JDialog {
         try {
             grantStatement = connection.createStatement();
             revokeStatement = connection.createStatement();
-            UserPrivileges updatedPrivileges = userPrivilegesPane.getUpdatesCatalogPrivileges(userName);
+            UserPrivileges updatedPrivileges = getUpdatesCatalogPrivileges(userName);
             for (int i = 0; i < updatedPrivileges.size(); i++) {
                 TablePrivileges tablePrivileges = updatedPrivileges.get(i);
                 if (tablePrivileges.isInsertPrivileges()) {
@@ -785,6 +840,21 @@ public class ManageUserDialog extends javax.swing.JDialog {
                 }
             }
         }
+    }
+
+    private UserPrivileges getUpdatesCatalogPrivileges(String userName) {
+        UserPrivileges updataedUserPrivileges = new UserPrivileges(userName);
+        for (int i = 0; i < jTablePrivileges.getRowCount(); i++) {
+            TablePrivileges tablePrivileges = new TablePrivileges((String) jTablePrivileges.getValueAt(i, 0), (String) jTablePrivileges.getValueAt(i, 1));
+            tablePrivileges.setInsertPrivileges((boolean) jTablePrivileges.getValueAt(i, 2));
+            tablePrivileges.setSelectPrivileges((boolean) jTablePrivileges.getValueAt(i, 3));
+            tablePrivileges.setUpdatePrivileges((boolean) jTablePrivileges.getValueAt(i, 4));
+            tablePrivileges.setDeletePrivileges((boolean) jTablePrivileges.getValueAt(i, 5));
+
+            updataedUserPrivileges.add(tablePrivileges);
+        }
+
+        return updataedUserPrivileges;
     }
 
     private boolean updatePassword() {
@@ -855,7 +925,7 @@ public class ManageUserDialog extends javax.swing.JDialog {
     private void jButtonUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonUpdateActionPerformed
         updateUser();
     }//GEN-LAST:event_jButtonUpdateActionPerformed
-
+    
     private void updateUser() {
         if (updatePassword()) {
             updatePrivliges();
@@ -898,6 +968,10 @@ public class ManageUserDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_jButtonDeleteActionPerformed
 
+    private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
+        setVisible(false);
+    }//GEN-LAST:event_jButtonCancelActionPerformed
+
     private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed
         if (jButtonAdd.isEnabled()) {
             addUser();
@@ -906,6 +980,42 @@ public class ManageUserDialog extends javax.swing.JDialog {
         }
         jTableUsers.requestFocus();
     }//GEN-LAST:event_jPasswordField1ActionPerformed
+
+    private void jCheckBoxAdministratorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxAdministratorItemStateChanged
+        if (jCheckBoxAdministrator.isSelected()) {
+            jPanelPriviliges.setEnabled(false);
+            jTablePrivileges.setEnabled(false);
+            setAllRights(true);
+        } else {
+            jPanelPriviliges.setEnabled(true);
+            jTablePrivileges.setEnabled(true);
+        }
+        jPanelPriviliges.validate();
+    }//GEN-LAST:event_jCheckBoxAdministratorItemStateChanged
+
+    
+    private void setAllRights(boolean right) {
+        if (jTablePrivileges == null) {
+            return;
+        }
+        DefaultTableModel model = (DefaultTableModel) jTablePrivileges.getModel();
+        int rowCount = model.getRowCount();
+        for (int i = 0; i < rowCount; i++) {
+            jTablePrivileges.setValueAt(right, i, 2);
+            jTablePrivileges.setValueAt(right, i, 3);
+            jTablePrivileges.setValueAt(right, i, 4);
+            jTablePrivileges.setValueAt(right, i, 5);
+        }
+        jTablePrivileges.validate();
+    }
+    
+    private void jCheckBoxEchoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxEchoItemStateChanged
+        if (jCheckBoxEcho.isSelected()) {
+            jPasswordField1.setEchoChar((char) 0);
+        } else {
+            jPasswordField1.setEchoChar('*');
+        }
+    }//GEN-LAST:event_jCheckBoxEchoItemStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAdd;
@@ -916,19 +1026,26 @@ public class ManageUserDialog extends javax.swing.JDialog {
     private javax.swing.JCheckBox jCheckBoxEcho;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanelPriviliges;
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JTable jTablePrivileges;
     private javax.swing.JTable jTableUsers;
     private javax.swing.JTextArea jTextAreaMessage;
+    private javax.swing.JTextField jTextFieldDatabaseName;
+    private javax.swing.JTextField jTextFieldServerName;
     private javax.swing.JTextField jTextFieldUserId;
     private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables

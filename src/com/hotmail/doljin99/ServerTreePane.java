@@ -158,7 +158,6 @@ public class ServerTreePane extends javax.swing.JPanel {
             jButtonAddTable.setEnabled(false);
             jButtonReadCsv.setEnabled(false);
             jButtonSql.setEnabled(false);
-            jButtonAddUser.setEnabled(false);
             int count = selected.getPathCount();
             switch (count) {
                 case 2: {
@@ -200,10 +199,8 @@ public class ServerTreePane extends javax.swing.JPanel {
                     ServerMan serverMan = findServerMan(serverName);
                     if (serverMan.isRun()) {
                         jButtonAddTable.setEnabled(true);
-                        jButtonAddUser.setEnabled(true);
                     } else {
                         jButtonAddTable.setEnabled(false);
-                        jButtonAddUser.setEnabled(false);
                     }
 
                     DatabaseInfoPane pane = new DatabaseInfoPane(serverMan, databaseName);
@@ -217,7 +214,7 @@ public class ServerTreePane extends javax.swing.JPanel {
                     String databaseName = paths[2].toString();
                     String tableName = paths[3].toString();
                     ServerMan serverMan = findServerMan(serverName);
-                    DatabaseMan databaseMan = serverMan.findDatabaseMan(serverName, databaseName);
+//                    DatabaseMan databaseMan = serverMan.findDatabaseMan(serverName, databaseName);
                     if (serverMan.isRun()) {
                         jButtonReadCsv.setEnabled(true);
                     } else {
@@ -370,7 +367,6 @@ public class ServerTreePane extends javax.swing.JPanel {
         jButtonAddUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Zoom16.gif"))); // NOI18N
         jButtonAddUser.setText("사용자");
         jButtonAddUser.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jButtonAddUser.setEnabled(false);
         jButtonAddUser.setFocusable(false);
         jButtonAddUser.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jButtonAddUser.addActionListener(new java.awt.event.ActionListener() {
@@ -530,15 +526,6 @@ public class ServerTreePane extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonStopActionPerformed
 
     private void jButtonReadCsvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReadCsvActionPerformed
-        JFileChooser chooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("CSV FILE", "csv", "csv");
-        chooser.setFileFilter(filter);
-        chooser.showOpenDialog(this);
-        File file = chooser.getSelectedFile();
-        if (file == null) {
-            setStatus("CSV 파일 읽기 취소");
-            return;
-        }
         TreePath selectionPath = tree.getSelectionPath();
         if (selectionPath == null) {
             setStatus("먼저 데이터를 입력할 테이블 노드를 선택하십시오.");
@@ -549,7 +536,17 @@ public class ServerTreePane extends javax.swing.JPanel {
         String databaseName = paths[2].toString();
         String tableName = paths[3].toString();
         ServerMan serverMan = findServerMan(serverName);
-        DatabaseMan databaseMan = serverMan.findDatabaseMan(serverName, databaseName);
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle(tableName + " 입력용 CSV 파일 열기");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("CSV FILE", "csv", "csv");
+        chooser.setFileFilter(filter);
+        chooser.showOpenDialog(this);
+        File file = chooser.getSelectedFile();
+        if (file == null) {
+            setStatus(tableName + " CSV 파일 입력 취소");
+            return;
+        }
+//        DatabaseMan databaseMan = serverMan.findDatabaseMan(serverName, databaseName);
         ResultSet rs = null;
         PreparedStatement ps = null;
         try {
@@ -567,7 +564,7 @@ public class ServerTreePane extends javax.swing.JPanel {
             int count = 0;
             while (rs.next()) {
                 for (int i = 0; i < columnNames.size(); i++) {
-                    String columnName = columnNames.get(i);
+//                    String columnName = columnNames.get(i);
                     ps.setObject(i + 1, rs.getObject(i + 1));
                 }
                 count += ps.executeUpdate();
@@ -611,11 +608,11 @@ public class ServerTreePane extends javax.swing.JPanel {
         ServerMan serverMan = serverList.findByName(serverName);
         DatabaseMan databaseMan = serverMan.findDatabaseByName(databaseName);
         Tables databaseTables = tables.getDatabaseTables(serverName, databaseName);
-        for (int i = 0; i < databaseTables.size(); i++) {
-            Table get = databaseTables.get(i);
+//        for (int i = 0; i < databaseTables.size(); i++) {
+//            Table get = databaseTables.get(i);
 //            System.out.println("table = " + get.getTableName());
-        }
-        Table table = tables.findByName(serverName, databaseName, tableName);
+//        }
+//        Table table = tables.findByName(serverName, databaseName, tableName);
         TableColumns tableColumns = columns.findTableColumns(serverName, databaseName);
         ScriptDialog dialog = new ScriptDialog((Frame) SwingUtilities.getWindowAncestor(this), false, serverMan, databaseMan, databaseTables, tableName, tableColumns, codeCompletionList);
         dialog.setVisible(true);
@@ -648,9 +645,13 @@ public class ServerTreePane extends javax.swing.JPanel {
         String serverName = paths[1].toString();
         String databaseNAme = paths[2].toString();
         ServerMan serverMan = serverList.findByName(serverName);
+        if (!serverMan.isRun()) {
+            setStatus(serverName + " 서버가 정지 상태이므로 접근할 수 없읍니다. 먼저 서버를 실행 시켜 주십시오");
+            return;
+        }
         DatabaseMan databaseMan = serverMan.findDatabaseByName(databaseNAme);
-        ManageUserDialog dialog = new ManageUserDialog((Frame) SwingUtilities.getWindowAncestor(this), true, serverMan, databaseMan, loginManager);
-        dialog.setLocationRelativeTo(null);
+       UsersDialog dialog = new UsersDialog((Frame) SwingUtilities.getWindowAncestor(this), true, 
+            serverMan, databaseMan, loginManager);
         dialog.setVisible(true);
     }//GEN-LAST:event_jButtonAddUserActionPerformed
 
@@ -689,8 +690,7 @@ public class ServerTreePane extends javax.swing.JPanel {
         }
         String[] messages = dialog.getMessage().split("\n");
         dialog.dispose();
-        for (int i = 0; i < messages.length; i++) {
-            String message = messages[i];
+        for (String message : messages) {
             setStatus("\t" + message);
         }
     }

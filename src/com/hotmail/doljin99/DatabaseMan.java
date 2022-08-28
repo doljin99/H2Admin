@@ -23,10 +23,9 @@ public class DatabaseMan {
 //    private String userPassword;
 //    private transient String baseDir;
 //    private String baseDir_enc;
-
     private transient String databaseName;
     private String databaseName_enc;
-    
+
     private Users users;
 
     private transient String message;
@@ -42,6 +41,7 @@ public class DatabaseMan {
     public DatabaseMan(String databaseName) {
         this(databaseName, new Users());
     }
+
     /**
      *
      * @param databaseName
@@ -51,11 +51,10 @@ public class DatabaseMan {
         this.databaseName = databaseName;
         this.users = users;
     }
-    
+
 //    public DatabaseMan(String serverName, boolean local, boolean memory, String port, String user, String userPassword, String baseDir, String databaseName) {
 //        this(serverName, local, memory, "localhost", port, user, userPassword, baseDir, databaseName);
 //    }
-
 //    public DatabaseMan(String serverName, boolean local, boolean memory, String hostAddress, String port, String user, String userPassword, String baseDir, String databaseName) {
 //        this.serverName = serverName;
 //        this.local = local;
@@ -67,7 +66,6 @@ public class DatabaseMan {
 //        this.databaseName = databaseName;
 //        this.user = user;
 //    }
-
     public String getDatabaseName() {
         return databaseName;
     }
@@ -121,7 +119,7 @@ public class DatabaseMan {
     public void setUsers(Users users) {
         this.users = users;
     }
-    
+
     public void serUser(User user) {
         if (users == null || users.isEmpty()) {
             return;
@@ -140,5 +138,12 @@ public class DatabaseMan {
             }
         }
         return null;
+    }
+
+    public Users getUsersNotNull() {
+        if (users != null) {
+            users = new Users();
+        }
+        return users;
     }
 }

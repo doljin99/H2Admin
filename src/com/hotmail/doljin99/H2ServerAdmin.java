@@ -141,16 +141,16 @@ public class H2ServerAdmin extends javax.swing.JFrame {
 
             @Override
             public void componentHidden(ComponentEvent e) {
+                resetActivityTimer(interval);
                 showOwnedWindows();
                 if (serverList == null) {
                     makeServerList();
                 }
-                resetActivityTimer(interval);
             }
         });
     }
 
-    class OnairWindow {
+    class OnAirWindow {
 
         Window window;
         int locationX;
@@ -158,7 +158,7 @@ public class H2ServerAdmin extends javax.swing.JFrame {
         int sizeX;
         int sizeY;
 
-        public OnairWindow(Window window) {
+        public OnAirWindow(Window window) {
             this.window = window;
         }
 
@@ -204,7 +204,7 @@ public class H2ServerAdmin extends javax.swing.JFrame {
 
     }
 
-    private ArrayList<OnairWindow> ownWindows;
+    private ArrayList<OnAirWindow> ownWindows;
 
     private void blockWindow(String msg) {
         blockMessage = msg;
@@ -216,7 +216,7 @@ public class H2ServerAdmin extends javax.swing.JFrame {
                 window.dispose();
                 continue;
             }
-            OnairWindow onairWindow = new OnairWindow(window);
+            OnAirWindow onairWindow = new OnAirWindow(window);
             onairWindow.setLocationX(window.getX());
             onairWindow.setLocationY(window.getY());
             onairWindow.setLocationX(window.getX());
@@ -225,7 +225,7 @@ public class H2ServerAdmin extends javax.swing.JFrame {
             ownWindows.add(onairWindow);
             window.setSize(20, 20);
             window.setLocation(getX() + 20, getY() + 20);
-            window.toBack();
+//            window.toBack();
             window.setVisible(false);
         }
 
@@ -240,23 +240,28 @@ public class H2ServerAdmin extends javax.swing.JFrame {
         if (serverList == null) {
             makeServerList();
         }
-        resetActivityTimer(interval);
+//        resetActivityTimer(interval);
     }
 
     private void showOwnedWindows() {
         if (ownWindows == null || ownWindows.isEmpty()) {
             return;
         }
+        Window modalWindow = null;
         for (int i = 0; i < ownWindows.size(); i++) {
-            OnairWindow onairWindow = ownWindows.get(i);
+            OnAirWindow onairWindow = ownWindows.get(i);
             Window window = onairWindow.getWindow();
             window.setSize(onairWindow.getSizeX(), onairWindow.getSizeY());
             window.setLocation(onairWindow.getLocationX(), onairWindow.getLocationY());
-            window.toFront();
+            if (window.isActive()) {
+                modalWindow = window;
+            }
             window.setVisible(true);
             window.validate();
         }
-        ownWindows.clear();
+        if (modalWindow != null) {
+            modalWindow.toFront();
+        }
     }
 
     private void login() {
@@ -925,7 +930,7 @@ public class H2ServerAdmin extends javax.swing.JFrame {
     private void stopActivityTimer() {
         if (activityTimer != null) {
             activityTimer.stop();
-            logMessage("activity listener stop.");
+//            logMessage("activity listener stop.");
         } else {
             logMessage("activity listener can't stop.");
         }
@@ -936,6 +941,7 @@ public class H2ServerAdmin extends javax.swing.JFrame {
         actionTimeOutListener = new ActionTimeOutListener();
         activityTimer = new InactivityListener(this, actionTimeOutListener, interval);
         activityTimer.start();
+//        logMessage("activity listener reset.");
     }
 
     private void logMessage(String msg) {
