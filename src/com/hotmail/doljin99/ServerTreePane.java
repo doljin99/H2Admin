@@ -650,7 +650,7 @@ public class ServerTreePane extends javax.swing.JPanel {
             return;
         }
         DatabaseMan databaseMan = serverMan.findDatabaseByName(databaseNAme);
-       UsersDialog dialog = new UsersDialog((Frame) SwingUtilities.getWindowAncestor(this), true, 
+        UsersDialog dialog = new UsersDialog((Frame) SwingUtilities.getWindowAncestor(this), true,
             serverMan, databaseMan, loginManager);
         dialog.setVisible(true);
     }//GEN-LAST:event_jButtonAddUserActionPerformed

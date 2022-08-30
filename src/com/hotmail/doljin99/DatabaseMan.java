@@ -141,7 +141,7 @@ public class DatabaseMan {
     }
 
     public Users getUsersNotNull() {
-        if (users != null) {
+        if (users == null) {
             users = new Users();
         }
         return users;

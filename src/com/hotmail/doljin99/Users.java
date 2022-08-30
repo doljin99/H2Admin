@@ -60,7 +60,7 @@ public class Users extends ArrayList<User> {
 
     public boolean existId(String id) {
         for (User user : this) {
-            if (user.getUserName().equalsIgnoreCase(id)) {
+            if (user.getUserName().trim().equalsIgnoreCase(id)) {
                 return true;
             }
         }
@@ -69,7 +69,7 @@ public class Users extends ArrayList<User> {
 
     public User getUser(String userName) {
         for (User user : this) {
-            if (user.getUserName().equalsIgnoreCase(userName)) {
+            if (user.getUserName().trim().equalsIgnoreCase(userName)) {
                 return user;
             }
         }

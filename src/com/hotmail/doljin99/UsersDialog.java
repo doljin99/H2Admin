@@ -239,10 +239,14 @@ public class UsersDialog extends javax.swing.JDialog {
                 jButtonAdd.setEnabled(false);
                 jButtonUpdate.setEnabled(true);
                 jButtonDelete.setEnabled(true);
-                setUserPrivileges(id);
                 int row = jTableUsers.getSelectedRow();
                 jCheckBoxAdministrator.setSelected((boolean) jTableUsers.getValueAt(row, 1));
                 jCheckBoxAdministrator.validate();
+                User user = users.getUser(id);
+                if (user != null) {
+                    jPasswordField1.setText(user.getUserPassword());
+                }
+                setUserPrivileges(id);
             } else {
                 jButtonAdd.setEnabled(true);
                 jButtonUpdate.setEnabled(false);
@@ -598,7 +602,7 @@ public class UsersDialog extends javax.swing.JDialog {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class
+                java.lang.String.class, java.lang.Object.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, true, true, true, true

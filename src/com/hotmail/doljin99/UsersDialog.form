@@ -353,7 +353,7 @@
                                   <Table columnCount="6" rowCount="0">
                                     <Column editable="false" title="&#xd14c;&#xc774;&#xbe14;&#xba85;" type="java.lang.String"/>
                                     <Column editable="false" title="&#xd14c;&#xc774;&#xbe14;&#xd0c0;&#xc785;" type="java.lang.Object"/>
-                                    <Column editable="true" title="INSERT" type="java.lang.Object"/>
+                                    <Column editable="true" title="INSERT" type="java.lang.Boolean"/>
                                     <Column editable="true" title="SELECT" type="java.lang.Boolean"/>
                                     <Column editable="true" title="UPDATE" type="java.lang.Boolean"/>
                                     <Column editable="true" title="DELETE" type="java.lang.Boolean"/>
