@@ -258,7 +258,7 @@ public class UsersDialog extends javax.swing.JDialog {
     private void setUserPrivileges(String userName) {
         userTablesPrivileges = getTablePrivileges(userName);
         if (userTablesPrivileges == null) {
-            writeMessage("테이블 겁근 권한 가져오기에 실패하였습니다.");
+            writeMessage("테이블 접근 권한 가져오기에 실패하였습니다.");
             return;
         }
         setPrivileges();
