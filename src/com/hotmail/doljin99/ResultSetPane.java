@@ -236,10 +236,11 @@ public class ResultSetPane extends javax.swing.JPanel {
 
         jToolBarGrid.setRollover(true);
 
-        jLabelCount.setText("0");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/hotmail/doljin99/Bundle"); // NOI18N
+        jLabelCount.setText(bundle.getString("0")); // NOI18N
         jToolBarGrid.add(jLabelCount);
 
-        jLabel1.setText(" 행");
+        jLabel1.setText(bundle.getString(" 행")); // NOI18N
         jToolBarGrid.add(jLabel1);
         jToolBarGrid.add(jSeparator1);
 
@@ -256,7 +257,7 @@ public class ResultSetPane extends javax.swing.JPanel {
         jToolBarGrid.add(jSeparator2);
 
         jButtonSaveCsv.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Save16.gif"))); // NOI18N
-        jButtonSaveCsv.setText("저장(CSV)");
+        jButtonSaveCsv.setText(bundle.getString("저장(CSV)")); // NOI18N
         jButtonSaveCsv.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonSaveCsv.setFocusable(false);
         jButtonSaveCsv.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -302,7 +303,7 @@ public class ResultSetPane extends javax.swing.JPanel {
 
         jPanelScript.add(jScrollPane3, java.awt.BorderLayout.CENTER);
 
-        jTabbedPane1.addTab("Script", jPanelScript);
+        jTabbedPane1.addTab(bundle.getString("SCRIPT"), jPanelScript); // NOI18N
 
         add(jTabbedPane1, java.awt.BorderLayout.CENTER);
 

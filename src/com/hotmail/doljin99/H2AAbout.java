@@ -67,17 +67,12 @@ public class H2AAbout extends javax.swing.JPanel {
         jLabel5.setText("H2Admin버전");
 
         jTextFieldVersion.setEditable(false);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/hotmail/doljin99/Bundle"); // NOI18N
-        jTextFieldVersion.setText(bundle.getString("H2AAbout.jTextFieldVersion.text")); // NOI18N
 
         jTextFieldOs.setEditable(false);
-        jTextFieldOs.setText(bundle.getString("H2AAbout.jTextFieldOs.text")); // NOI18N
 
         jTextFieldJavaVersion.setEditable(false);
-        jTextFieldJavaVersion.setText(bundle.getString("H2AAbout.jTextFieldJavaVersion.text")); // NOI18N
 
         jTextFieldJavaHomm.setEditable(false);
-        jTextFieldJavaHomm.setText(bundle.getString("H2AAbout.jTextFieldJavaHomm.text")); // NOI18N
 
         jLabel6.setText("H2 버전");
 

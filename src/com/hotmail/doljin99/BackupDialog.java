@@ -192,9 +192,8 @@ public class BackupDialog extends javax.swing.JDialog {
 
         getContentPane().add(jToolBar1, java.awt.BorderLayout.NORTH);
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/hotmail/doljin99/Bundle"); // NOI18N
-        jLabel1.setText(bundle.getString("BackupDialog.jLabel1.text")); // NOI18N
-        jLabel1.setToolTipText(bundle.getString("BackupDialog.jLabel1.toolTipText")); // NOI18N
+        jLabel1.setText("base dir");
+        jLabel1.setToolTipText("");
 
         jTextFieldBaseDir.setEditable(false);
 
@@ -207,11 +206,11 @@ public class BackupDialog extends javax.swing.JDialog {
         jRadioButtonOffline.setText("Offline");
         jRadioButtonOffline.setEnabled(false);
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 51, 204)), bundle.getString("BackupDialog.jPanel2.border.title"))); // NOI18N
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 51, 204)), "백업 대상 DB"));
 
         buttonGroupDBSelect.add(jRadioButtonAllDB);
         jRadioButtonAllDB.setSelected(true);
-        jRadioButtonAllDB.setText(bundle.getString("BackupDialog.jRadioButtonAllDB.text")); // NOI18N
+        jRadioButtonAllDB.setText("모든 DB");
         jRadioButtonAllDB.setToolTipText("서버의 모든 DB를 백업");
         jRadioButtonAllDB.setEnabled(false);
 
@@ -222,7 +221,7 @@ public class BackupDialog extends javax.swing.JDialog {
 
         buttonGroupDBSelect.add(jRadioButtonOnlyOneDB);
         jRadioButtonOnlyOneDB.setText("유일한DB");
-        jRadioButtonOnlyOneDB.setToolTipText(bundle.getString("BackupDialog.jRadioButtonOnlyOneDB.toolTipText")); // NOI18N
+        jRadioButtonOnlyOneDB.setToolTipText("서버에 DB 한개만 있음");
         jRadioButtonOnlyOneDB.setEnabled(false);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
