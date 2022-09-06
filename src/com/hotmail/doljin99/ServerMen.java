@@ -11,11 +11,21 @@ import java.util.ArrayList;
  *
  * @author dolji
  */
-public class ServerMen extends ArrayList<ServerMan> {
+public class ServerMen {
 
+    private ArrayList<ServerMan> serverMen;
+    private BackupSchedules backupSchedules;
     private transient String message;
 
-    public boolean addNew(ServerMan serverMan) {
+    public ServerMen() {
+        this(new ArrayList<ServerMan>(), new BackupSchedules());
+    }
+    public ServerMen(ArrayList<ServerMan> serverMen, BackupSchedules backupSchedules) {
+        this.serverMen = serverMen;
+        this.backupSchedules = backupSchedules;
+    }
+
+    public boolean addServerMan(ServerMan serverMan) {
         if (serverMan == null) {
             message = "추가할 대상이 없습니다.";
             return false;
@@ -51,12 +61,15 @@ public class ServerMen extends ArrayList<ServerMan> {
                 return false;
             }
         }
+        if (serverMen == null) {
+            serverMen = new ArrayList<>();
+        }
 
-        return super.add(serverMan);
+        return serverMen.add(serverMan);
     }
 
     private boolean duplicatedName(String name) {
-        for (ServerMan server : this) {
+        for (ServerMan server : serverMen) {
             if (server.getServerName().equalsIgnoreCase(name)) {
                 return true;
             }
@@ -65,7 +78,7 @@ public class ServerMen extends ArrayList<ServerMan> {
     }
 
     private boolean usedPort(String port) {
-        for (ServerMan server : this) {
+        for (ServerMan server : serverMen) {
             if (!server.isLocal()) {
                 continue;
             }
@@ -77,7 +90,7 @@ public class ServerMen extends ArrayList<ServerMan> {
     }
 
     public ServerMan findByName(String name) {
-        for (ServerMan server : this) {
+        for (ServerMan server : serverMen) {
             if (server.getServerName().equalsIgnoreCase(name)) {
                 return server;
             }
@@ -86,8 +99,8 @@ public class ServerMen extends ArrayList<ServerMan> {
     }
 
     public int getIndex(String name) {
-        for (int i = 0; i < this.size(); i++) {
-            ServerMan server = this.get(i);
+        for (int i = 0; i < serverMen.size(); i++) {
+            ServerMan server = serverMen.get(i);
             if (server.getServerName().equalsIgnoreCase(name)) {
                 return i;
             }
@@ -105,18 +118,52 @@ public class ServerMen extends ArrayList<ServerMan> {
             message = serverName + " 서버가 없습니다.";
             return null;
         }
-        return remove(index);
+        return serverMen.remove(index);
     }    
 
     public void decryptServerMen(LoginManager loginManager) {
-        for (ServerMan serverMan : this) {
+        for (ServerMan serverMan : serverMen) {
             serverMan.decryptFields(loginManager);
         }
+        if (backupSchedules == null) {
+            backupSchedules = new BackupSchedules();
+        }
+        backupSchedules.decryptFields(loginManager);
     }
 
     void encryptFields(LoginManager loginManager) {
-        for (ServerMan serverMan : this) {
+        for (ServerMan serverMan : serverMen) {
             serverMan.encryptFields(loginManager);
         }
+        if (backupSchedules == null) {
+            backupSchedules = new BackupSchedules();
+        }
+        backupSchedules.encryptFields(loginManager);
     }
+
+    public BackupSchedules getBackupSchedules() {
+        if (backupSchedules == null) {
+            backupSchedules = new BackupSchedules();
+        }
+        return backupSchedules;
+    }
+
+    public void setBackupSchedules(BackupSchedules backupSchedules) {
+        this.backupSchedules = backupSchedules;
+    }
+
+    int getServerListSize() {
+        if (serverMen == null) {
+            serverMen = new ArrayList<>();
+            return 0;
+        }
+        return serverMen.size();
+    }
+
+    ServerMan getServerMan(int i) {
+        if (serverMen == null) {
+            serverMen = new ArrayList<>();
+        }
+        return serverMen.get(i);
+    }    
 }

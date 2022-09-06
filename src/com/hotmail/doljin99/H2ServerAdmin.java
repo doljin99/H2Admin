@@ -50,7 +50,7 @@ import org.h2.engine.Constants;
  */
 public class H2ServerAdmin extends javax.swing.JFrame {
 
-    public static final String VERSION = "v0.9.2";
+    public static final String VERSION = "v1.0";
 
     private LoginManager loginManager;
     private JPanel glassPane;
@@ -303,8 +303,9 @@ public class H2ServerAdmin extends javax.swing.JFrame {
         FileInputStream fileInputStream = null;
         BufferedReader br = null;
         try {
-            java.lang.reflect.Type serverType = new TypeToken<ServerMen>() {
-            }.getType();
+//            java.lang.reflect.Type serverType = new TypeToken<ServerMen>() {
+//            }.getType();
+            java.lang.reflect.Type serverType = ServerMen.class;
             fileInputStream = new FileInputStream(SERVER_MEN_ENC_DIR + File.separator + SERVER_MEN_PATH);
             br = new BufferedReader(new InputStreamReader(fileInputStream, "UTF-8"));
 
@@ -669,8 +670,8 @@ public class H2ServerAdmin extends javax.swing.JFrame {
         if (serverList == null) {
             System.exit(0);
         }
-        for (int i = 0; i < serverList.size(); i++) {
-            ServerMan serverMan = serverList.get(i);
+        for (int i = 0; i < serverList.getServerListSize(); i++) {
+            ServerMan serverMan = serverList.getServerMan(i);
             if (serverMan.isLocal() && serverMan.isRun()) {
                 try {
                     serverMan.stop();
@@ -695,8 +696,9 @@ public class H2ServerAdmin extends javax.swing.JFrame {
             if (!dir.exists()) {
                 FileUtils.forceMkdir(dir);
             }
-            java.lang.reflect.Type serverType = new TypeToken<ServerMen>() {
-            }.getType();
+//            java.lang.reflect.Type serverType = new TypeToken<ServerMen>() {
+//            }.getType();
+            java.lang.reflect.Type serverType = ServerMen.class;
             serverWriter = new OutputStreamWriter(new FileOutputStream(SERVER_MEN_ENC_DIR + File.separator + SERVER_MEN_PATH), "UTF-8");
             BufferedWriter bufferedWriter = new BufferedWriter(serverWriter);
             gson.toJson(serverList, serverType, bufferedWriter);
@@ -762,8 +764,8 @@ public class H2ServerAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonStopServerActionPerformed
 
     ServerMan findServerMan(String name) {
-        for (int i = 0; i < serverList.size(); i++) {
-            ServerMan serverMan = serverList.get(i);
+        for (int i = 0; i < serverList.getServerListSize(); i++) {
+            ServerMan serverMan = serverList.getServerMan(i);
             if (name.equals(serverMan.getServerName())) {
                 return serverMan;
             }
@@ -819,7 +821,7 @@ public class H2ServerAdmin extends javax.swing.JFrame {
             return;
         }
         serverMan.encryptFields(loginManager);
-        if (serverList.addNew(serverMan)) {
+        if (serverList.addServerMan(serverMan)) {
             logMessage("server 생성: " + serverMan.getPort());
             refreshTree();
             saveServerInformation();

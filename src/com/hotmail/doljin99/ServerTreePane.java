@@ -38,7 +38,7 @@ public class ServerTreePane extends javax.swing.JPanel {
 
     private Object status;
 
-    private ServerMen serverList;
+    private ServerMen serverMen;
 
     private Tables tables;
     private TableColumns columns;
@@ -69,7 +69,7 @@ public class ServerTreePane extends javax.swing.JPanel {
      */
     public ServerTreePane(ServerMen serverList, Object status, List<String> codeCompletionList, LoginManager loginManager) {
         initComponents();
-        this.serverList = serverList;
+        this.serverMen = serverList;
         this.status = status;
         this.codeCompletionList = codeCompletionList;
         this.loginManager = loginManager;
@@ -268,8 +268,8 @@ public class ServerTreePane extends javax.swing.JPanel {
     }
 
     ServerMan findServerMan(String name) {
-        for (int i = 0; i < serverList.size(); i++) {
-            ServerMan serverMan = serverList.get(i);
+        for (int i = 0; i < serverMen.getServerListSize(); i++) {
+            ServerMan serverMan = serverMen.getServerMan(i);
             if (name.equals(serverMan.getServerName())) {
                 return serverMan;
             }
@@ -306,6 +306,8 @@ public class ServerTreePane extends javax.swing.JPanel {
         jSeparator7 = new javax.swing.JToolBar.Separator();
         jButtonDatabaseBackup = new javax.swing.JButton();
         jSeparator6 = new javax.swing.JToolBar.Separator();
+        jButtonScheduleBackup = new javax.swing.JButton();
+        jSeparator8 = new javax.swing.JToolBar.Separator();
         jButtonAddTable = new javax.swing.JButton();
         jSeparator5 = new javax.swing.JToolBar.Separator();
         jButtonReadCsv = new javax.swing.JButton();
@@ -390,6 +392,19 @@ public class ServerTreePane extends javax.swing.JPanel {
         });
         jToolBar1.add(jButtonDatabaseBackup);
         jToolBar1.add(jSeparator6);
+
+        jButtonScheduleBackup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/SaveAll16.gif"))); // NOI18N
+        jButtonScheduleBackup.setText("정기백업");
+        jButtonScheduleBackup.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonScheduleBackup.setFocusable(false);
+        jButtonScheduleBackup.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonScheduleBackup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonScheduleBackupActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButtonScheduleBackup);
+        jToolBar1.add(jSeparator8);
 
         jButtonAddTable.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Add16.gif"))); // NOI18N
         jButtonAddTable.setText("테이블");
@@ -605,7 +620,7 @@ public class ServerTreePane extends javax.swing.JPanel {
         String serverName = paths[1].toString();
         String databaseName = paths[2].toString();
         String tableName = paths[3].toString();
-        ServerMan serverMan = serverList.findByName(serverName);
+        ServerMan serverMan = serverMen.findByName(serverName);
         DatabaseMan databaseMan = serverMan.findDatabaseByName(databaseName);
         Tables databaseTables = tables.getDatabaseTables(serverName, databaseName);
 //        for (int i = 0; i < databaseTables.size(); i++) {
@@ -644,7 +659,7 @@ public class ServerTreePane extends javax.swing.JPanel {
         }
         String serverName = paths[1].toString();
         String databaseNAme = paths[2].toString();
-        ServerMan serverMan = serverList.findByName(serverName);
+        ServerMan serverMan = serverMen.findByName(serverName);
         if (!serverMan.isRun()) {
             setStatus(serverName + " 서버가 정지 상태이므로 접근할 수 없읍니다. 먼저 서버를 실행 시켜 주십시오");
             return;
@@ -654,6 +669,26 @@ public class ServerTreePane extends javax.swing.JPanel {
             serverMan, databaseMan, loginManager);
         dialog.setVisible(true);
     }//GEN-LAST:event_jButtonAddUserActionPerformed
+
+    private void jButtonScheduleBackupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonScheduleBackupActionPerformed
+        TreePath selectionPath = tree.getSelectionPath();
+        ServerMan serverMan = getServerMan(selectionPath);
+        if (serverMan == null) {
+            return;
+        }
+        if (!serverMan.isLocal()) {
+            setStatus("현재 버전에서는 remote 서버 데이터베이스에 대한 백업 기능이 없습니다.");
+            return;
+        }
+
+        DatabaseMan databaseMan = getDatabaseMan(selectionPath);
+        
+        BackupScheduleDialog dialog = new BackupScheduleDialog((Frame) SwingUtilities.getWindowAncestor(this), true, 
+            serverMan, databaseMan, serverMen.getBackupSchedules(), 
+            loginManager);        
+        dialog.setLocationRelativeTo(null);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_jButtonScheduleBackupActionPerformed
 
     protected void backup() {
         TreePath selectionPath = tree.getSelectionPath();
@@ -693,6 +728,44 @@ public class ServerTreePane extends javax.swing.JPanel {
         for (String message : messages) {
             setStatus("\t" + message);
         }
+    }
+
+    private ServerMan getServerMan(TreePath path) {
+        if (path == null || path.getPathCount() < 2) {
+            setStatus("먼저 백업할 서버나 데이터베이스를 선택하십시오.");
+            return null;
+        }
+
+        Object[] paths = path.getPath();
+        String serverName = paths[1].toString();
+        ServerMan serverMan = findServerMan(serverName);
+        if (serverMan == null) {
+            setStatus("서버를 찾을 수 없습니다.: " + serverName);
+            return null;
+        }
+        return serverMan;
+    }
+
+    private DatabaseMan getDatabaseMan(TreePath path) {
+        if (path == null || path.getPathCount() < 2) {
+            setStatus("먼저 백업할 서버나 데이터베이스를 선택하십시오.");
+            return null;
+        }
+
+        Object[] paths = path.getPath();
+        String serverName = paths[1].toString();
+        ServerMan serverMan = getServerMan(path);
+        if (serverMan == null) {
+            setStatus("서버를 찾을 수 없습니다.: " + serverName);
+            return null;
+        }
+        String databaseName;
+        DatabaseMan databaseMan = null;
+        if (paths.length >= 3) {
+            databaseName = paths[2].toString();
+            databaseMan = serverMan.findDatabaseMan(serverName, databaseName);
+        }
+        return databaseMan;
     }
 
     private ArrayList<String> getColumnNames(ResultSetMetaData metaData) {
@@ -739,10 +812,10 @@ public class ServerTreePane extends javax.swing.JPanel {
 //        TreePath selectionPath = tree.getSelectionPath();
 //        DefaultMutableTreeNode node = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
 //        node.add(new DefaultMutableTreeNode(serverMan.getName()));
-//        if (serverList.add(serverMan)) {
+//        if (serverMen.add(serverMan)) {
 //            setStatus("server 생성: " + serverMan.getPort());
 //        } else {
-//            setStatus("server 생성 실패: " + serverList.getMessage());
+//            setStatus("server 생성 실패: " + serverMen.getMessage());
 //            dialog.dispose();
 //            return;
 //        }
@@ -789,12 +862,12 @@ public class ServerTreePane extends javax.swing.JPanel {
             selectionPath = tree.getSelectionPath();
         }
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("servers");
-        if (serverList == null) {
-            serverList = new ServerMen();
+        if (serverMen == null) {
+            serverMen = new ServerMen();
         }
 
-        for (int i = 0; i < serverList.size(); i++) {
-            ServerMan serverMan = serverList.get(i);
+        for (int i = 0; i < serverMen.getServerListSize(); i++) {
+            ServerMan serverMan = serverMen.getServerMan(i);
             DefaultMutableTreeNode serverNode = new DefaultMutableTreeNode(serverMan.getServerName());
             boolean save = true;
             if (serverMan.isLocal()) {
@@ -825,7 +898,7 @@ public class ServerTreePane extends javax.swing.JPanel {
             remove(layout.getLayoutComponent(BorderLayout.CENTER));
         }
         tree = null;
-        tree = new ServerTree(root, serverList);
+        tree = new ServerTree(root, serverMen);
         tree.addTreeSelectionListener(new SelectionListener());
         tree.validate();
         JScrollPane scrollPane = new JScrollPane(tree);
@@ -885,6 +958,7 @@ public class ServerTreePane extends javax.swing.JPanel {
     private javax.swing.JButton jButtonAddUser;
     private javax.swing.JButton jButtonDatabaseBackup;
     private javax.swing.JButton jButtonReadCsv;
+    private javax.swing.JButton jButtonScheduleBackup;
     private javax.swing.JButton jButtonSql;
     private javax.swing.JButton jButtonStart;
     private javax.swing.JButton jButtonStop;
@@ -897,6 +971,7 @@ public class ServerTreePane extends javax.swing.JPanel {
     private javax.swing.JToolBar.Separator jSeparator5;
     private javax.swing.JToolBar.Separator jSeparator6;
     private javax.swing.JToolBar.Separator jSeparator7;
+    private javax.swing.JToolBar.Separator jSeparator8;
     private javax.swing.JSplitPane jSplitPaneServerTree;
     private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables

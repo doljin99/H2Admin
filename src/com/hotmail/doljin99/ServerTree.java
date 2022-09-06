@@ -43,8 +43,8 @@ public class ServerTree extends JTree {
     }
 
     ServerMan findServerMan(String name) {
-        for (int i = 0; i < serverList.size(); i++) {
-            ServerMan serverMan = serverList.get(i);
+        for (int i = 0; i < serverList.getServerListSize(); i++) {
+            ServerMan serverMan = serverList.getServerMan(i);
             if (name.equals(serverMan.getServerName())) {
                 return serverMan;
             }

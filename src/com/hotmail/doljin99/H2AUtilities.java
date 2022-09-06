@@ -424,7 +424,7 @@ public class H2AUtilities {
         for (int i = 0; i < plains.size(); i++) {
             ServerManOld plain = plains.get(i);
             ServerMan serverMan = upgradeServerMan(loginManager, plain);
-            serverMen.add(serverMan);
+            serverMen.addServerMan(serverMan);
         }
 
         return serverMen;
