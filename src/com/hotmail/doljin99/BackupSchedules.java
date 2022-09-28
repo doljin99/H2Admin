@@ -68,16 +68,16 @@ public class BackupSchedules extends ArrayList<BackupSchedule> {
         return false;
     }
     
-    public BackupSchedule deleteSchedule(BackupSchedule backupSchedule) {
+    public boolean deleteSchedule(BackupSchedule backupSchedule) {
         String key = makeKey(backupSchedule);
         for (int i = 0; i < this.size(); i++) {
             BackupSchedule legacy = this.get(i);
             if (makeKey(legacy).equals(key)) {
                remove(legacy);
-               return legacy;
+               return true;
             }
         }
-        return null;
+        return false;
     }
 
     private String makeKey(BackupSchedule backupSchedule) {
