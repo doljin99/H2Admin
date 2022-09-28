@@ -60,6 +60,24 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemSetBlockIntervalActionPerformed"/>
               </Events>
             </MenuItem>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator6">
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItemListScheduleBackup">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="&#xc815;&#xae30; &#xbc31;&#xc5c5; &#xb300;&#xae30; &#xd604;&#xd669;"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemListScheduleBackupActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItemScheduleBaclupLog">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="&#xc815;&#xae30; &#xbc31;&#xc5c5; &#xb85c;&#xadf8; &#xbcf4;&#xae30;"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemScheduleBaclupLogActionPerformed"/>
+              </Events>
+            </MenuItem>
           </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="jMenuHelp">

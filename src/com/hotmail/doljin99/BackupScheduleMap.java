@@ -10,9 +10,9 @@ import java.util.HashMap;
  *
  * @author dolji
  */
-public class BackupSchesuduleMap extends HashMap<String, BackupSchedule> {
+public class BackupScheduleMap extends HashMap<String, BackupSchedule> {
 
-    public BackupSchesuduleMap() {
+    public BackupScheduleMap() {
         super();
     }
     

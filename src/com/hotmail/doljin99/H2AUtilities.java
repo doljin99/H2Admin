@@ -361,6 +361,25 @@ public class H2AUtilities {
         return false;
     }
 
+    public static File forceMkdir(String directoryName) {
+        try {
+            File file = new File(directoryName);
+            if (file.exists()) {
+                if (file.isDirectory()) {
+                    return file;
+                }
+                return null;
+            }
+            if (file.mkdir()) {
+                return file;
+            }
+
+            return null;
+        } catch (SecurityException ex) {
+            return null;
+        }
+    }
+
     public static File chooseDirectory() {
         return chooseDirectory("디렉터리 선택");
     }
@@ -469,7 +488,7 @@ public class H2AUtilities {
 
     private static DatabaseMan upgradeDatabaseMan(LoginManager loginManager, DatabaseManOld databaseManOld) {
         DatabaseMan databaseMan = new DatabaseMan();
-        
+
         databaseMan.setDatabaseName(databaseManOld.getDatabaseName());
         databaseMan.encryptFields(loginManager);
 //        databaseMan.setServerName_enc(loginManager.encrypt(databaseManOld.getServerName()));
@@ -477,7 +496,7 @@ public class H2AUtilities {
 //        databaseMan.setPort_enc(loginManager.encrypt(databaseManOld.getPort()));
 //        databaseMan.setBaseDir_enc(loginManager.encrypt(databaseManOld.getBaseDir()));
 //        databaseMan.setDatabaseName_enc(loginManager.encrypt(databaseManOld.getDatabaseName()));
-        
+
         return databaseMan;
     }
 }

@@ -59,6 +59,9 @@ public class H2ServerAdmin extends javax.swing.JFrame {
     public static final String SERVER_MEN_ENC_DIR = ".serverList";
     public static final String SERVER_MEN_ENC_PATH = "server_enc.json";
 
+    public static final String SCHEDULED_BACKUP_LOG_DIRECTORY = ".backuplog";
+    public static final String SCHEDULED_BACKUP_LOG_NAME = "backuplog.txt";
+
     private ServerMen serverList;
     private ServerTreePane serverTreePane;
 
@@ -69,6 +72,8 @@ public class H2ServerAdmin extends javax.swing.JFrame {
     private String blockMessage;
     private int interval = 5;
     private ActionTimeOutListener actionTimeOutListener;
+
+    private ScheduledBackupRunnable scheduledBackupRunnable;
 
     /**
      * Creates new form HeServerAdmin
@@ -100,6 +105,10 @@ public class H2ServerAdmin extends javax.swing.JFrame {
         }
 
         resetActivityTimer();
+
+        scheduledBackupRunnable = new ScheduledBackupRunnable(serverList);
+        Thread executeScheduleBackup = new Thread(scheduledBackupRunnable);
+        executeScheduleBackup.start();
     }
 
     private void makeServerList() {
@@ -416,6 +425,9 @@ public class H2ServerAdmin extends javax.swing.JFrame {
         jSeparator4 = new javax.swing.JPopupMenu.Separator();
         jMenuItemBlockWindow = new javax.swing.JMenuItem();
         jMenuItemSetBlockInterval = new javax.swing.JMenuItem();
+        jSeparator6 = new javax.swing.JPopupMenu.Separator();
+        jMenuItemListScheduleBackup = new javax.swing.JMenuItem();
+        jMenuItemScheduleBaclupLog = new javax.swing.JMenuItem();
         jMenuHelp = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -580,6 +592,23 @@ public class H2ServerAdmin extends javax.swing.JFrame {
             }
         });
         jMenuEdit.add(jMenuItemSetBlockInterval);
+        jMenuEdit.add(jSeparator6);
+
+        jMenuItemListScheduleBackup.setText("정기 백업 대기 현황");
+        jMenuItemListScheduleBackup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemListScheduleBackupActionPerformed(evt);
+            }
+        });
+        jMenuEdit.add(jMenuItemListScheduleBackup);
+
+        jMenuItemScheduleBaclupLog.setText("정기 백업 로그 보기");
+        jMenuItemScheduleBaclupLog.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemScheduleBaclupLogActionPerformed(evt);
+            }
+        });
+        jMenuEdit.add(jMenuItemScheduleBaclupLog);
 
         jMenuBar1.add(jMenuEdit);
 
@@ -670,16 +699,16 @@ public class H2ServerAdmin extends javax.swing.JFrame {
         if (serverList == null) {
             System.exit(0);
         }
-        for (int i = 0; i < serverList.getServerListSize(); i++) {
-            ServerMan serverMan = serverList.getServerMan(i);
-            if (serverMan.isLocal() && serverMan.isRun()) {
-                try {
-                    serverMan.stop();
-                } catch (SQLException ex) {
-                    System.out.println("H2관리 앱 종료시 " + serverMan.getServerName() + " 서버 정지 에러: " + ex.getLocalizedMessage());
-                }
-            }
-        }
+//        for (int i = 0; i < serverList.getServerListSize(); i++) {
+//            ServerMan serverMan = serverList.getServerMan(i);
+//            if (serverMan.isLocal() && serverMan.isRun()) {
+//                try {
+//                    serverMan.stop();
+//                } catch (SQLException ex) {
+//                    System.out.println("H2관리 앱 종료시 " + serverMan.getServerName() + " 서버 정지 에러: " + ex.getLocalizedMessage());
+//                }
+//            }
+//        }
 
         saveServerInformation();
         setVisible(false);
@@ -917,6 +946,26 @@ public class H2ServerAdmin extends javax.swing.JFrame {
         logMessage("서버 정보를 저장하였습니다.");
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
+    private void jMenuItemListScheduleBackupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemListScheduleBackupActionPerformed
+        ScheduledBackupRunnable.ExecuteBackupPool pool = scheduledBackupRunnable.getExecuteBackupPool();
+        BackupScheduleListDialog dialog = new BackupScheduleListDialog(this, true, pool);
+        dialog.setLocationRelativeTo(null);
+        dialog.setSize(600, 400);
+        dialog.setVisible(true);
+        dialog.dispose();
+    }//GEN-LAST:event_jMenuItemListScheduleBackupActionPerformed
+
+    private void jMenuItemScheduleBaclupLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemScheduleBaclupLogActionPerformed
+        String logFileName = SCHEDULED_BACKUP_LOG_DIRECTORY + File.separator + SCHEDULED_BACKUP_LOG_NAME;
+        File file = new File(logFileName);
+        if (!file.exists()) {
+            logMessage("정기 백업 로그 파일이 없습니다: " + logFileName);
+        }
+        ScheduledBackupLogDialog dialog = new ScheduledBackupLogDialog(this, true);
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_jMenuItemScheduleBaclupLogActionPerformed
+
     private void openBrowser(String uri) {
         try {
             Desktop.getDesktop().browse(URI.create(uri));
@@ -1006,6 +1055,8 @@ public class H2ServerAdmin extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItemBackup;
     private javax.swing.JMenuItem jMenuItemBlockWindow;
     private javax.swing.JMenuItem jMenuItemLChangePassword;
+    private javax.swing.JMenuItem jMenuItemListScheduleBackup;
+    private javax.swing.JMenuItem jMenuItemScheduleBaclupLog;
     private javax.swing.JMenuItem jMenuItemSetBlockInterval;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -1016,6 +1067,7 @@ public class H2ServerAdmin extends javax.swing.JFrame {
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JPopupMenu.Separator jSeparator5;
+    private javax.swing.JPopupMenu.Separator jSeparator6;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextArea jTextAreaStatus;

@@ -25,7 +25,7 @@
     <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
-    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,2,75,0,0,3,-111"/>
+    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,2,75,0,0,3,-60"/>
   </AuxValues>
 
   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
@@ -159,7 +159,7 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jPanel5" max="32767" attributes="0"/>
+                              <Component id="jPanel5" pref="413" max="32767" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="jLabel15" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
@@ -308,7 +308,7 @@
                               <Component id="jRadioButtonSelectedDB" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="jRadioButtonOnlyOneDB" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="194" max="32767" attributes="0"/>
+                              <EmptySpace pref="132" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -480,13 +480,48 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
+                          <Component id="jScrollPane6" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="jToolBar2" max="32767" attributes="0"/>
-                                  <Group type="102" alignment="1" attributes="0">
+                                  <Component id="jLabel11" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="jLabel9" alignment="0" min="-2" pref="31" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+                              <Component id="jTextFieldMinPart" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="jLabel10" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="jLabel12" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="jLabel13" alignment="0" min="-2" pref="31" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="jTextFieldHourPart" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="jTextFieldMonthPart" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="jTextFieldDayOfMonthPart" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="jTextFieldDayOfWeekPart" max="32767" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="jLabel16" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jTextFieldTestYear" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jTextFieldTestMonth" min="-2" pref="31" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
+                                      <Component id="jLabel8" min="-2" pref="5" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jTextFieldTestDay" min="-2" pref="28" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
                                       <Component id="jLabel17" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="jTextFieldStartYear" min="-2" max="-2" attributes="0"/>
@@ -511,45 +546,10 @@
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="jTextFieldEndDay" min="-2" pref="31" max="-2" attributes="0"/>
                                   </Group>
-                                  <Group type="102" attributes="0">
-                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="jLabel11" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="jLabel9" alignment="0" min="-2" pref="31" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
-                                      <Component id="jTextFieldMinPart" max="32767" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" attributes="0">
-                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="jLabel10" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="jLabel12" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="jLabel13" alignment="0" min="-2" pref="31" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="jTextFieldHourPart" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="jTextFieldMonthPart" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="jTextFieldDayOfMonthPart" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="jTextFieldDayOfWeekPart" max="32767" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                                  <Group type="102" attributes="0">
-                                      <Component id="jLabel16" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="jTextFieldTestYear" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="jTextFieldTestMonth" min="-2" pref="31" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
-                                      <Component id="jLabel8" min="-2" pref="5" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="jTextFieldTestDay" min="-2" pref="28" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="jToolBar2" alignment="0" min="-2" pref="423" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="0" pref="19" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="73" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="jScrollPane6" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -670,7 +670,7 @@
             <Component class="javax.swing.JTextField" name="jTextFieldDayOfMonthPart">
               <Properties>
                 <Property name="text" type="java.lang.String" value="*"/>
-                <Property name="toolTipText" type="java.lang.String" value=" [1,31]"/>
+                <Property name="toolTipText" type="java.lang.String" value=" [1,31], L -&gt; &#xd574;&#xb2f9;&#xc6d4;&#xc758; &#xb9c8;&#xc9c0;&#xb9c9;&#xc77c;, L-n -&gt; &#xd574;&#xb2f9;&#xc6d4;&#xc758; &#xb9c8;&#xc9c0;&#xb9c9;&#xc77c;&#xc758; n&#xbc88;&#xc9f8; &#xc804;&#xc77c;"/>
                 <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[50, 2147483647]"/>
                 </Property>
@@ -710,7 +710,7 @@
             <Component class="javax.swing.JTextField" name="jTextFieldDayOfWeekPart">
               <Properties>
                 <Property name="text" type="java.lang.String" value="*"/>
-                <Property name="toolTipText" type="java.lang.String" value="[1,7][&#xc77c;,&#xc6d4;,&#xd654;,&#xc218;,&#xbaa9;,&#xae08;,&#xd1a0;]"/>
+                <Property name="toolTipText" type="java.lang.String" value="[1~7] -&gt; [&#xc77c;~&#xd1a0;], m#n(L) -&gt; n(&#xb9c8;&#xc9c0;&#xb9c9;)&#xc8fc;&#xcc28; m&#xc694;&#xc77c;"/>
                 <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[50, 2147483647]"/>
                 </Property>
@@ -784,7 +784,7 @@
             </Component>
             <Component class="javax.swing.JTextField" name="jTextFieldEndMonth">
               <Properties>
-                <Property name="text" type="java.lang.String" value="23"/>
+                <Property name="text" type="java.lang.String" value="12"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel6">
@@ -794,7 +794,7 @@
             </Component>
             <Component class="javax.swing.JTextField" name="jTextFieldEndDay">
               <Properties>
-                <Property name="text" type="java.lang.String" value="59"/>
+                <Property name="text" type="java.lang.String" value="31"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="jTextFieldTestYear">
@@ -832,6 +832,9 @@
               <SubComponents>
                 <Component class="javax.swing.JButton" name="jButtonSimulateDay">
                   <Properties>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/toolbarButtonGraphics/general/Search16.gif"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="&#xd2b9;&#xc815; &#xc77c;&#xc790; &#xac80;&#xc0ac;"/>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
@@ -847,6 +850,9 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="jButtonSimulateYear">
                   <Properties>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/toolbarButtonGraphics/general/Search16.gif"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="1&#xb144; simulation"/>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
@@ -862,6 +868,9 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="jButtonStopSimulation">
                   <Properties>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/toolbarButtonGraphics/general/Stop16.gif"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="simulation&#xc815;&#xc9c0;"/>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
@@ -872,6 +881,24 @@
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonStopSimulationActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JToolBar$Separator" name="jSeparator6">
+                </Component>
+                <Component class="javax.swing.JButton" name="jButtonCopyResult">
+                  <Properties>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/toolbarButtonGraphics/general/Copy16.gif"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="&#xacb0;&#xacfc;&#xbcf5;&#xc0ac;"/>
+                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                      <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
+                        <BevelBorder/>
+                      </Border>
+                    </Property>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonCopyResultActionPerformed"/>
                   </Events>
                 </Component>
               </SubComponents>

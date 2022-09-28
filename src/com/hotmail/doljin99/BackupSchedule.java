@@ -1,6 +1,7 @@
 package com.hotmail.doljin99;
 
 
+import com.hotmail.doljin99.loginmanager.CronTime;
 import com.hotmail.doljin99.loginmanager.LoginManager;
 
 /*
@@ -11,19 +12,12 @@ import com.hotmail.doljin99.loginmanager.LoginManager;
  *
  * @author dolji
  */
-public class BackupSchedule {
+public class BackupSchedule extends CronTime {
 
     private transient String serverName;
     private String serverName_enc;
     private transient String cronName;
     private String cronName_enc;
-    private String minPart;
-    private String hourPart;
-    private String domPart;
-    private String monthPart;
-    private String dowPart;
-    private long startDate;
-    private long endDate;
     private transient String databaseName;
     private String databaseName_enc;
     private transient String backupDir;
@@ -65,62 +59,6 @@ public class BackupSchedule {
 
     public void setCronName_enc(String cronName_enc) {
         this.cronName_enc = cronName_enc;
-    }
-
-    public String getMinPart() {
-        return minPart;
-    }
-
-    public void setMinPart(String minPart) {
-        this.minPart = minPart;
-    }
-
-    public String getHourPart() {
-        return hourPart;
-    }
-
-    public void setHourPart(String hourPart) {
-        this.hourPart = hourPart;
-    }
-
-    public String getDayOfMonthPart() {
-        return domPart;
-    }
-
-    public void setDayOfMonthPart(String domPart) {
-        this.domPart = domPart;
-    }
-
-    public String getMonthPart() {
-        return monthPart;
-    }
-
-    public void setMonthPart(String monthPart) {
-        this.monthPart = monthPart;
-    }
-
-    public String getDayOfWeekPart() {
-        return dowPart;
-    }
-
-    public void setDayOfWeekPart(String dowPart) {
-        this.dowPart = dowPart;
-    }
-
-    public long getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(long startDate) {
-        this.startDate = startDate;
-    }
-
-    public long getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(long endDate) {
-        this.endDate = endDate;
     }
 
     public String getDatabaseName() {
@@ -201,6 +139,22 @@ public class BackupSchedule {
 
     public void setRemark_enc(String remark_enc) {
         this.remark_enc = remark_enc;
+    }
+
+    public String makeKey() {
+        if (serverName == null || cronName == null) {
+            return null;
+        }
+
+        return makeKey(serverName, cronName);
+    }
+    
+    public static String makeKey(String serverName, String cronName) {
+        if (serverName == null || cronName == null) {
+            return null;
+        }
+
+        return serverName.toUpperCase() + ":" + cronName.toUpperCase();
     }
 
     public void decryptFields(LoginManager loginManager) {
