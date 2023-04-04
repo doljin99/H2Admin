@@ -1,8 +1,9 @@
 package com.hotmail.doljin99;
 
 
-import com.hotmail.doljin99.loginmanager.CronTime;
+import com.hotmail.doljin99.loginmanager.KronTime;
 import com.hotmail.doljin99.loginmanager.LoginManager;
+import java.time.LocalDateTime;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -12,7 +13,7 @@ import com.hotmail.doljin99.loginmanager.LoginManager;
  *
  * @author dolji
  */
-public class BackupSchedule extends CronTime {
+public class BackupSchedule extends KronTime {
 
     private transient String serverName;
     private String serverName_enc;
@@ -25,9 +26,13 @@ public class BackupSchedule extends CronTime {
     private transient String backupFile;
     private String backupFile_enc;
     private int retryLimit;
-    private long entryDatetime;
+    private LocalDateTime entryDatetime;
     private transient String remark;
     private String remark_enc;
+
+    public BackupSchedule() {
+        super();
+    }
 
     public String getServerName() {
         return serverName;
@@ -117,11 +122,11 @@ public class BackupSchedule extends CronTime {
         this.retryLimit = retryLimit;
     }
 
-    public long getEntryDatetime() {
+    public LocalDateTime getEntryDatetime() {
         return entryDatetime;
     }
 
-    public void setEntryDatetime(long entryDatetime) {
+    public void setEntryDatetime(LocalDateTime entryDatetime) {
         this.entryDatetime = entryDatetime;
     }
 

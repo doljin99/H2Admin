@@ -31,6 +31,8 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.URI;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -50,7 +52,7 @@ import org.h2.engine.Constants;
  */
 public class H2ServerAdmin extends javax.swing.JFrame {
 
-    public static final String VERSION = "v1.0";
+    public static final String VERSION = "V2.0";
 
     private LoginManager loginManager;
     private JPanel glassPane;
@@ -308,7 +310,9 @@ public class H2ServerAdmin extends javax.swing.JFrame {
     }
 
     private ServerMen readServerMen() {
-        Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
+        Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new GsonLocalDateTimeAdapter())
+                .registerTypeAdapter(LocalDate.class, new GsonDateConverter())
+                .disableHtmlEscaping().setPrettyPrinting().create();
         FileInputStream fileInputStream = null;
         BufferedReader br = null;
         try {
@@ -358,7 +362,9 @@ public class H2ServerAdmin extends javax.swing.JFrame {
     }
 
     private ServerMen readServerMenOld() {
-        Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
+        Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new GsonLocalDateTimeAdapter())
+                .registerTypeAdapter(LocalDate.class, new GsonDateConverter())
+                .disableHtmlEscaping().setPrettyPrinting().create();
         BufferedReader br = null;
         try {
             java.lang.reflect.Type serverType = new TypeToken<ServerMenOld>() {
@@ -716,7 +722,9 @@ public class H2ServerAdmin extends javax.swing.JFrame {
     }
 
     private void saveServerInformation() {
-        Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
+        Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new GsonLocalDateTimeAdapter())
+                .registerTypeAdapter(LocalDate.class, new GsonDateConverter())
+                .disableHtmlEscaping().setPrettyPrinting().create();
         Writer serverWriter = null;
 
         try {

@@ -11,9 +11,10 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -27,11 +28,11 @@ public class ScheduledBackupRunnable implements Runnable {
 
     private int termMillis;
     private final ServerMen serverMen;
-    private final BackupSchedules backupSchedules;
+//    private BackupSchedules backupSchedules;
 
     private ExecuteBackupPool executeBackupPool;
 
-    private SimpleDateFormat dateFormat;
+    private String dateFormat;
     private static final String EXTENSION = ".zip";
 
     private boolean running = true;
@@ -42,7 +43,7 @@ public class ScheduledBackupRunnable implements Runnable {
 
     public ScheduledBackupRunnable(ServerMen serverMen, int termMillis) {
         this.serverMen = serverMen;
-        this.backupSchedules = serverMen.getBackupSchedules();
+//        this.backupSchedules = serverMen.getBackupSchedules();
         this.termMillis = termMillis;
 
         init();
@@ -50,7 +51,7 @@ public class ScheduledBackupRunnable implements Runnable {
 
     private void init() {
         executeBackupPool = new ExecuteBackupPool();
-        dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+        dateFormat = "yyyy-MM-dd-HH-mm-ss";
     }
 
     @Override
@@ -59,22 +60,26 @@ public class ScheduledBackupRunnable implements Runnable {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                Calendar today;
-                Calendar tommorow;
+                LocalDateTime today;
+                LocalDateTime tommorow;
                 while (running) {
+                    BackupSchedules backupSchedules = serverMen.getBackupSchedules();
                     if (backupSchedules == null || backupSchedules.isEmpty()) {
-                        continue;
+                        break;
                     }
-                    today = Calendar.getInstance();
-                    tommorow = Calendar.getInstance();
-                    tommorow.add(Calendar.DAY_OF_MONTH, 1);
-                    ArrayList<Long> toBes = new ArrayList<>();
+                    today = LocalDateTime.now().withNano(0);
+                    tommorow = today.plusDays(1);
+
+                    ArrayList<LocalDateTime> toBes = new ArrayList<>();
                     for (int i = 0; i < backupSchedules.size(); i++) {
                         BackupSchedule backupSchedule = backupSchedules.get(i);
                         toBes.addAll(backupSchedule.getWaitTimesInOneDay(today));
                         toBes.addAll(backupSchedule.getWaitTimesInOneDay(tommorow));
                         for (int j = 0; j < toBes.size(); j++) {
-                            Long at = toBes.get(j);
+                            LocalDateTime at = toBes.get(j);
+                            if (j > 100) {
+                                break;
+                            }
                             executeBackupPool.addExecuteBackupRunnable(at, backupSchedule);
                         }
                         toBes.clear();
@@ -84,6 +89,10 @@ public class ScheduledBackupRunnable implements Runnable {
                         if (executeBackupScheduleRunnable.isDone()) {
                             executeBackupPool.remove(i);
                         }
+                    }
+                    try {
+                        Thread.sleep(10000);
+                    } catch (InterruptedException ex) {
                     }
                 }
             }
@@ -100,8 +109,8 @@ public class ScheduledBackupRunnable implements Runnable {
         public ExecuteBackupPool() {
         }
 
-        public boolean addExecuteBackupRunnable(long at, BackupSchedule backupSchedule) {
-            if (at < System.currentTimeMillis()) {
+        public boolean addExecuteBackupRunnable(LocalDateTime at, BackupSchedule backupSchedule) {
+            if (at.isBefore(LocalDateTime.now().withNano(0))) {
                 return false;
             }
             int dupCcount = 0;
@@ -115,8 +124,8 @@ public class ScheduledBackupRunnable implements Runnable {
             }
             ExecuteBackupScheduleRunnable runnable = new ExecuteBackupScheduleRunnable(at, backupSchedule);
             Timer timer = new Timer();
-            timer.schedule(runnable, new Date(at));
-            System.out.println("정기 백업 추가되었습니다: " + runnable.getIdentifier());
+            timer.schedule(runnable, Date.from(at.atZone(ZoneId.systemDefault()).toInstant()));
+            
             return add(runnable);
         }
 
@@ -136,14 +145,14 @@ public class ScheduledBackupRunnable implements Runnable {
 
     class ExecuteBackupScheduleRunnable extends TimerTask {
 
-        private final long scheduleTime;
-        private final BackupSchedule backupSchedule;
+        private final LocalDateTime scheduleTime;
+        private BackupSchedule backupSchedule;
 
         private boolean done;
         private String message;
         private String filePath;
 
-        public ExecuteBackupScheduleRunnable(long scheduleTime, BackupSchedule backupSchedule) {
+        public ExecuteBackupScheduleRunnable(LocalDateTime scheduleTime, BackupSchedule backupSchedule) {
             this.scheduleTime = scheduleTime;
             this.backupSchedule = backupSchedule;
 
@@ -154,7 +163,7 @@ public class ScheduledBackupRunnable implements Runnable {
         public void run() {
             try {
                 message = "";
-                addMessage("작업 시작 시간: " + dateFormat.format(System.currentTimeMillis()));
+                addMessage("작업 시작 시간: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateFormat)));
                 H2AUtilities.forceMkdir(H2ServerAdmin.SCHEDULED_BACKUP_LOG_DIRECTORY);
                 filePath = H2ServerAdmin.SCHEDULED_BACKUP_LOG_DIRECTORY + File.separator + H2ServerAdmin.SCHEDULED_BACKUP_LOG_NAME;
                 String serverName = backupSchedule.getServerName();
@@ -177,8 +186,8 @@ public class ScheduledBackupRunnable implements Runnable {
 
                 try (FileWriter fw = new FileWriter(filePath, true); BufferedWriter writer = new BufferedWriter(fw)) {
                     StringBuilder sb = new StringBuilder();
-                    sb.append("작업 종료 시간: ").append(dateFormat.format(new Date(System.currentTimeMillis()))).append("\n");
-                    sb.append(backupSchedule.makeKey()).append(" ").append(dateFormat.format(new Date(scheduleTime))).append("\n");
+                    sb.append("작업 종료 시간: ").append(LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateFormat))).append("\n");
+                    sb.append(backupSchedule.makeKey()).append(" ").append(scheduleTime.format(DateTimeFormatter.ISO_DATE_TIME)).append("\n");
                     sb.append(message);
                     sb.append("----------------------------------------------------------------------------------------------------\n");
 
@@ -252,9 +261,9 @@ public class ScheduledBackupRunnable implements Runnable {
                 onOff = "OFF";
             }
             return directory + File.separator
-                + makeFileNamePrefix(serverMan.getServerName(), databaseName, onOff)
-                + makeCurrentDateString()
-                + EXTENSION;
+                    + makeFileNamePrefix(serverMan.getServerName(), databaseName, onOff)
+                    + makeCurrentDateString()
+                    + EXTENSION;
         }
 
         private String makeFileNamePrefix(String serverName, String dbName, String onOff) {
@@ -270,7 +279,7 @@ public class ScheduledBackupRunnable implements Runnable {
         }
 
         private String makeCurrentDateString() {
-            return dateFormat.format(new Date(System.currentTimeMillis()));
+            return LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateFormat));
         }
 
         private String makeBackupFilename(String directory, String serverName, String databaseName, String onOff) {
@@ -311,12 +320,12 @@ public class ScheduledBackupRunnable implements Runnable {
             System.out.println(msg + "\n");
         }
 
-        public boolean isDuplicate(long at, BackupSchedule anotherBackupSchedule) {
-            return scheduleTime == at && backupSchedule.makeKey().equals(anotherBackupSchedule.makeKey());
+        public boolean isDuplicate(LocalDateTime at, BackupSchedule anotherBackupSchedule) {
+            return scheduleTime.equals(at) && backupSchedule.makeKey().equals(anotherBackupSchedule.makeKey());
         }
 
         public boolean isDuplicate(ExecuteBackupScheduleRunnable another) {
-            return scheduleTime == another.scheduledExecutionTime() && makeKey().equals(another.makeKey());
+            return Date.from(scheduleTime.atZone(ZoneId.systemDefault()).toInstant()).getTime() == another.scheduledExecutionTime() && makeKey().equals(another.makeKey());
         }
 
         private String makeKey() {
@@ -325,14 +334,14 @@ public class ScheduledBackupRunnable implements Runnable {
 
         public String getIdentifier() {
             StringBuilder sb = new StringBuilder();
-            sb.append(dateFormat.format(scheduleTime)).append("\n");
+            sb.append(scheduleTime.format(DateTimeFormatter.ofPattern(dateFormat))).append("\n");
             sb.append(backupSchedule.makeKey()).append("\n");
             sb.append(backupSchedule.getBackupDir()).append("\n");
 
             return sb.toString();
         }
 
-        public long getScheduleTime() {
+        public LocalDateTime getScheduleTime() {
             return scheduleTime;
         }
 

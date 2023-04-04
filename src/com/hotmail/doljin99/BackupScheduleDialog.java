@@ -4,7 +4,7 @@
  */
 package com.hotmail.doljin99;
 
-import com.hotmail.doljin99.loginmanager.CronTime;
+import com.hotmail.doljin99.loginmanager.KronTime;
 import com.hotmail.doljin99.loginmanager.LoginManager;
 import java.awt.Cursor;
 import java.io.File;
@@ -12,8 +12,10 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
@@ -32,13 +34,14 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
     private final ServerMan serverMan;
     private final DatabaseMan databaseMan;
 
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+//    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
     private static final String EXTENSION = ".zip";
 
     private boolean done;
     private String message;
-    private final BackupSchedules backupSchedules;
+    private BackupSchedules backupSchedules;
     private final LoginManager loginManager;
+    private BackupSchedule backupSchedule;
 
     /**
      * Creates new form BackupDialog
@@ -51,8 +54,8 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
      * @param loginManager
      */
     public BackupScheduleDialog(java.awt.Frame parent, boolean modal,
-        ServerMan serverMan, DatabaseMan databaseMan, BackupSchedules backupSchedules,
-        LoginManager loginManager) {
+            ServerMan serverMan, DatabaseMan databaseMan, BackupSchedules backupSchedules,
+            LoginManager loginManager) {
         super(parent, modal);
         initComponents();
         this.serverMan = serverMan;
@@ -100,6 +103,10 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
         validate();
     }
 
+    public BackupSchedule getBackupSchedule() {
+        return backupSchedule;
+    }
+
     class ScheduleListSelectionListener implements ListSelectionListener {
 
         @Override
@@ -110,8 +117,8 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
             }
 
             BackupSchedule backupSchedule = backupSchedules.getBackupSchedule(
-                (String) jTableSchedulesTable.getValueAt(row, 1),
-                (String) jTableSchedulesTable.getValueAt(row, 2));
+                    (String) jTableSchedulesTable.getValueAt(row, 1),
+                    (String) jTableSchedulesTable.getValueAt(row, 2));
             if (backupSchedule == null) {
                 return;
             }
@@ -120,7 +127,7 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
     }
 
     private BackupSchedule makeBackupSchedule() {
-        BackupSchedule backupSchedule = new BackupSchedule();
+        backupSchedule = new BackupSchedule();
 
         backupSchedule.setServerName(jTextFieldServerName.getText());
         backupSchedule.setCronName(jTextFieldCronName.getText());
@@ -129,96 +136,24 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
         backupSchedule.setDayOfMonthValue(jTextFieldDayOfMonthPart.getText());
         backupSchedule.setMonthValue(jTextFieldMonthPart.getText());
         backupSchedule.setDayOfWeekValue(jTextFieldDayOfWeekPart.getText());
-        long startDate = makeStartDate();
-        if (startDate < 0) {
+        LocalDate startDate = getStartDate();
+        if (startDate == null) {
             return null;
         }
-        long endDate = makeEndDate();
-        if (endDate < 0) {
+        LocalDate endDate = getEndDate();
+        if (endDate == null) {
             return null;
         }
-        backupSchedule.setStartDate(makeStartDate());
-        backupSchedule.setEndDate(makeEndDate());
+        backupSchedule.setStartLocalDate(getStartDate());
+        backupSchedule.setEndLocalDate(getEndDate());
         backupSchedule.setDatabaseName(jTextFieldDatabaseName.getText());
         backupSchedule.setBackupDir(jTextFieldBackupDir.getText());
         backupSchedule.setBackupFile(jTextFieldBackupFileName.getText());
-        backupSchedule.setEntryDatetime(System.currentTimeMillis());
+        backupSchedule.setEntryDatetime(LocalDateTime.now().withNano(0));
 
         backupSchedule.encryptFields(loginManager);
 
         return backupSchedule;
-    }
-
-    private long makeStartDate() {
-        try {
-            long timeMillis = -1;
-            Calendar calendar = Calendar.getInstance();
-
-            int year = Integer.valueOf(jTextFieldStartYear.getText());
-            int month = Integer.valueOf(jTextFieldStartMonth.getText());
-            int day = Integer.valueOf(jTextFieldStartDay.getText());
-
-            calendar.set(Calendar.YEAR, year);
-            if (month < 1 || month > 12) {
-                setStatus("시작 월 값 범위 에러: " + month);
-                return timeMillis;
-            }
-            calendar.set(Calendar.MONTH, month - 1);
-            int maxDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-            if (day < 1 || day > maxDay) {
-                setStatus("시작 일 값 범위 에러: " + month);
-                return timeMillis;
-            }
-            calendar.set(Calendar.DAY_OF_MONTH, day);
-
-            calendar.set(Calendar.HOUR_OF_DAY, 0);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
-            calendar.set(Calendar.MILLISECOND, 0);
-
-            timeMillis = calendar.getTimeInMillis();
-
-            return timeMillis;
-        } catch (NullPointerException | NumberFormatException ex) {
-            setStatus("일자 정보 에러: " + ex.getLocalizedMessage());
-            return -1;
-        }
-    }
-
-    private long makeEndDate() {
-        try {
-            long timeMillis = -1;
-            Calendar calendar = Calendar.getInstance();
-
-            int year = Integer.valueOf(jTextFieldEndYear.getText());
-            int month = Integer.valueOf(jTextFieldEndMonth.getText());
-            int day = Integer.valueOf(jTextFieldEndDay.getText());
-
-            calendar.set(Calendar.YEAR, year);
-            if (month < 1 || month > 12) {
-                setStatus("종료 월 값 범위 에러: " + month);
-                return timeMillis;
-            }
-            calendar.set(Calendar.MONTH, month - 1);
-            int maxDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-            if (day < 1 || day > maxDay) {
-                setStatus("종료 일 값 범위 에러: " + month);
-                return timeMillis;
-            }
-            calendar.set(Calendar.DAY_OF_MONTH, day);
-
-            calendar.set(Calendar.HOUR_OF_DAY, 23);
-            calendar.set(Calendar.MINUTE, 59);
-            calendar.set(Calendar.SECOND, 59);
-            calendar.set(Calendar.MILLISECOND, 999);
-
-            timeMillis = calendar.getTimeInMillis();
-
-            return timeMillis;
-        } catch (NullPointerException | NumberFormatException ex) {
-            setStatus("일자 정보 에러: " + ex.getLocalizedMessage());
-            return -1;
-        }
     }
 
     private void displayScheduleValues(BackupSchedule backupSchedule) {
@@ -240,15 +175,15 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
         jTextFieldMonthPart.setText(backupSchedule.getMonthValue());
         jTextFieldDayOfWeekPart.setText(backupSchedule.getDayOfWeekValue());
 
-        Date startDate = new Date(backupSchedule.getStartDateMillis());
-        String startDateString = dateFormat.format(startDate);
+        LocalDate startDate = backupSchedule.getStartLocalDate();
+        String startDateString = startDate.format(DateTimeFormatter.ISO_DATE);
         String[] items = startDateString.split("-");
         jTextFieldStartYear.setText(items[0]);
         jTextFieldStartMonth.setText(items[1]);
         jTextFieldStartDay.setText(items[2]);
 
-        Date endDate = new Date(backupSchedule.getEndDateMillis());
-        String endDateString = dateFormat.format(endDate);
+        LocalDate endDate = backupSchedule.getEndLocalDate();
+        String endDateString = endDate.format(DateTimeFormatter.ISO_DATE);
         items = endDateString.split("-");
         jTextFieldEndYear.setText(items[0]);
         jTextFieldEndMonth.setText(items[1]);
@@ -305,8 +240,8 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
     }
 
     private void setInitialDate() {
-        Calendar calendar = Calendar.getInstance();
-        String currentDate = dateFormat.format(calendar.getTime());
+        LocalDate currentLocalDate = LocalDate.now();
+        String currentDate = currentLocalDate.format(DateTimeFormatter.ISO_DATE);
 
         String[] items = currentDate.split("-");
         jTextFieldStartYear.setText(items[0]);
@@ -339,7 +274,7 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
     }
 
     private String makeCurrentDateString() {
-        return dateFormat.format(new Date(System.currentTimeMillis()));
+        return LocalDate.now().format(DateTimeFormatter.ISO_DATE);
     }
 
     private String makeBackupFilename(String serverName, String databaseName) {
@@ -356,9 +291,9 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
             onOff = "OFF";
         }
         return directory + File.separator
-            + makeFileNamePrefix(serverName, databaseName, onOff)
-            + makeCurrentDateString()
-            + EXTENSION;
+                + makeFileNamePrefix(serverName, databaseName, onOff)
+                + makeCurrentDateString()
+                + EXTENSION;
     }
 
     private String makeBackupFilename(String directory, String serverName, String databaseName, String onOff) {
@@ -749,7 +684,7 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
         jLabel13.setText("요일");
 
         jTextFieldDayOfWeekPart.setText("*");
-        jTextFieldDayOfWeekPart.setToolTipText("[1~7] -> [일~토], m#n(L) -> n(마지막)주차 m요일");
+        jTextFieldDayOfWeekPart.setToolTipText("[1~7] -> [월~일], m#n(L) -> n(마지막)주차 m요일");
         jTextFieldDayOfWeekPart.setMaximumSize(new java.awt.Dimension(50, 2147483647));
         jTextFieldDayOfWeekPart.setMinimumSize(new java.awt.Dimension(50, 23));
         jTextFieldDayOfWeekPart.setPreferredSize(new java.awt.Dimension(70, 23));
@@ -792,7 +727,6 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
 
         jTextFieldTestDay.setText("02");
 
-        jToolBar2.setFloatable(false);
         jToolBar2.setRollover(true);
 
         jButtonSimulateDay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Search16.gif"))); // NOI18N
@@ -995,7 +929,7 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
     }
 
     private void jButtonAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddActionPerformed
-        BackupSchedule backupSchedule = makeBackupSchedule();
+        backupSchedule = makeBackupSchedule();
         if (backupSchedule == null) {
             setStatus("추가할 정기 백업 정보 에러.");
             return;
@@ -1110,70 +1044,68 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
 
     private void jButtonSimulateDayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSimulateDayActionPerformed
         jTextAreaTimes.setText("");
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd E HH:mm:ss");
-        Calendar start = getStartDate();
-        Calendar end = getEndDate();
-        Calendar testDate = getTestDate();
+        String format = "yyyy-MM-dd E HH:mm:ss";
+        LocalDate start = getStartDate();
+        LocalDate end = getEndDate();
+        LocalDate testDate = getTestDate();
         if (start == null || end == null || testDate == null) {
             return;
         }
-        System.out.println("start = " + format.format(start.getTime()));
-        System.out.println("end = " + format.format(end.getTime()));
-        System.out.println("testDate = " + format.format(testDate.getTime()));
-        CronTime cronTime = new CronTime();
+        System.out.println("start = " + start.format(DateTimeFormatter.ISO_DATE));
+        System.out.println("end = " + end.format(DateTimeFormatter.ISO_DATE));
+        System.out.println("testDate = " + testDate.format(DateTimeFormatter.ISO_DATE));
+        KronTime kronTime = new KronTime();
 //            start.getTimeInMillis(),
 //            end.getTimeInMillis(),
 //            jTextFieldMinPart.getText(), jTextFieldHourPart.getText(),
 //            jTextFieldDayOfMonthPart.getText(),
 //            jTextFieldMonthPart.getText(),
 //            jTextFieldDayOfWeekPart.getText());
-        cronTime.setStartDate(start);
-        cronTime.setEndDate(end);
-        cronTime.setMinValue(jTextFieldMinPart.getText());
-        cronTime.setHourValue(jTextFieldHourPart.getText());
-        cronTime.setDayOfMonthValue(jTextFieldDayOfMonthPart.getText().toUpperCase());
-        cronTime.setMonthValue(jTextFieldMonthPart.getText());
-        cronTime.setDayOfWeekValue(jTextFieldDayOfWeekPart.getText().toUpperCase());
+        kronTime.setStartLocalDate(start);
+        kronTime.setEndLocalDate(end);
+        kronTime.setMinValue(jTextFieldMinPart.getText());
+        kronTime.setHourValue(jTextFieldHourPart.getText());
+        kronTime.setDayOfMonthValue(jTextFieldDayOfMonthPart.getText().toUpperCase());
+        kronTime.setMonthValue(jTextFieldMonthPart.getText());
+        kronTime.setDayOfWeekValue(jTextFieldDayOfWeekPart.getText().toUpperCase());
 
-        Date date = new Date();
-        ArrayList<Long> calculated = cronTime.getWaitTimesInOneDay(testDate.getTimeInMillis());
+        ArrayList<LocalDateTime> calculated = kronTime.getWaitTimesInOneDay(testDate.atStartOfDay());
         if (calculated == null) {
-            setStatus("에러: " + cronTime.getMessage());
+            setStatus("에러: " + kronTime.getMessage());
             return;
         }
         if (calculated.isEmpty()) {
-            setStatus("범위 밖 결과: " + cronTime.getMessage());
+            setStatus("범위 밖 결과: " + kronTime.getMessage());
             return;
         }
         for (int i = 0; i < calculated.size(); i++) {
-            Long timeInMillis = calculated.get(i);
-            date.setTime(timeInMillis);
-            appendDate((i + 1) + " - " + format.format(date));
+            LocalDateTime timeInMillis = calculated.get(i);
+            appendDate((i + 1) + " - " + timeInMillis.format(DateTimeFormatter.ofPattern(format)));
         }
     }//GEN-LAST:event_jButtonSimulateDayActionPerformed
 
-    private Calendar getStartDate() {
+    private LocalDate getStartDate() {
         return getDate(jTextFieldStartYear.getText(), jTextFieldStartMonth.getText(), jTextFieldStartDay.getText(), true);
     }
 
-    private Calendar getEndDate() {
+    private LocalDate getEndDate() {
         return getDate(jTextFieldEndYear.getText(), jTextFieldEndMonth.getText(), jTextFieldEndDay.getText(), false);
     }
 
-    private Calendar getTestDate() {
+    private LocalDate getTestDate() {
         return getDate(jTextFieldTestYear.getText(), jTextFieldTestMonth.getText(), jTextFieldTestDay.getText(), true);
     }
 
-    private Calendar getDate(String yearString, String monthString, String dayString, boolean start) {
+    private LocalDate getDate(String yearString, String monthString, String dayString, boolean start) {
         int year;
         try {
-            year = Integer.valueOf(yearString);
+            year = Integer.parseInt(yearString);
         } catch (NumberFormatException ex) {
             return null;
         }
         int month;
         try {
-            month = Integer.valueOf(monthString);
+            month = Integer.parseInt(monthString);
             if (month < 1 || month > 12) {
                 return null;
             }
@@ -1182,7 +1114,7 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
         }
         int day;
         try {
-            day = Integer.valueOf(dayString);
+            day = Integer.parseInt(dayString);
             if (day < 1 || month > 31) {
                 return null;
             }
@@ -1193,23 +1125,9 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
             return null;
         }
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month - 1);
-        calendar.set(Calendar.DAY_OF_MONTH, day);
-        if (start) {
-            calendar.set(Calendar.HOUR_OF_DAY, 0);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
-            calendar.set(Calendar.MILLISECOND, 0);
-        } else {
-            calendar.set(Calendar.HOUR_OF_DAY, 23);
-            calendar.set(Calendar.MINUTE, 59);
-            calendar.set(Calendar.SECOND, 59);
-            calendar.set(Calendar.MILLISECOND, 999);
-        }
+        LocalDate localDate = LocalDate.of(year, month, day);
 
-        return calendar;
+        return localDate;
     }
 
     private final int[] largeMonth = {1, 3, 5, 7, 8, 10, 12};
@@ -1247,7 +1165,7 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
     class SimulatorRunnable implements Runnable {
 
         private boolean run = true;
-        private int year;
+        private final int year;
 
         public SimulatorRunnable(int year) {
             this.year = year;
@@ -1260,12 +1178,12 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
                 jButtonSimulateYear.setEnabled(false);
                 jButtonSimulateDay.setEnabled(false);
                 jButtonStopSimulation.setEnabled(true);
-                
+
                 StringBuilder sb = new StringBuilder();
                 sb.append("서버명: ").append(jTextFieldServerName.getText()).append("\n");
                 sb.append("DB명: ").append(jTextFieldDatabaseName.getText()).append("\n");
                 sb.append("cron명: ").append(jTextFieldCronName.getText()).append("\n");
-                
+
                 sb.append("cron 표현식: ");
                 sb.append(" [ ").append(jTextFieldMinPart.getText()).append(" ] ").append("~");
                 sb.append(" [ ").append(jTextFieldHourPart.getText()).append(" ] ").append("~");
@@ -1273,59 +1191,45 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
                 sb.append(" [ ").append(jTextFieldMonthPart.getText()).append(" ] ").append("~");
                 sb.append(" [ ").append(jTextFieldDayOfWeekPart.getText().toUpperCase()).append(" ]");
                 appendDate(sb.toString());
-                
-                Calendar startDate = Calendar.getInstance();
-                Calendar endDate = Calendar.getInstance();
-                startDate.set(Calendar.YEAR, year);
-                startDate.set(Calendar.MONTH, 0);
-                startDate.set(Calendar.DATE, 1);
-                startDate.set(Calendar.HOUR_OF_DAY, 0);
-                startDate.set(Calendar.MINUTE, 0);
-                startDate.set(Calendar.SECOND, 0);
-                startDate.set(Calendar.MILLISECOND, 0);
-                endDate.set(Calendar.YEAR, year);
-                endDate.set(Calendar.MONTH, 11);
-                endDate.set(Calendar.DATE, 31);
-                endDate.set(Calendar.HOUR_OF_DAY, 23);
-                endDate.set(Calendar.MINUTE, 59);
-                endDate.set(Calendar.SECOND, 59);
-                endDate.set(Calendar.MILLISECOND, 999);
+
+                LocalDate startDate = getStartDate();
+                LocalDate endDate = getEndDate();
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd E HH:mm:ss");
-                Date applyDate = startDate.getTime();
-                Date firedDate = endDate.getTime();
-                appendDate("적용 일자: " + format.format(applyDate));
-                appendDate("종료 일자: " + format.format(firedDate));
-                ArrayList<Long> calculated;
+
+                appendDate("적용 일자: " + startDate.format(DateTimeFormatter.ISO_DATE));
+                appendDate("종료 일자: " + endDate.format(DateTimeFormatter.ISO_DATE));
+                ArrayList<LocalDateTime> calculated;
                 Date date = new Date();
 
-                CronTime cronTime = new CronTime();
-                cronTime.setStartDate(startDate);
-                cronTime.setEndDate(endDate);
+                KronTime cronTime = new KronTime();
+                cronTime.setStartLocalDate(startDate);
+                cronTime.setEndLocalDate(endDate);
                 cronTime.setMinValue(jTextFieldMinPart.getText());
                 cronTime.setHourValue(jTextFieldHourPart.getText());
                 cronTime.setDayOfMonthValue(jTextFieldDayOfMonthPart.getText());
                 cronTime.setMonthValue(jTextFieldMonthPart.getText());
                 cronTime.setDayOfWeekValue(jTextFieldDayOfWeekPart.getText());
 
+                LocalDateTime testStartDate = LocalDate.of(year, 1, 1).atStartOfDay();
+
                 int count = 0;
-                for (int i = 0; run && i < endDate.getActualMaximum(Calendar.DAY_OF_YEAR); i++) {
+                for (int i = 0; run && i < testStartDate.getDayOfYear(); i++) {
                     try {
-                        calculated = cronTime.getWaitTimesInOneDay(startDate);
+                        calculated = cronTime.getWaitTimesInOneDay(testStartDate);
                         if (calculated == null) {
                             setStatus("에러: " + cronTime.getMessage());
-                            return;
+                            continue;
                         }
                         if (calculated.isEmpty()) {
 //                            setStatus("범위 밖 결과: " + cronTimeValue.getMessage());
                             continue;
                         }
                         for (int j = 0; j < calculated.size(); j++) {
-                            Long timeInMillis = calculated.get(j);
-                            date.setTime(timeInMillis);
-                            appendDate((++count) + " - " + format.format(date));
+                            LocalDateTime localDateTime = calculated.get(j);
+                            appendDate((++count) + " - " + localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd (E) HH:mm:ss")));
                         }
                     } finally {
-                        startDate.add(Calendar.DATE, 1);
+                        testStartDate = testStartDate.plusDays(1);
                     }
                 }
             } finally {
@@ -1352,9 +1256,9 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
         jTextAreaTimes.setText("");
         int year;
         try {
-            year = Integer.valueOf(jTextFieldStartYear.getText());
+            year = Integer.parseInt(jTextFieldTestYear.getText());
         } catch (NumberFormatException ex) {
-            year = Calendar.getInstance().get(Calendar.YEAR);
+            year = LocalDateTime.now().getYear();
         }
         simulatorRunnable = new SimulatorRunnable(year);
         Thread simulator = new Thread(simulatorRunnable);

@@ -6,7 +6,9 @@ package com.hotmail.doljin99;
 
 import com.hotmail.doljin99.ScheduledBackupRunnable.ExecuteBackupPool;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -20,6 +22,7 @@ public class BackupScheduleListDialog extends javax.swing.JDialog {
 
     /**
      * Creates new form BackupScheduleListDialog
+     *
      * @param parent
      * @param modal
      * @param pool
@@ -28,27 +31,135 @@ public class BackupScheduleListDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         this.pool = pool;
-        
+
         init();
     }
-    
+
     private void init() {
-        DefaultTableModel model = (DefaultTableModel) jTableList.getModel();
-        model.setRowCount(0);
-        Object [] row = new Object[6];
+        ArrayList<BackupScheduleRow> list = new ArrayList<>();
         for (int i = 0; i < pool.size(); i++) {
             ScheduledBackupRunnable.ExecuteBackupScheduleRunnable runnable = pool.get(i);
-            row[0] = i + 1;
-            row[1] = runnable.getBackupSchedule().getServerName();
-            row[2] = runnable.getBackupSchedule().getCronName();
-            row[3] = runnable.getBackupSchedule().getDatabaseName();
-            row[4] = dateFormat.format(new Date(runnable.getScheduleTime()));
-            row[5] = runnable.getBackupSchedule().getBackupDir();
+            BackupScheduleRow row = new BackupScheduleRow();
+            row.setServerName(runnable.getBackupSchedule().getServerName());
+            row.setCronName(runnable.getBackupSchedule().getCronName());
+            row.setDatabaseName(runnable.getBackupSchedule().getDatabaseName());
+            row.setScheduleTime(runnable.getScheduleTime().format(DateTimeFormatter.ISO_DATE_TIME));
+            row.setBackupDir(runnable.getBackupSchedule().getBackupDir());
             
+            list.add(row);
+        }
+        Collections.sort(list, (BackupScheduleRow o1, BackupScheduleRow o2) -> {
+            String time1 = o1.getScheduleTime();
+            String time2 = o2.getScheduleTime();
+            return time1.compareTo(time2);
+        });
+
+        DefaultTableModel model = (DefaultTableModel) jTableList.getModel();
+        model.setRowCount(0);
+        Object[] row = new Object[6];
+        for (int i = 0; i < list.size(); i++) {
+            BackupScheduleRow backupScheduleRow = list.get(i);
+            row[0] = i + 1;
+            row[1] = backupScheduleRow.getServerName();
+            row[2] = backupScheduleRow.getCronName();
+            row[3] = backupScheduleRow.getDatabaseName();
+            row[4] = backupScheduleRow.getScheduleTime();
+            row[5] = backupScheduleRow.getBackupDir();
+
             model.addRow(row);
         }
         H2AUtilities.alignColumnWidth(jTableList);
         jTableList.validate();
+    }
+
+    class BackupScheduleRow {
+
+        private String serverName;
+        private String cronName;
+        private String databaseName;
+        private String scheduleTime;
+        private String backupDir;
+
+        /**
+         * Get the value of backupDir
+         *
+         * @return the value of backupDir
+         */
+        public String getBackupDir() {
+            return backupDir;
+        }
+
+        /**
+         * Set the value of backupDir
+         *
+         * @param backupDir new value of backupDir
+         */
+        public void setBackupDir(String backupDir) {
+            this.backupDir = backupDir;
+        }
+
+        /**
+         * Get the value of scheduleTime
+         *
+         * @return the value of scheduleTime
+         */
+        public String getScheduleTime() {
+            return scheduleTime;
+        }
+
+        /**
+         * Set the value of scheduleTime
+         *
+         * @param scheduleTime new value of scheduleTime
+         */
+        public void setScheduleTime(String scheduleTime) {
+            this.scheduleTime = scheduleTime;
+        }
+
+        /**
+         * Get the value of databaseName
+         *
+         * @return the value of databaseName
+         */
+        public String getDatabaseName() {
+            return databaseName;
+        }
+
+        /**
+         * Set the value of databaseName
+         *
+         * @param databaseName new value of databaseName
+         */
+        public void setDatabaseName(String databaseName) {
+            this.databaseName = databaseName;
+        }
+
+        /**
+         * Get the value of cronName
+         *
+         * @return the value of cronName
+         */
+        public String getCronName() {
+            return cronName;
+        }
+
+        /**
+         * Set the value of cronName
+         *
+         * @param cronName new value of cronName
+         */
+        public void setCronName(String cronName) {
+            this.cronName = cronName;
+        }
+
+        public String getServerName() {
+            return serverName;
+        }
+
+        public void setServerName(String serverName) {
+            this.serverName = serverName;
+        }
+
     }
 
     /**

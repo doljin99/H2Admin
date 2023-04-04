@@ -51,7 +51,7 @@ public class ServerMen {
             }
             int portNo;
             try {
-                portNo = Integer.valueOf(port);
+                portNo = Integer.parseInt(port);
                 if (!H2AUtilities.isAvailablePort(portNo)) {
                     message = "사용 중인 port 번호입니다.";
                     return false;

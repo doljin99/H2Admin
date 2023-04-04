@@ -180,7 +180,7 @@ public class ServerInfoPane extends javax.swing.JPanel {
                                 .addComponent(jCheckBoxIfNotExists)
                                 .addGap(18, 18, 18)
                                 .addComponent(jCheckBoxTcpDaemon)))
-                        .addGap(0, 25, Short.MAX_VALUE))
+                        .addGap(0, 82, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addGap(30, 30, 30)
@@ -236,7 +236,7 @@ public class ServerInfoPane extends javax.swing.JPanel {
                     .addComponent(jCheckBoxTcpAllowOthers)
                     .addComponent(jCheckBoxIfNotExists)
                     .addComponent(jCheckBoxTcpDaemon))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

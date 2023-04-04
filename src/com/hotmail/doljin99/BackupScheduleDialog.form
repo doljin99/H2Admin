@@ -710,7 +710,7 @@
             <Component class="javax.swing.JTextField" name="jTextFieldDayOfWeekPart">
               <Properties>
                 <Property name="text" type="java.lang.String" value="*"/>
-                <Property name="toolTipText" type="java.lang.String" value="[1~7] -&gt; [&#xc77c;~&#xd1a0;], m#n(L) -&gt; n(&#xb9c8;&#xc9c0;&#xb9c9;)&#xc8fc;&#xcc28; m&#xc694;&#xc77c;"/>
+                <Property name="toolTipText" type="java.lang.String" value="[1~7] -&gt; [&#xc6d4;~&#xc77c;], m#n(L) -&gt; n(&#xb9c8;&#xc9c0;&#xb9c9;)&#xc8fc;&#xcc28; m&#xc694;&#xc77c;"/>
                 <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[50, 2147483647]"/>
                 </Property>
@@ -824,7 +824,6 @@
             </Component>
             <Container class="javax.swing.JToolBar" name="jToolBar2">
               <Properties>
-                <Property name="floatable" type="boolean" value="false"/>
                 <Property name="rollover" type="boolean" value="true"/>
               </Properties>
 

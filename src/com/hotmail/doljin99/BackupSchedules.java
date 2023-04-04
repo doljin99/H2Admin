@@ -20,6 +20,7 @@ public class BackupSchedules extends ArrayList<BackupSchedule> {
     public BackupSchedule addBackupSchedule(BackupSchedule backupSchedule) {
         if (!exist(backupSchedule)) {
             add(backupSchedule);
+            
             return backupSchedule;
         }
         return null;
