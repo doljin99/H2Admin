@@ -60,7 +60,7 @@ public class TableInfoPane extends javax.swing.JPanel {
                 model.addRow(row);
             }
         }
-        H2AUtilities.setTableHAllHeadersAlignment(jTablePrimaryKeys, SwingConstants.CENTER);
+        H2AUtilities.setTableAllHeadersAlignment(jTablePrimaryKeys, SwingConstants.CENTER);
         H2AUtilities.alignColumnWidth(jTablePrimaryKeys);
         jTablePrimaryKeys.validate();
         
@@ -83,7 +83,7 @@ public class TableInfoPane extends javax.swing.JPanel {
             
             foreignKeyTableModel.addRow(row);
         }
-        H2AUtilities.setTableHAllHeadersAlignment(jTableForeignKey, SwingConstants.CENTER);
+        H2AUtilities.setTableAllHeadersAlignment(jTableForeignKey, SwingConstants.CENTER);
         H2AUtilities.alignColumnWidth(jTableForeignKey);
         jTableForeignKey.validate();
     }

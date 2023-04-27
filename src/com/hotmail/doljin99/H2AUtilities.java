@@ -251,7 +251,7 @@ public class H2AUtilities {
         return true;
     }
 
-    public static void setTableHAllHeadersAlignment(JTable grid, int alignment) {
+    public static void setTableAllHeadersAlignment(JTable grid, int alignment) {
         if (grid == null) {
             return;
         }

@@ -7,7 +7,16 @@ package com.hotmail.doljin99;
 import com.hotmail.doljin99.loginmanager.KronTime;
 import com.hotmail.doljin99.loginmanager.LoginManager;
 import java.awt.Cursor;
+import java.awt.Desktop;
+import java.awt.Frame;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -99,6 +108,8 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
         jRadioButtonOffline.validate();
         jRadioButtonOnlyOneDB.validate();
         jRadioButtonSelectedDB.validate();
+        
+        setSize(1024, 800);
 
         validate();
     }
@@ -228,10 +239,10 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
         }
         Object[] row = new Object[3];
         for (int i = 0; i < backupSchedules.size(); i++) {
-            BackupSchedule backupSchedule = backupSchedules.get(i);
+            BackupSchedule tempBackupSchedule = backupSchedules.get(i);
             row[0] = i + 1;
-            row[1] = backupSchedule.getServerName();
-            row[2] = backupSchedule.getCronName();
+            row[1] = tempBackupSchedule.getServerName();
+            row[2] = tempBackupSchedule.getCronName();
 
             model.addRow(row);
         }
@@ -343,6 +354,17 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
         jTextFieldServerName = new javax.swing.JTextField();
         jLabel19 = new javax.swing.JLabel();
         jTextFieldDatabaseName = new javax.swing.JTextField();
+        jPanel6 = new javax.swing.JPanel();
+        jToolBar2 = new javax.swing.JToolBar();
+        jButtonSimulateDay = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JToolBar.Separator();
+        jButtonSimulateYear = new javax.swing.JButton();
+        jSeparator3 = new javax.swing.JToolBar.Separator();
+        jButtonStopSimulation = new javax.swing.JButton();
+        jSeparator6 = new javax.swing.JToolBar.Separator();
+        jButtonCopyResult = new javax.swing.JButton();
+        jSeparator7 = new javax.swing.JToolBar.Separator();
+        jButtonHelp = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
@@ -374,14 +396,6 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
         jTextFieldTestMonth = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         jTextFieldTestDay = new javax.swing.JTextField();
-        jToolBar2 = new javax.swing.JToolBar();
-        jButtonSimulateDay = new javax.swing.JButton();
-        jSeparator2 = new javax.swing.JToolBar.Separator();
-        jButtonSimulateYear = new javax.swing.JButton();
-        jSeparator3 = new javax.swing.JToolBar.Separator();
-        jButtonStopSimulation = new javax.swing.JButton();
-        jSeparator6 = new javax.swing.JToolBar.Separator();
-        jButtonCopyResult = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextAreaStatus = new javax.swing.JTextArea();
@@ -447,7 +461,7 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
 
         getContentPane().add(jToolBar1, java.awt.BorderLayout.NORTH);
 
-        jSplitPane1.setDividerLocation(500);
+        jSplitPane1.setDividerLocation(480);
 
         jPanel3.setLayout(new java.awt.BorderLayout());
 
@@ -494,7 +508,7 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
                 .addComponent(jRadioButtonSelectedDB)
                 .addGap(18, 18, 18)
                 .addComponent(jRadioButtonOnlyOneDB)
-                .addContainerGap(132, Short.MAX_VALUE))
+                .addContainerGap(123, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -572,7 +586,7 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
             .addGroup(jPanelOfflineLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelOfflineLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE)
                     .addGroup(jPanelOfflineLayout.createSequentialGroup()
                         .addComponent(jLabel15)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -646,6 +660,69 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
         jPanel3.add(jPanelOffline, java.awt.BorderLayout.CENTER);
 
         jSplitPane1.setLeftComponent(jPanel3);
+
+        jPanel6.setLayout(new java.awt.BorderLayout());
+
+        jToolBar2.setRollover(true);
+
+        jButtonSimulateDay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Search16.gif"))); // NOI18N
+        jButtonSimulateDay.setText("특정 일자 검사");
+        jButtonSimulateDay.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonSimulateDay.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSimulateDayActionPerformed(evt);
+            }
+        });
+        jToolBar2.add(jButtonSimulateDay);
+        jToolBar2.add(jSeparator2);
+
+        jButtonSimulateYear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Search16.gif"))); // NOI18N
+        jButtonSimulateYear.setText("1년 simulation");
+        jButtonSimulateYear.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonSimulateYear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSimulateYearActionPerformed(evt);
+            }
+        });
+        jToolBar2.add(jButtonSimulateYear);
+        jToolBar2.add(jSeparator3);
+
+        jButtonStopSimulation.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Stop16.gif"))); // NOI18N
+        jButtonStopSimulation.setText("simulation정지");
+        jButtonStopSimulation.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonStopSimulation.setEnabled(false);
+        jButtonStopSimulation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonStopSimulationActionPerformed(evt);
+            }
+        });
+        jToolBar2.add(jButtonStopSimulation);
+        jToolBar2.add(jSeparator6);
+
+        jButtonCopyResult.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Copy16.gif"))); // NOI18N
+        jButtonCopyResult.setText("결과복사");
+        jButtonCopyResult.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonCopyResult.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCopyResultActionPerformed(evt);
+            }
+        });
+        jToolBar2.add(jButtonCopyResult);
+        jToolBar2.add(jSeparator7);
+
+        jButtonHelp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Help16.gif"))); // NOI18N
+        jButtonHelp.setText("도움말");
+        jButtonHelp.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonHelp.setFocusable(false);
+        jButtonHelp.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonHelp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonHelpActionPerformed(evt);
+            }
+        });
+        jToolBar2.add(jButtonHelp);
+
+        jPanel6.add(jToolBar2, java.awt.BorderLayout.NORTH);
 
         jLabel16.setText("특정일자");
 
@@ -727,52 +804,6 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
 
         jTextFieldTestDay.setText("02");
 
-        jToolBar2.setRollover(true);
-
-        jButtonSimulateDay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Search16.gif"))); // NOI18N
-        jButtonSimulateDay.setText("특정 일자 검사");
-        jButtonSimulateDay.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jButtonSimulateDay.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSimulateDayActionPerformed(evt);
-            }
-        });
-        jToolBar2.add(jButtonSimulateDay);
-        jToolBar2.add(jSeparator2);
-
-        jButtonSimulateYear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Search16.gif"))); // NOI18N
-        jButtonSimulateYear.setText("1년 simulation");
-        jButtonSimulateYear.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jButtonSimulateYear.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSimulateYearActionPerformed(evt);
-            }
-        });
-        jToolBar2.add(jButtonSimulateYear);
-        jToolBar2.add(jSeparator3);
-
-        jButtonStopSimulation.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Stop16.gif"))); // NOI18N
-        jButtonStopSimulation.setText("simulation정지");
-        jButtonStopSimulation.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jButtonStopSimulation.setEnabled(false);
-        jButtonStopSimulation.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonStopSimulationActionPerformed(evt);
-            }
-        });
-        jToolBar2.add(jButtonStopSimulation);
-        jToolBar2.add(jSeparator6);
-
-        jButtonCopyResult.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Copy16.gif"))); // NOI18N
-        jButtonCopyResult.setText("결과복사");
-        jButtonCopyResult.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jButtonCopyResult.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonCopyResultActionPerformed(evt);
-            }
-        });
-        jToolBar2.add(jButtonCopyResult);
-
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -780,24 +811,6 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane6)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(23, 23, 23)
-                        .addComponent(jTextFieldMinPart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(24, 24, 24)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextFieldHourPart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jTextFieldMonthPart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jTextFieldDayOfMonthPart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jTextFieldDayOfWeekPart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel4Layout.createSequentialGroup()
@@ -835,17 +848,32 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel6)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextFieldEndDay, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 73, Short.MAX_VALUE)))
+                                .addComponent(jTextFieldEndDay, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 33, Short.MAX_VALUE))
+                    .addComponent(jScrollPane6)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(24, 24, 24)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextFieldMonthPart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jTextFieldDayOfMonthPart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jTextFieldDayOfWeekPart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jTextFieldHourPart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(23, 23, 23)
+                        .addComponent(jTextFieldMinPart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel17)
                     .addComponent(jTextFieldStartYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -888,11 +916,13 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
                     .addComponent(jLabel13)
                     .addComponent(jTextFieldDayOfWeekPart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        jSplitPane1.setRightComponent(jPanel4);
+        jPanel6.add(jPanel4, java.awt.BorderLayout.CENTER);
+
+        jSplitPane1.setRightComponent(jPanel6);
 
         getContentPane().add(jSplitPane1, java.awt.BorderLayout.CENTER);
 
@@ -1273,15 +1303,15 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonStopSimulationActionPerformed
 
     private void jButtonUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonUpdateActionPerformed
-        BackupSchedule backupSchedule = makeBackupSchedule();
-        if (backupSchedule == null) {
+        BackupSchedule tempBackupSchedule = makeBackupSchedule();
+        if (tempBackupSchedule == null) {
             setStatus("수절할 정기 백업 정보 에러.");
             return;
         }
-        if (backupSchedules.updateBackupSchedule(backupSchedule) == null) {
-            setStatus("정기 백업 수정 실패: " + backupSchedule.getServerName() + ", " + backupSchedule.getCronName());
+        if (backupSchedules.updateBackupSchedule(tempBackupSchedule) == null) {
+            setStatus("정기 백업 수정 실패: " + tempBackupSchedule.getServerName() + ", " + tempBackupSchedule.getCronName());
         } else {
-            setStatus("정기 백업 수정 성공: " + backupSchedule.getServerName() + ", " + backupSchedule.getCronName());
+            setStatus("정기 백업 수정 성공: " + tempBackupSchedule.getServerName() + ", " + tempBackupSchedule.getCronName());
         }
     }//GEN-LAST:event_jButtonUpdateActionPerformed
 
@@ -1292,8 +1322,8 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
             setStatus(key + " : 삭제 취소 되었습니다.");
             return;
         }
-        BackupSchedule backupSchedule = backupSchedules.getBackupSchedule(jTextFieldServerName.getText(), jTextFieldCronName.getText());
-        if (backupSchedules.deleteSchedule(backupSchedule)) {
+        BackupSchedule tempBackupSchedule = backupSchedules.getBackupSchedule(jTextFieldServerName.getText(), jTextFieldCronName.getText());
+        if (backupSchedules.deleteSchedule(tempBackupSchedule)) {
             setStatus(key + " : 삭제되었습니다.");
             refreshBackupScheduleGrid();
         } else {
@@ -1305,6 +1335,45 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
         jTextAreaTimes.copy();
         setStatus("결과가 클립보드에 복사되었습니다.");
     }//GEN-LAST:event_jButtonCopyResultActionPerformed
+
+    private void jButtonHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonHelpActionPerformed
+        if (!Desktop.isDesktopSupported()) {
+            setStatus("Cron time 도움말 열기: HTML 파일열기 지원되지 않음.");
+            return;
+        }
+        InputStream is = null;
+        BufferedReader br = null;
+        byte[] data = new byte[1024];
+        int nRead;
+        try { 
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            is = H2ServerAdmin.class.getResourceAsStream("/resources/krontimeManual.html");
+            br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+            while ((nRead = is.read(data, 0, data.length)) != -1) {
+                buffer.write(data, 0, nRead);
+            }
+            buffer.flush();
+            String content = new String(buffer.toByteArray(), StandardCharsets.UTF_8);
+            HelpDialog dialog = new HelpDialog((Frame) getOwner(), true, "Cron Time Help", content);
+            dialog.setLocationRelativeTo(this);
+            dialog.setVisible(true);
+        } catch (IOException ex) {
+            setStatus("Cron time 도움말 열기: " + ex.getLocalizedMessage());
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException ex) {
+                }
+            }
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException ex) {
+                }
+            }
+        }
+    }//GEN-LAST:event_jButtonHelpActionPerformed
 
     public boolean isDone() {
         return done;
@@ -1324,6 +1393,7 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonCopyResult;
     private javax.swing.JButton jButtonDelete;
+    private javax.swing.JButton jButtonHelp;
     private javax.swing.JButton jButtonSimulateDay;
     private javax.swing.JButton jButtonSimulateYear;
     private javax.swing.JButton jButtonStopSimulation;
@@ -1352,6 +1422,7 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanelOffline;
     private javax.swing.JRadioButton jRadioButtonAllDB;
     private javax.swing.JRadioButton jRadioButtonOffline;
@@ -1367,6 +1438,7 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
     private javax.swing.JToolBar.Separator jSeparator4;
     private javax.swing.JToolBar.Separator jSeparator5;
     private javax.swing.JToolBar.Separator jSeparator6;
+    private javax.swing.JToolBar.Separator jSeparator7;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTable jTableSchedulesTable;
     private javax.swing.JTextArea jTextAreaStatus;

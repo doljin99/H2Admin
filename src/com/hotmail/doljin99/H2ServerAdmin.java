@@ -52,7 +52,7 @@ import org.h2.engine.Constants;
  */
 public class H2ServerAdmin extends javax.swing.JFrame {
 
-    public static final String VERSION = "V2.0";
+    public static final String VERSION = "V2.1";
 
     private LoginManager loginManager;
     private JPanel glassPane;
