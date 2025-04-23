@@ -461,7 +461,7 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
 
         getContentPane().add(jToolBar1, java.awt.BorderLayout.NORTH);
 
-        jSplitPane1.setDividerLocation(480);
+        jSplitPane1.setDividerLocation(400);
 
         jPanel3.setLayout(new java.awt.BorderLayout());
 
@@ -508,7 +508,7 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
                 .addComponent(jRadioButtonSelectedDB)
                 .addGap(18, 18, 18)
                 .addComponent(jRadioButtonOnlyOneDB)
-                .addContainerGap(123, Short.MAX_VALUE))
+                .addContainerGap(48, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -586,7 +586,7 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
             .addGroup(jPanelOfflineLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelOfflineLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(jPanelOfflineLayout.createSequentialGroup()
                         .addComponent(jLabel15)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -849,7 +849,7 @@ public class BackupScheduleDialog extends javax.swing.JDialog {
                                 .addComponent(jLabel6)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jTextFieldEndDay, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 33, Short.MAX_VALUE))
+                        .addGap(0, 119, Short.MAX_VALUE))
                     .addComponent(jScrollPane6)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
